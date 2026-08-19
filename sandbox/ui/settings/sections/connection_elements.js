@@ -58,7 +58,6 @@ export function queryConnectionElements(getElement = getSettingsElement) {
         deepseekWebFields: getElement(DOM_IDS.DEEPSEEK_WEB_FIELDS),
         deepseekWebPhone: getElement(DOM_IDS.DEEPSEEK_WEB_PHONE),
         deepseekWebPassword: getElement(DOM_IDS.DEEPSEEK_WEB_PASSWORD),
-        deepseekWebAreaCode: getElement(DOM_IDS.DEEPSEEK_WEB_AREA_CODE),
         deepseekWebLogin: getElement(DOM_IDS.DEEPSEEK_WEB_LOGIN),
         deepseekWebLoginStatus: getElement(DOM_IDS.DEEPSEEK_WEB_LOGIN_STATUS),
         deepseekWebThinkingEnabled: getElement(DOM_IDS.DEEPSEEK_WEB_THINKING_ENABLED),

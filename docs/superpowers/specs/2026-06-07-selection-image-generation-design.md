@@ -2,7 +2,7 @@
 
 ## Goal
 
-Add a one-click image generation action to the text selection toolbar. When the user selects text and clicks the new image button, Gemini Nexus should use the selected text as the image prompt and render the generated image in the existing floating result window.
+Add a one-click image generation action to the text selection toolbar. When the user selects text and clicks the new image button, DeepSeek Zoom should use the selected text as the image prompt and render the generated image in the existing floating result window.
 
 ## Behavior
 

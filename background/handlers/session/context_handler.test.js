@@ -28,7 +28,7 @@ describe('ContextHandler', () => {
                 error: 'Context persistence failed',
             });
             expect(errorSpy).toHaveBeenCalledWith(
-                '[Gemini Nexus] Failed to set Web auth context:',
+                '[DeepSeek Zoom] Failed to set Web auth context:',
                 error
             );
         } finally {
@@ -55,7 +55,7 @@ describe('ContextHandler', () => {
                 error: 'Context cleanup failed',
             });
             expect(errorSpy).toHaveBeenCalledWith(
-                '[Gemini Nexus] Failed to reset Web auth context:',
+                '[DeepSeek Zoom] Failed to reset Web auth context:',
                 error
             );
         } finally {

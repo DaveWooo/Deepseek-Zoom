@@ -685,7 +685,7 @@ describe('MessageBridge model persistence', () => {
             expect.objectContaining({ action: 'RESTORE_IMAGE_TOOLS' })
         );
         expect(warn).toHaveBeenCalledWith(
-            '[Gemini Nexus] Failed to restore image tools setting:',
+            '[DeepSeek Zoom] Failed to restore image tools setting:',
             'Storage read failed'
         );
 

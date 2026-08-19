@@ -220,7 +220,7 @@ export class PromptController {
             }
 
             console.warn(
-                `[Gemini Nexus] Generation watchdog: clearing stuck isGenerating after ${timeoutMs}ms idle`
+                `[DeepSeek Zoom] Generation watchdog: clearing stuck isGenerating after ${timeoutMs}ms idle`
             );
             // Cancel the SW run so late tool outputs / replies cannot race a
             // new send. forceClear alone only unlocks UI and drops messages.
@@ -251,7 +251,7 @@ export class PromptController {
 
     async sendPromptText(text, files = []) {
         if (this.app.isGenerating) {
-            console.info('[Gemini Nexus] send ignored: already generating', {
+            console.info('[DeepSeek Zoom] send ignored: already generating', {
                 sessionId: this.app.generatingSessionId,
             });
             return;
@@ -272,7 +272,7 @@ export class PromptController {
         const currentId = this.sessionManager.currentSessionId;
         const session = this.sessionManager.getCurrentSession();
         if (!session) {
-            console.error('[Gemini Nexus] send aborted: no current session after create');
+            console.error('[DeepSeek Zoom] send aborted: no current session after create');
             this.ui.updateStatus(t('sessionCreateFailed'));
             return;
         }
@@ -326,7 +326,7 @@ export class PromptController {
         this.setGeneratingState(true, currentId);
 
         const payload = this.buildRequestPayload(text, files, currentId);
-        console.info('[Gemini Nexus] SEND_PROMPT → parent', {
+        console.info('[DeepSeek Zoom] SEND_PROMPT → parent', {
             sessionId: currentId,
             model: payload.model,
             enableBrowserControl: payload.enableBrowserControl,

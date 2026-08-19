@@ -73,7 +73,7 @@ export class AuthManager {
             }
         } catch (error) {
             console.warn(
-                '[Gemini Nexus] Failed to refresh account indices before rotation:',
+                '[DeepSeek Zoom] Failed to refresh account indices before rotation:',
                 error
             );
         }
@@ -83,11 +83,11 @@ export class AuthManager {
         try {
             await chrome.storage.local.set({ geminiAccountPointer: this.currentAccountPointer });
         } catch (error) {
-            console.warn('[Gemini Nexus] Failed to persist account rotation pointer:', error);
+            console.warn('[DeepSeek Zoom] Failed to persist account rotation pointer:', error);
         }
 
         debugLog(
-            `[Gemini Nexus] Rotated to account index: ${this.accountIndices[this.currentAccountPointer]}`
+            `[DeepSeek Zoom] Rotated to account index: ${this.accountIndices[this.currentAccountPointer]}`
         );
         return this.accountIndices[this.currentAccountPointer];
     }
@@ -139,7 +139,7 @@ export class AuthManager {
                 geminiContext: this.currentContext,
             });
         } catch (error) {
-            console.warn('[Gemini Nexus] Failed to persist Web auth context:', error);
+            console.warn('[DeepSeek Zoom] Failed to persist Web auth context:', error);
         }
     }
 
@@ -149,7 +149,7 @@ export class AuthManager {
         try {
             await chrome.storage.local.remove(['geminiContext']);
         } catch (error) {
-            console.warn('[Gemini Nexus] Failed to clear Web auth context:', error);
+            console.warn('[DeepSeek Zoom] Failed to clear Web auth context:', error);
         }
 
         // Rotate to spread load on reset
@@ -168,7 +168,7 @@ export class AuthManager {
         try {
             await chrome.storage.local.remove(['geminiContext']);
         } catch (error) {
-            console.warn('[Gemini Nexus] Failed to clear Web auth context:', error);
+            console.warn('[DeepSeek Zoom] Failed to clear Web auth context:', error);
         }
     }
 

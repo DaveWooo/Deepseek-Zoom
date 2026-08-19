@@ -168,7 +168,7 @@ function exportStorageData(storageKeys, kind, buildPayload) {
     chrome.storage.local.get(storageKeys, (result) => {
         const readError = getRuntimeLastError();
         if (readError) {
-            console.warn(`[Gemini Nexus] Failed to export ${kind} data:`, readError);
+            console.warn(`[DeepSeek Zoom] Failed to export ${kind} data:`, readError);
             return;
         }
 

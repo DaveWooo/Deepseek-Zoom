@@ -564,7 +564,7 @@ describe('RequestDispatcher response mapping', () => {
                 apiKey: 'openrouter-key',
                 model: 'anthropic/claude-sonnet-4.5',
                 reasoningEffort: null,
-                headers: { 'X-Title': 'Gemini Nexus' },
+                headers: { 'X-Title': 'DeepSeek Zoom' },
                 chatPayload: {
                     reasoning: { effort: 'medium', exclude: false },
                     provider: { order: ['anthropic'], allow_fallbacks: false },

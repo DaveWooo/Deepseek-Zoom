@@ -3,11 +3,11 @@
 </p>
 
 <div align="center">
-  <a href="https://github.com/yeahhe365/Gemini-Nexus">
-    <img src="logo.png" width="160" height="160" alt="Gemini Nexus Logo">
+  <a href="https://github.com/DaveWooo/Deepseek-Nexus">
+    <img src="logo.png" width="160" height="160" alt="DeepSeek Zoom Logo">
   </a>
 
-# Gemini Nexus
+# DeepSeek Zoom
 
 ### 赋予浏览器原生 AI 灵魂
 
@@ -33,7 +33,7 @@
 
 ### 项目简介
 
-**Gemini Nexus** 赋予浏览器原生 AI 灵魂,是一款集成 Gemini Web、Google Gemini API、OpenAI Compatible API 以及多个第三方专门 API 渠道的 Chrome 扩展程序。它不仅仅是一个侧边栏插件,而是通过注入式的**悬浮工具栏**、图像与截图输入、基于 Chrome DevTools Protocol 的**浏览器控制工具**以及可选的**外部 MCP 工具**,将 AI 的触角伸向网页浏览的每一个交互细节。
+**DeepSeek Zoom** 赋予浏览器原生 AI 灵魂,是一款集成 Gemini Web、Google Gemini API、OpenAI Compatible API 以及多个第三方专门 API 渠道的 Chrome 扩展程序。它不仅仅是一个侧边栏插件,而是通过注入式的**悬浮工具栏**、图像与截图输入、基于 Chrome DevTools Protocol 的**浏览器控制工具**以及可选的**外部 MCP 工具**,将 AI 的触角伸向网页浏览的每一个交互细节。
 
 ### 逆向工程与数据流向披露
 
@@ -47,7 +47,7 @@
 
 ### 能力概览
 
-Gemini Nexus 当前围绕浏览器内 AI 工作流提供以下能力：
+DeepSeek Zoom 当前围绕浏览器内 AI 工作流提供以下能力：
 
 - **Gemini Web**、**Gemini API**、**OpenAI Compatible API**、**OpenAI 官方 API**、**DeepSeek API**、**OpenRouter API**、**通义 / DashScope API**、**Anthropic API** 与 **智谱 API** 多提供方切换，支持按渠道配置 `Base URL`、`API Key` 与 `Model IDs`。
 - **Gemini Web 临时对话** 开关，可让 Web 渠道请求不进入 Gemini 近期对话。
@@ -91,11 +91,11 @@ Gemini Nexus 当前围绕浏览器内 AI 工作流提供以下能力：
 
 ### 外部 MCP 工具
 
-Gemini Nexus 可以选择连接到一个或多个外部 MCP 服务器（通过 **SSE**、**可流式传输的 HTTP** 或 **WebSocket**），并在现有的工具循环（Tool Loop）中执行其工具。
+DeepSeek Zoom 可以选择连接到一个或多个外部 MCP 服务器（通过 **SSE**、**可流式传输的 HTTP** 或 **WebSocket**），并在现有的工具循环（Tool Loop）中执行其工具。
 
 #### 推荐方案：使用本地代理（支持 stdio 服务器）
 
-由于 Chrome 扩展程序无法直接运行基于 stdio 的 MCP 服务器，推荐的设置方案是运行一个本地代理（例如 [MCP SuperAssistant](https://github.com/srbhptl39/MCP-SuperAssistant) Proxy）。在代理中配置您的 MCP 服务器（包括 stdio 服务器），然后将 Gemini Nexus 连接到该代理端点。
+由于 Chrome 扩展程序无法直接运行基于 stdio 的 MCP 服务器，推荐的设置方案是运行一个本地代理（例如 [MCP SuperAssistant](https://github.com/srbhptl39/MCP-SuperAssistant) Proxy）。在代理中配置您的 MCP 服务器（包括 stdio 服务器），然后将 DeepSeek Zoom 连接到该代理端点。
 
 常见的代理端点如下：
 
@@ -143,7 +143,7 @@ Gemini Web **依赖逆向协议**,在无官方授权的情况下访问 Google �
 
 #### 安装步骤
 
-1. 从 [Releases](https://github.com/yeahhe365/Gemini-Nexus/releases) 下载最新 ZIP 包并解压。
+1. 从 [Releases](https://github.com/DaveWooo/Deepseek-Nexus/releases) 下载最新 ZIP 包并解压。
 2. Chrome 访问 `chrome://extensions/`，右上角开启 **“开发者模式”**。
 3. 点击 **“加载已解压的扩展程序”**，选择解压后的文件夹即可。
 

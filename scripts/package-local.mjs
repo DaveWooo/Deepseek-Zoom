@@ -71,7 +71,7 @@ async function main() {
     console.log('  2. Load unpacked → select the folder above');
     console.log('');
     console.log('Safer than clicking Reload when the browser is crashy:');
-    console.log('  • Close the Gemini Nexus side panel first');
+    console.log('  • Close the DeepSeek Zoom side panel first');
     console.log('  • Stop browser control if the “debugging this browser” bar is showing');
     console.log('  • Prefer Disable → Enable, or Service Worker console: chrome.runtime.reload()');
     console.log('');

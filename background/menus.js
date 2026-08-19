@@ -45,7 +45,7 @@ async function notifyContextMenuFailure(tabId) {
         .executeScript({
             target: { tabId },
             func: showContextMenuFailureNotice,
-            args: ['Gemini Nexus 无法在当前页面启动，请刷新页面后重试。'],
+            args: ['DeepSeek Zoom 无法在当前页面启动，请刷新页面后重试。'],
         })
         .catch(() => {});
 }
@@ -76,7 +76,7 @@ function buildContextMenuItems() {
     const isZh = chrome.i18n.getUILanguage().startsWith('zh');
 
     const titles = {
-        main: isZh ? 'Gemini Nexus' : 'Gemini Nexus',
+        main: isZh ? 'DeepSeek Zoom' : 'DeepSeek Zoom',
         ask: isZh ? '快速提问' : 'Quick Ask',
         pageChat: isZh ? '与当前网页对话' : 'Chat with Page',
         readPage: isZh ? '朗读当前网页' : 'Read page aloud',
@@ -187,7 +187,7 @@ function queueContextMenuSetup() {
     contextMenuSetupPromise = setup;
 
     setup.catch((error) => {
-        console.warn('Failed to create Gemini Nexus context menus:', error?.message || error);
+        console.warn('Failed to create DeepSeek Zoom context menus:', error?.message || error);
     });
 
     return setup;

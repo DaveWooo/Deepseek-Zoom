@@ -199,7 +199,7 @@ describe('QuickAskHandler', () => {
                 source: 'toolbar',
                 requestId: 'quick-ask-1',
             });
-            expect(errorSpy).toHaveBeenCalledWith('[Gemini Nexus] Quick ask failed:', error);
+            expect(errorSpy).toHaveBeenCalledWith('[DeepSeek Zoom] Quick ask failed:', error);
         } finally {
             errorSpy.mockRestore();
         }
@@ -269,7 +269,7 @@ describe('QuickAskHandler', () => {
                 source: 'toolbar',
                 requestId: 'image-quick-ask-1',
             });
-            expect(errorSpy).toHaveBeenCalledWith('[Gemini Nexus] Image quick ask failed:', error);
+            expect(errorSpy).toHaveBeenCalledWith('[DeepSeek Zoom] Image quick ask failed:', error);
         } finally {
             errorSpy.mockRestore();
         }

@@ -19,12 +19,12 @@ describe('GeminiSelectionBlacklist', () => {
 
         expect(
             blacklist.matchesLocation(
-                { href: 'https://github.com/yeahhe365/Gemini-Nexus' },
+                { href: 'https://github.com/DaveWooo/Deepseek-Nexus' },
                 'github.com'
             )
         ).toBe(true);
         expect(
-            blacklist.matchesLocation({ href: 'https://gist.github.com/yeahhe365' }, 'github.com')
+            blacklist.matchesLocation({ href: 'https://gist.github.com/DaveWooo' }, 'github.com')
         ).toBe(false);
     });
 

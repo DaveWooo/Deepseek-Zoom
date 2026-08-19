@@ -32,7 +32,7 @@ describe('buildHostManifest', () => {
         });
         expect(m).toEqual({
             name: 'com.gemini_nexus.logger',
-            description: 'Gemini Nexus action logger',
+            description: 'DeepSeek Zoom action logger',
             type: 'stdio',
             path: '/Users/x/.gemini-nexus/native-logger.js',
             allowed_origins: [`chrome-extension://${GN_EXTENSION_ID}/`],

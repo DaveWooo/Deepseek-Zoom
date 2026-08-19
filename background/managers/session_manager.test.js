@@ -167,7 +167,7 @@ describe('GeminiSessionManager cancellation', () => {
             expect(manager.auth.forceContextRefresh).toHaveBeenCalledTimes(1);
             expect(chrome.storage.local.remove).toHaveBeenCalledWith(['geminiContext']);
             expect(warnSpy).toHaveBeenCalledWith(
-                '[Gemini Nexus] Failed to clear stale Web auth context:',
+                '[DeepSeek Zoom] Failed to clear stale Web auth context:',
                 storageError
             );
             expect(result).toEqual(

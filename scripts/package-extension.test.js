@@ -31,7 +31,7 @@ describe('package-extension', () => {
 
     it('rewrites packaged manifest to use the bundled content entry', () => {
         const manifest = {
-            name: 'Gemini Nexus',
+            name: 'DeepSeek Zoom',
             content_scripts: [
                 {
                     matches: ['<all_urls>'],

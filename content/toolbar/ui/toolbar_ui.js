@@ -143,7 +143,7 @@
                 try {
                     this.events.disconnect();
                 } catch (error) {
-                    console.warn('[Gemini Nexus] Failed to disconnect toolbar events:', error);
+                    console.warn('[DeepSeek Zoom] Failed to disconnect toolbar events:', error);
                 }
             }
             this.events = null;
@@ -155,7 +155,7 @@
                 try {
                     previousImagePreview.destroy();
                 } catch (error) {
-                    console.warn('[Gemini Nexus] Failed to destroy image preview:', error);
+                    console.warn('[DeepSeek Zoom] Failed to destroy image preview:', error);
                 }
             }
 
@@ -165,7 +165,7 @@
                 try {
                     this.bridge.destroy();
                 } catch (error) {
-                    console.warn('[Gemini Nexus] Failed to destroy renderer bridge:', error);
+                    console.warn('[DeepSeek Zoom] Failed to destroy renderer bridge:', error);
                 }
             }
             this.bridge = null;
@@ -452,12 +452,12 @@
             } else if (provider === 'deepseek_web') {
                 const dsw = settings.deepseekWeb || {};
                 options = [];
+                if (dsw.enabledVision !== false)
+                    options.push({ value: 'vision', label: 'DeepSeek Vision (识图)' });
                 if (dsw.enabledDefault !== false)
                     options.push({ value: 'default', label: 'DeepSeek最新版模型 (快速)' });
                 if (dsw.enabledExpert !== false)
                     options.push({ value: 'expert', label: 'DeepSeek R1 (专家)' });
-                if (dsw.enabledVision !== false)
-                    options.push({ value: 'vision', label: 'DeepSeek Vision (识图)' });
                 if (options.length === 0)
                     options.push({ value: 'default', label: 'DeepSeek最新版模型 (快速)' });
             } else if (getDedicatedProviderConfig(provider)) {

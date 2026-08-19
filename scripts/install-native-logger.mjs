@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Installs the Gemini Nexus native logger host: copies host.js to a stable
+// Installs the DeepSeek Zoom native logger host: copies host.js to a stable
 // path under ~/.gemini-nexus/ and writes the Chrome NativeMessagingHosts
 // manifest whose allowed_origins pins this extension's ID. Run with --uninstall
 // to remove. Run from the project root so manifest.json's key can be read.
@@ -46,7 +46,7 @@ export function buildHostManifest({
     extensionId,
     hostScriptPath,
     name = HOST_NAME,
-    description = 'Gemini Nexus action logger',
+    description = 'DeepSeek Zoom action logger',
 }) {
     return {
         name,

@@ -40,7 +40,7 @@ export async function getConnectionSettings(options = {}) {
             'geminiContextRecentTurns',
         ]);
     } catch (error) {
-        console.warn('[Gemini Nexus] Failed to read connection settings:', error);
+        console.warn('[DeepSeek Zoom] Failed to read connection settings:', error);
         stored = {};
     }
 
@@ -68,12 +68,12 @@ export async function getConnectionSettings(options = {}) {
                 await chrome.storage.local.set({ geminiApiKeyPointer: nextPointer });
             } catch (error) {
                 console.warn(
-                    '[Gemini Nexus] Failed to persist Official API key rotation pointer:',
+                    '[DeepSeek Zoom] Failed to persist Official API key rotation pointer:',
                     error
                 );
             }
 
-            debugLog(`[Gemini Nexus] Rotating Official API Key (Index: ${pointer})`);
+            debugLog(`[DeepSeek Zoom] Rotating Official API Key (Index: ${pointer})`);
         }
     } else {
         activeApiKey = activeApiKey.trim();

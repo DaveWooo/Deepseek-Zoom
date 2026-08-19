@@ -41,7 +41,7 @@ describe('handleProviderModelList', () => {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
-                'X-Title': 'Gemini Nexus',
+                'X-Title': 'DeepSeek Zoom',
                 Authorization: 'Bearer openrouter-key',
             },
         });

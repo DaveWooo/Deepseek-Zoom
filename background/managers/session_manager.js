@@ -105,7 +105,7 @@ export class GeminiSessionManager {
                     await chrome.storage.local.remove(['geminiContext']);
                 } catch (storageError) {
                     console.warn(
-                        '[Gemini Nexus] Failed to clear stale Web auth context:',
+                        '[DeepSeek Zoom] Failed to clear stale Web auth context:',
                         storageError
                     );
                 }

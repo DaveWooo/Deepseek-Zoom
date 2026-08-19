@@ -22,7 +22,7 @@ describe('SidebarTemplate', () => {
         expect(brand.getAttribute('type')).toBe('button');
         expect(brand.querySelector('.sidebar-brand-logo').getAttribute('src')).toBe('../logo.png');
         expect(brand.querySelector('.sidebar-brand-logo').getAttribute('aria-hidden')).toBe('true');
-        expect(brand.querySelector('.sidebar-header-title').textContent).toBe('Gemini Nexus');
+        expect(brand.querySelector('.sidebar-header-title').textContent).toBe('DeepSeek Zoom');
         expect(brand.querySelector('.sidebar-header-title').className).toBe('sidebar-header-title');
         expect(header.lastElementChild.id).toBe('close-sidebar');
         expect(actions.querySelector('#new-chat-sidebar-btn')).not.toBeNull();

@@ -12,6 +12,12 @@
 
 export const DEEPSEEK_WEB_MODEL_TYPES = Object.freeze([
     {
+        value: 'vision',
+        labelKey: 'deepseekWebModelVision',
+        labelFallback: 'DeepSeek Vision (识图)',
+        supportsFile: true,
+    },
+    {
         value: 'default',
         labelKey: 'deepseekWebModelDefault',
         labelFallback: 'DeepSeek最新版模型 (快速)',
@@ -22,12 +28,6 @@ export const DEEPSEEK_WEB_MODEL_TYPES = Object.freeze([
         labelKey: 'deepseekWebModelExpert',
         labelFallback: 'DeepSeek R1 (专家)',
         supportsFile: false,
-    },
-    {
-        value: 'vision',
-        labelKey: 'deepseekWebModelVision',
-        labelFallback: 'DeepSeek Vision (识图)',
-        supportsFile: true,
     },
 ]);
 

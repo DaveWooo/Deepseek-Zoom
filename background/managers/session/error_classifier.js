@@ -130,7 +130,7 @@ export async function withProviderRetry(fn, options = {}) {
             const baseDelay = Math.pow(2, attempt) * 1000;
             const jitter = Math.random() * 1000;
             console.warn(
-                `[Gemini Nexus] Retryable provider error (${error.message}), retrying... (Attempt ${attempt}/${maxAttempts})`
+                `[DeepSeek Zoom] Retryable provider error (${error.message}), retrying... (Attempt ${attempt}/${maxAttempts})`
             );
             await new Promise((resolve) => setTimeout(resolve, baseDelay + jitter));
         }

@@ -108,7 +108,7 @@ describe('sendWebMessage', () => {
         const [, init] = global.fetch.mock.calls[0];
         const fReq = init.body.get('f.req');
         expect(fReq).toContain('只回复 PROJECT_OK');
-        expect(fReq).not.toContain('Gemini Nexus thinking mode');
+        expect(fReq).not.toContain('DeepSeek Zoom thinking mode');
         const modelHeader = JSON.parse(init.headers['x-goog-ext-525001261-jspb']);
         expect(modelHeader[14]).toBe(6);
         expect(modelHeader[15]).toBe(1);
@@ -170,7 +170,7 @@ describe('sendWebMessage', () => {
         const [, init] = global.fetch.mock.calls[0];
         const fReq = init.body.get('f.req');
         expect(fReq).toContain('Solve it.');
-        expect(fReq).not.toContain('Gemini Nexus thinking mode');
+        expect(fReq).not.toContain('DeepSeek Zoom thinking mode');
         const modelHeader = JSON.parse(init.headers['x-goog-ext-525001261-jspb']);
         expect(modelHeader[14]).toBe(3);
         expect(modelHeader[15]).toBe(1);

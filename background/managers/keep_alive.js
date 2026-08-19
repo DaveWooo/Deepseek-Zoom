@@ -55,7 +55,7 @@ class KeepAliveManager {
         // No work to do — the alarm firing while a stream is active is enough to
         // keep the worker alive through a long thinking/reasoning pause.
         if (alarm.name === STREAM_HEARTBEAT_ALARM) {
-            debugLog('[Gemini Nexus] Keep-Alive: stream heartbeat');
+            debugLog('[DeepSeek Zoom] Keep-Alive: stream heartbeat');
         }
     }
 
@@ -70,7 +70,7 @@ class KeepAliveManager {
             });
         } catch (error) {
             // 静默降级:心跳失败时不影响主流程,SW 仍可能因 token 流存活
-            debugLog('[Gemini Nexus] Keep-Alive: failed to arm stream heartbeat', error);
+            debugLog('[DeepSeek Zoom] Keep-Alive: failed to arm stream heartbeat', error);
         }
     }
 
@@ -136,7 +136,7 @@ class KeepAliveManager {
             }
 
             await this._setLastRotationAttempt(now);
-            debugLog('[Gemini Nexus] Keep-Alive: Rotating cookies...');
+            debugLog('[DeepSeek Zoom] Keep-Alive: Rotating cookies...');
 
             // This endpoint refreshes __Secure-1PSIDTS
             // Browser automatically handles the Cookie header in request and Set-Cookie in response
@@ -154,7 +154,7 @@ class KeepAliveManager {
             if (response.ok) {
                 await this._setLastRotationAttempt(Date.now());
                 this.consecutiveErrors = 0;
-                debugLog('[Gemini Nexus] Keep-Alive: Rotation successful');
+                debugLog('[DeepSeek Zoom] Keep-Alive: Rotation successful');
             } else {
                 this.consecutiveErrors++;
                 await this._handleError(response.status);
@@ -164,10 +164,10 @@ class KeepAliveManager {
             // Avoid flooding LogManager / console on sustained offline or
             // blocked RotateCookies — backoff already slows retries.
             if (this.consecutiveErrors <= 2) {
-                console.error('[Gemini Nexus] Keep-Alive: Network error', error);
+                console.error('[DeepSeek Zoom] Keep-Alive: Network error', error);
             } else if (this.consecutiveErrors === 3 || this.consecutiveErrors % 5 === 0) {
                 console.warn(
-                    `[Gemini Nexus] Keep-Alive: Network error (x${this.consecutiveErrors})`,
+                    `[DeepSeek Zoom] Keep-Alive: Network error (x${this.consecutiveErrors})`,
                     error?.message || error
                 );
             }
@@ -177,14 +177,14 @@ class KeepAliveManager {
     }
 
     async _handleError(status) {
-        console.warn(`[Gemini Nexus] Keep-Alive: Rotation failed with status ${status}`);
+        console.warn(`[DeepSeek Zoom] Keep-Alive: Rotation failed with status ${status}`);
 
         // If 401 Unauthorized or 403 Forbidden, session is likely dead.
         // Clear both memory and storage so the next request re-fetches tokens.
         // Storage-only cleanup left AuthManager.currentContext serving stale
         // tokens for the rest of the service-worker lifetime.
         if (status === 401 || status === 403) {
-            debugLog('[Gemini Nexus] Session expired. Clearing local context.');
+            debugLog('[DeepSeek Zoom] Session expired. Clearing local context.');
             try {
                 if (typeof this.onSessionExpired === 'function') {
                     await this.onSessionExpired();
@@ -192,7 +192,7 @@ class KeepAliveManager {
                     await chrome.storage.local.remove(['geminiContext']);
                 }
             } catch (error) {
-                console.warn('[Gemini Nexus] Keep-Alive: Failed to clear expired context:', error);
+                console.warn('[DeepSeek Zoom] Keep-Alive: Failed to clear expired context:', error);
             }
         }
 

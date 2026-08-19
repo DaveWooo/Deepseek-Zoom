@@ -8,7 +8,7 @@ export class ContextHandler {
             .setContext(request.context, request.model)
             .then(() => sendResponse({ status: 'context_updated' }))
             .catch((error) => {
-                console.error('[Gemini Nexus] Failed to set Web auth context:', error);
+                console.error('[DeepSeek Zoom] Failed to set Web auth context:', error);
                 sendResponse({ status: 'error', error: error?.message || String(error) });
             });
         return true;
@@ -19,7 +19,7 @@ export class ContextHandler {
             .resetContext()
             .then(() => sendResponse({ status: 'reset' }))
             .catch((error) => {
-                console.error('[Gemini Nexus] Failed to reset Web auth context:', error);
+                console.error('[DeepSeek Zoom] Failed to reset Web auth context:', error);
                 sendResponse({ status: 'error', error: error?.message || String(error) });
             });
         return true;

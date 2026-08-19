@@ -132,7 +132,7 @@ describe('ShortcutManager', () => {
 
             expect(chrome.runtime.sendMessage).not.toHaveBeenCalled();
             expect(warnSpy).toHaveBeenCalledWith(
-                'Failed to load Gemini Nexus shortcuts:',
+                'Failed to load DeepSeek Zoom shortcuts:',
                 'Storage unavailable'
             );
         } finally {

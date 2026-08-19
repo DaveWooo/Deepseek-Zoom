@@ -21,7 +21,7 @@ Supported:
 
 Not claimed as complete:
 
-- Native Gemini Web `ProcessFile` flow. The live app still registers `ProcessFile` (`LbusCb`) and may use it for PDF/text/document paths, but Gemini Nexus currently uploads image attachments through `https://push.clients6.google.com/upload/` and rejects non-image attachments for the Web provider.
+- Native Gemini Web `ProcessFile` flow. The live app still registers `ProcessFile` (`LbusCb`) and may use it for PDF/text/document paths, but DeepSeek Zoom currently uploads image attachments through `https://push.clients6.google.com/upload/` and rejects non-image attachments for the Web provider.
 - Removed image-preview model routing. `gemini-3.1-flash-image-preview` and `gemini-3-pro-image-preview-11-2025` are intentionally rejected by the Web provider until their current Web request contract is revalidated.
 - Native three-id Web conversation continuation. Local history is folded into the prompt because the live Web client rejects the old three-id continuation payload without extra UI-only context.
 
@@ -46,7 +46,7 @@ The live `BardChatUi` script registers:
 - `/assistant.lamda.BardFrontendService/StreamGenerate` -> `RxAFq`
 - `/assistant.lamda.BardFrontendService/ProcessFile` -> `LbusCb`
 
-Gemini Nexus posts to:
+DeepSeek Zoom posts to:
 
 ```text
 https://gemini.google.com/_/BardChatUi/data/assistant.lamda.BardFrontendService/StreamGenerate
@@ -81,7 +81,7 @@ The native Gemini Web thinking enum is:
 | `2`          | `THINKING_LEVEL_EXTENDED`   | `medium`, `high`            |
 | `3`          | `THINKING_LEVEL_DEEP_THINK` | Reserved; not used by Nexus |
 
-Gemini Nexus does not prepend hidden thinking instructions to user prompts. The prompt body is sent as authored by the user; thinking depth is controlled by the native side-channel above.
+DeepSeek Zoom does not prepend hidden thinking instructions to user prompts. The prompt body is sent as authored by the user; thinking depth is controlled by the native side-channel above.
 
 ## Temporary Chat
 

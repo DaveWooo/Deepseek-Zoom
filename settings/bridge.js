@@ -335,6 +335,8 @@ export class StandaloneSettingsBridge {
             this.controller.updateProviderModelsResult(response);
         } else if (response.action === 'DEEPSEEK_WEB_LOGIN_RESULT') {
             window.postMessage({ action: 'DEEPSEEK_WEB_LOGIN_RESULT', payload: response }, '*');
+        } else if (response.action === 'DEEPSEEK_WEB_TEST_RESULT') {
+            window.postMessage({ action: 'DEEPSEEK_WEB_TEST_RESULT', payload: response }, '*');
         } else if (response.logs) {
             this.controller.saveLogFile(response.logs);
         }

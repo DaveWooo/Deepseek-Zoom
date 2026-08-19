@@ -24,15 +24,16 @@ const STORAGE_KEYS = [
 
 const DS_HEADERS = {
     'content-type': 'application/json',
-    'origin': BASE_URL,
-    'referer': BASE_URL + '/',
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/134.0.0.0 Safari/537.36',
+    origin: BASE_URL,
+    referer: BASE_URL + '/',
+    'user-agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/134.0.0.0 Safari/537.36',
     'x-client-version': '2.0.2',
     'x-client-platform': 'web',
 };
 
 function buildAuthHeaders(token) {
-    return { ...DS_HEADERS, 'authorization': `Bearer ${token}` };
+    return { ...DS_HEADERS, authorization: `Bearer ${token}` };
 }
 
 /**
@@ -128,8 +129,8 @@ export async function loadDeepSeekWebAuth() {
         areaCode: stored.deepseek_web_area_code || '+86',
         email: stored.deepseek_web_email || '',
         password: stored.deepseek_web_password || '',
-        thinkingEnabled: stored.deepseek_web_thinking_enabled === true,
-        searchEnabled: stored.deepseek_web_search_enabled === true,
+        thinkingEnabled: stored.deepseek_web_thinking_enabled !== false,
+        searchEnabled: stored.deepseek_web_search_enabled !== false,
         modelType: stored.deepseek_web_model_type || 'default',
     };
 }
@@ -147,7 +148,8 @@ export async function saveDeepSeekWebAuth(auth) {
     if (auth.areaCode !== undefined) update.deepseek_web_area_code = auth.areaCode;
     if (auth.email !== undefined) update.deepseek_web_email = auth.email;
     if (auth.password !== undefined) update.deepseek_web_password = auth.password;
-    if (auth.thinkingEnabled !== undefined) update.deepseek_web_thinking_enabled = auth.thinkingEnabled;
+    if (auth.thinkingEnabled !== undefined)
+        update.deepseek_web_thinking_enabled = auth.thinkingEnabled;
     if (auth.searchEnabled !== undefined) update.deepseek_web_search_enabled = auth.searchEnabled;
     if (auth.modelType !== undefined) update.deepseek_web_model_type = auth.modelType;
     await chrome.storage.local.set(update);
@@ -210,7 +212,10 @@ export async function discoverDeepSeekModels(token) {
 
         if (hasThink) {
             models.push({
-                id: mc.model_type === 'default' ? 'deepseek-reasoner' : `deepseek-${mc.model_type}-reasoner`,
+                id:
+                    mc.model_type === 'default'
+                        ? 'deepseek-reasoner'
+                        : `deepseek-${mc.model_type}-reasoner`,
                 modelType: mc.model_type,
                 thinkingEnabled: true,
                 searchEnabled: false,
@@ -219,7 +224,10 @@ export async function discoverDeepSeekModels(token) {
 
         if (hasSearch) {
             models.push({
-                id: mc.model_type === 'default' ? 'deepseek-search' : `deepseek-${mc.model_type}-search`,
+                id:
+                    mc.model_type === 'default'
+                        ? 'deepseek-search'
+                        : `deepseek-${mc.model_type}-search`,
                 modelType: mc.model_type,
                 thinkingEnabled: false,
                 searchEnabled: true,

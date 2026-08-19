@@ -54,7 +54,7 @@ nativeLoggerSink.setRequestHandler('get_status', async () => {
     }
     return {
         version: manifest.version || null,
-        name: manifest.name || 'Gemini Nexus',
+        name: manifest.name || 'DeepSeek Zoom',
         unpacked: isUnpackedExtension(),
         nativeLogEnabled: nativeLoggerSink.enabled,
         logCount: logManager.getLogs().length,
@@ -111,9 +111,9 @@ if (defaultNativeLogEnabled) {
 
 setupConsoleInterception(logManager);
 
-console.info('[Gemini Nexus] Background Service Worker Started');
+console.info('[DeepSeek Zoom] Background Service Worker Started');
 console.info(
-    '[Gemini Nexus] Local debug bridge: http://127.0.0.1:17321/health (requires native logger host)'
+    '[DeepSeek Zoom] Local debug bridge: http://127.0.0.1:17321/health (requires native logger host)'
 );
 
 // Side panel sandbox can keep isGenerating=true across SW restarts. Notify
@@ -195,6 +195,6 @@ chrome.runtime.onSuspend?.addListener?.(() => {
     try {
         controlManager.suspendCleanup();
     } catch (error) {
-        console.warn('[Gemini Nexus] onSuspend cleanup failed:', error);
+        console.warn('[DeepSeek Zoom] onSuspend cleanup failed:', error);
     }
 });

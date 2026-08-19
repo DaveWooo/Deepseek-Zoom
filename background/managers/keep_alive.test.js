@@ -84,7 +84,7 @@ describe('KeepAliveManager alarm listener', () => {
 
             expect(chrome.storage.local.remove).toHaveBeenCalledWith(['geminiContext']);
             expect(warnSpy).toHaveBeenCalledWith(
-                '[Gemini Nexus] Keep-Alive: Failed to clear expired context:',
+                '[DeepSeek Zoom] Keep-Alive: Failed to clear expired context:',
                 storageError
             );
         } finally {

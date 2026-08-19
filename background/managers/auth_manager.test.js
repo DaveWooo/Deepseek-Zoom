@@ -134,7 +134,7 @@ describe('AuthManager', () => {
             expect(manager.currentAccountPointer).toBe(1);
             expect(chrome.storage.local.set).toHaveBeenCalledWith({ geminiAccountPointer: 1 });
             expect(warnSpy).toHaveBeenCalledWith(
-                '[Gemini Nexus] Failed to persist account rotation pointer:',
+                '[DeepSeek Zoom] Failed to persist account rotation pointer:',
                 storageError
             );
         } finally {
@@ -155,7 +155,7 @@ describe('AuthManager', () => {
             expect(manager.currentAccountPointer).toBe(1);
             expect(chrome.storage.local.set).toHaveBeenCalledWith({ geminiAccountPointer: 1 });
             expect(warnSpy).toHaveBeenCalledWith(
-                '[Gemini Nexus] Failed to refresh account indices before rotation:',
+                '[DeepSeek Zoom] Failed to refresh account indices before rotation:',
                 storageError
             );
         } finally {
@@ -186,7 +186,7 @@ describe('AuthManager', () => {
                 geminiContext: context,
             });
             expect(warnSpy).toHaveBeenCalledWith(
-                '[Gemini Nexus] Failed to persist Web auth context:',
+                '[DeepSeek Zoom] Failed to persist Web auth context:',
                 storageError
             );
         } finally {
@@ -215,7 +215,7 @@ describe('AuthManager', () => {
             expect(manager.currentContext).toBeNull();
             expect(chrome.storage.local.remove).toHaveBeenCalledWith(['geminiContext']);
             expect(warnSpy).toHaveBeenCalledWith(
-                '[Gemini Nexus] Failed to clear Web auth context:',
+                '[DeepSeek Zoom] Failed to clear Web auth context:',
                 storageError
             );
         } finally {

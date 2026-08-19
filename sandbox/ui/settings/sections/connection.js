@@ -111,15 +111,31 @@ export class ConnectionSection {
 
         // DeepSeek Web fields
         const dsw = data?.deepseekWeb || {};
-        if (this.elements.deepseekWebPhone) this.elements.deepseekWebPhone.value = dsw.deepseek_web_phone || '';
-        if (this.elements.deepseekWebPassword) this.elements.deepseekWebPassword.value = dsw.deepseek_web_password || '';
-        if (this.elements.deepseekWebAreaCode) this.elements.deepseekWebAreaCode.value = dsw.deepseek_web_area_code || '+86';
-        if (this.elements.deepseekWebThinkingEnabled) this.elements.deepseekWebThinkingEnabled.checked = dsw.deepseek_web_thinking_enabled === true;
-        if (this.elements.deepseekWebSearchEnabled) this.elements.deepseekWebSearchEnabled.checked = dsw.deepseek_web_search_enabled === true;
-        if (this.elements.deepseekWebModelType) this.elements.deepseekWebModelType.value = dsw.deepseek_web_model_type || 'default';
-        if (this.elements.deepseekWebModelEnabledDefault) this.elements.deepseekWebModelEnabledDefault.checked = dsw.deepseek_web_model_enabled_default !== false;
-        if (this.elements.deepseekWebModelEnabledExpert) this.elements.deepseekWebModelEnabledExpert.checked = dsw.deepseek_web_model_enabled_expert !== false;
-        if (this.elements.deepseekWebModelEnabledVision) this.elements.deepseekWebModelEnabledVision.checked = dsw.deepseek_web_model_enabled_vision !== false;
+        if (this.elements.deepseekWebPhone)
+            this.elements.deepseekWebPhone.value = dsw.deepseek_web_phone || '';
+        if (this.elements.deepseekWebPassword)
+            this.elements.deepseekWebPassword.value = dsw.deepseek_web_password || '';
+        // Area Code input is hidden in the UI; keep the last saved value for login.
+        this.deepseekWebAreaCodeValue = dsw.deepseek_web_area_code || '+86';
+        if (this.elements.deepseekWebAreaCode)
+            this.elements.deepseekWebAreaCode.value = this.deepseekWebAreaCodeValue;
+        if (this.elements.deepseekWebThinkingEnabled)
+            this.elements.deepseekWebThinkingEnabled.checked =
+                dsw.deepseek_web_thinking_enabled !== false;
+        if (this.elements.deepseekWebSearchEnabled)
+            this.elements.deepseekWebSearchEnabled.checked =
+                dsw.deepseek_web_search_enabled !== false;
+        if (this.elements.deepseekWebModelType)
+            this.elements.deepseekWebModelType.value = dsw.deepseek_web_model_type || 'default';
+        if (this.elements.deepseekWebModelEnabledDefault)
+            this.elements.deepseekWebModelEnabledDefault.checked =
+                dsw.deepseek_web_model_enabled_default !== false;
+        if (this.elements.deepseekWebModelEnabledExpert)
+            this.elements.deepseekWebModelEnabledExpert.checked =
+                dsw.deepseek_web_model_enabled_expert !== false;
+        if (this.elements.deepseekWebModelEnabledVision)
+            this.elements.deepseekWebModelEnabledVision.checked =
+                dsw.deepseek_web_model_enabled_vision !== false;
         this._updateDeepSeekWebStatusDots();
         if (this.elements.deepseekWebLoginStatus && dsw.deepseek_web_token) {
             this.elements.deepseekWebLoginStatus.textContent = '✅ Logged in';
@@ -224,15 +240,33 @@ export class ConnectionSection {
             openaiWebSearch: openaiWebSearch ? openaiWebSearch.checked === true : false,
 
             deepseekWeb: {
-                deepseek_web_phone: this.elements.deepseekWebPhone ? this.elements.deepseekWebPhone.value.trim() : '',
-                deepseek_web_password: this.elements.deepseekWebPassword ? this.elements.deepseekWebPassword.value.trim() : '',
-                deepseek_web_area_code: this.elements.deepseekWebAreaCode ? this.elements.deepseekWebAreaCode.value.trim() : '+86',
-                deepseek_web_thinking_enabled: this.elements.deepseekWebThinkingEnabled ? this.elements.deepseekWebThinkingEnabled.checked : false,
-                deepseek_web_search_enabled: this.elements.deepseekWebSearchEnabled ? this.elements.deepseekWebSearchEnabled.checked : false,
-                deepseek_web_model_type: this.elements.deepseekWebModelType ? this.elements.deepseekWebModelType.value : 'default',
-                deepseek_web_model_enabled_default: this.elements.deepseekWebModelEnabledDefault ? this.elements.deepseekWebModelEnabledDefault.checked === true : true,
-                deepseek_web_model_enabled_expert: this.elements.deepseekWebModelEnabledExpert ? this.elements.deepseekWebModelEnabledExpert.checked === true : true,
-                deepseek_web_model_enabled_vision: this.elements.deepseekWebModelEnabledVision ? this.elements.deepseekWebModelEnabledVision.checked === true : true,
+                deepseek_web_phone: this.elements.deepseekWebPhone
+                    ? this.elements.deepseekWebPhone.value.trim()
+                    : '',
+                deepseek_web_password: this.elements.deepseekWebPassword
+                    ? this.elements.deepseekWebPassword.value.trim()
+                    : '',
+                deepseek_web_area_code: this.elements.deepseekWebAreaCode
+                    ? this.elements.deepseekWebAreaCode.value.trim()
+                    : this.deepseekWebAreaCodeValue || '+86',
+                deepseek_web_thinking_enabled: this.elements.deepseekWebThinkingEnabled
+                    ? this.elements.deepseekWebThinkingEnabled.checked
+                    : false,
+                deepseek_web_search_enabled: this.elements.deepseekWebSearchEnabled
+                    ? this.elements.deepseekWebSearchEnabled.checked
+                    : false,
+                deepseek_web_model_type: this.elements.deepseekWebModelType
+                    ? this.elements.deepseekWebModelType.value
+                    : 'default',
+                deepseek_web_model_enabled_default: this.elements.deepseekWebModelEnabledDefault
+                    ? this.elements.deepseekWebModelEnabledDefault.checked === true
+                    : true,
+                deepseek_web_model_enabled_expert: this.elements.deepseekWebModelEnabledExpert
+                    ? this.elements.deepseekWebModelEnabledExpert.checked === true
+                    : true,
+                deepseek_web_model_enabled_vision: this.elements.deepseekWebModelEnabledVision
+                    ? this.elements.deepseekWebModelEnabledVision.checked === true
+                    : true,
             },
             dedicatedApiProviders: this.dedicatedApiProviders,
 
@@ -249,20 +283,39 @@ export class ConnectionSection {
 
     _updateDeepSeekWebStatusDots() {
         const dots = [
-            { checkbox: this.elements.deepseekWebModelEnabledDefault, dot: this.elements.deepseekWebStatusDotDefault },
-            { checkbox: this.elements.deepseekWebModelEnabledExpert, dot: this.elements.deepseekWebStatusDotExpert },
-            { checkbox: this.elements.deepseekWebModelEnabledVision, dot: this.elements.deepseekWebStatusDotVision },
+            {
+                checkbox: this.elements.deepseekWebModelEnabledDefault,
+                dot: this.elements.deepseekWebStatusDotDefault,
+            },
+            {
+                checkbox: this.elements.deepseekWebModelEnabledExpert,
+                dot: this.elements.deepseekWebStatusDotExpert,
+            },
+            {
+                checkbox: this.elements.deepseekWebModelEnabledVision,
+                dot: this.elements.deepseekWebStatusDotVision,
+            },
         ];
         for (const { checkbox, dot } of dots) {
             if (dot) {
-                dot.className = 'model-status-dot ' + (checkbox?.checked !== false ? 'model-status-enabled' : 'model-status-disabled');
+                dot.className =
+                    'model-status-dot ' +
+                    (checkbox?.checked !== false
+                        ? 'model-status-enabled'
+                        : 'model-status-disabled');
             }
         }
     }
 
     updateVisibility(provider) {
-        const { apiKeyContainer, webFields, officialFields, openaiFields, dedicatedApiFields, deepseekWebFields } =
-            this.elements;
+        const {
+            apiKeyContainer,
+            webFields,
+            officialFields,
+            openaiFields,
+            dedicatedApiFields,
+            deepseekWebFields,
+        } = this.elements;
         if (!apiKeyContainer) return;
 
         if (webFields) webFields.hidden = provider !== 'web';

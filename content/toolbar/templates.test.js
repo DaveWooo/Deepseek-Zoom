@@ -46,7 +46,7 @@ describe('GeminiToolbarTemplates', () => {
                 removeWatermark: 'Remove watermark',
                 upscale: 'Upscale',
                 expand: 'Expand',
-                windowTitle: 'Gemini Nexus',
+                windowTitle: 'DeepSeek Zoom',
                 close: 'Close',
                 askPlaceholder: 'Ask Gemini...',
                 toolbarProviderLabel: 'Popup provider',

@@ -236,7 +236,7 @@ describe('content script startup injection', () => {
         });
     });
 
-    it('skips tabs that already have Gemini Nexus content scripts', async () => {
+    it('skips tabs that already have DeepSeek Zoom content scripts', async () => {
         chrome.scripting.executeScript
             .mockResolvedValueOnce([{ result: true }])
             .mockResolvedValueOnce([{ result: true }]);

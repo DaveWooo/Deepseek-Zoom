@@ -229,13 +229,13 @@ export class MessageBridge {
             const ratio = bytesUsed / quota;
             if (ratio > 0.95) {
                 console.warn(
-                    `[Gemini Nexus] Storage nearly full (${bytesUsed}/${quota} bytes); skipping session save to avoid a quota error. Delete old sessions to free space.`
+                    `[DeepSeek Zoom] Storage nearly full (${bytesUsed}/${quota} bytes); skipping session save to avoid a quota error. Delete old sessions to free space.`
                 );
                 return;
             }
             if (ratio > 0.8) {
                 console.warn(
-                    `[Gemini Nexus] Storage usage is high (${Math.round(ratio * 100)}%). Consider deleting old sessions.`
+                    `[DeepSeek Zoom] Storage usage is high (${Math.round(ratio * 100)}%). Consider deleting old sessions.`
                 );
             }
             performWrite();

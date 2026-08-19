@@ -10,7 +10,7 @@ const rootDir = path.resolve(__dirname, '..');
 const defaultZipPath = path.join(
     rootDir,
     'artifacts',
-    `gemini-nexus-v${process.env.npm_package_version ?? 'local'}.zip`
+    `deepseek-zoom-v${process.env.npm_package_version ?? 'local'}.zip`
 );
 
 /**

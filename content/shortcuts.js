@@ -79,10 +79,10 @@
         try {
             const result = chrome.storage.local.set({ geminiShortcuts: normalized });
             result?.catch?.((error) => {
-                console.warn('Failed to migrate Gemini Nexus shortcuts:', error?.message || error);
+                console.warn('Failed to migrate DeepSeek Zoom shortcuts:', error?.message || error);
             });
         } catch (error) {
-            console.warn('Failed to migrate Gemini Nexus shortcuts:', error?.message || error);
+            console.warn('Failed to migrate DeepSeek Zoom shortcuts:', error?.message || error);
         }
     }
 
@@ -112,17 +112,17 @@
             result
                 ?.then?.((response) => {
                     if (response?.status === 'error' && typeof onError === 'function') {
-                        onError(response.error || 'Gemini Nexus shortcut failed');
+                        onError(response.error || 'DeepSeek Zoom shortcut failed');
                     }
                 })
                 ?.catch?.((error) => {
                     if (typeof onError === 'function') {
-                        onError(error?.message || 'Gemini Nexus shortcut failed');
+                        onError(error?.message || 'DeepSeek Zoom shortcut failed');
                     }
                 });
         } catch (error) {
             if (typeof onError === 'function') {
-                onError(error?.message || 'Gemini Nexus shortcut failed');
+                onError(error?.message || 'DeepSeek Zoom shortcut failed');
             }
         }
     }
@@ -150,7 +150,7 @@
             chrome.storage.local.get(['geminiShortcuts'], (result) => {
                 const errorMessage = getStorageReadError();
                 if (errorMessage) {
-                    console.warn('Failed to load Gemini Nexus shortcuts:', errorMessage);
+                    console.warn('Failed to load DeepSeek Zoom shortcuts:', errorMessage);
                 } else {
                     this.appShortcuts = normalizeShortcuts(result?.geminiShortcuts);
                     persistShortcutMigration(result?.geminiShortcuts, this.appShortcuts);

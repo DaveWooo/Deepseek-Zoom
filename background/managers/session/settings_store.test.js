@@ -62,7 +62,7 @@ describe('getConnectionSettings', () => {
 
             expect(settings.apiKey).toBe('key-a');
             expect(warnSpy).toHaveBeenCalledWith(
-                '[Gemini Nexus] Failed to persist Official API key rotation pointer:',
+                '[DeepSeek Zoom] Failed to persist Official API key rotation pointer:',
                 expect.any(Error)
             );
         } finally {

@@ -12,7 +12,7 @@ async function installPageGuard(url) {
     return window.GeminiNexusPageGuard;
 }
 
-describe('Gemini Nexus page guard', () => {
+describe('DeepSeek Zoom page guard', () => {
     beforeEach(() => {
         delete window.GeminiNexusPageGuard;
     });

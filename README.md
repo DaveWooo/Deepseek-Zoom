@@ -3,11 +3,11 @@
 </p>
 
 <div align="center">
-  <a href="https://github.com/yeahhe365/Gemini-Nexus">
-    <img src="logo.png" width="160" height="160" alt="Gemini Nexus Logo">
+  <a href="https://github.com/DaveWooo/Deepseek-Nexus">
+    <img src="logo.png" width="160" height="160" alt="DeepSeek Zoom Logo">
   </a>
 
-# Gemini Nexus
+# DeepSeek Zoom
 
 ### Give your browser a native AI layer
 
@@ -33,7 +33,7 @@
 
 ### Project Overview
 
-**Gemini Nexus** gives your browser a native AI layer by combining Gemini Web, the Google Gemini API, OpenAI-compatible APIs, and dedicated third-party API providers in one Chrome extension. It is more than a side panel: the extension includes an injected floating toolbar, image and screenshot input, Chrome DevTools Protocol based browser-control tools, and optional external MCP tools for browser-native AI workflows.
+**DeepSeek Zoom** gives your browser a native AI layer by combining Gemini Web, the Google Gemini API, OpenAI-compatible APIs, and dedicated third-party API providers in one Chrome extension. It is more than a side panel: the extension includes an injected floating toolbar, image and screenshot input, Chrome DevTools Protocol based browser-control tools, and optional external MCP tools for browser-native AI workflows.
 
 ### Reverse Engineering & Data Flow Disclosure
 
@@ -47,7 +47,7 @@
 
 ### Capability Overview
 
-Gemini Nexus currently focuses on these browser AI workflows:
+DeepSeek Zoom currently focuses on these browser AI workflows:
 
 - Switch among **Gemini Web**, **Gemini API**, **OpenAI Compatible API**, **OpenAI Official API**, **DeepSeek API**, **OpenRouter API**, **Qwen / DashScope API**, **Anthropic API**, and **Zhipu API**, with provider-specific `Base URL`, `API Key`, and `Model IDs`.
 - Enable Gemini Web temporary chats so Web-provider requests are not added to Gemini Recent chats.
@@ -78,7 +78,7 @@ The project includes provider drivers under `services/providers` and adapts beha
 
 ### Browser Control
 
-Built on `background/control/` and Chrome DevTools Protocol, Gemini Nexus lets AI perform agentic browser tasks through a local tool loop:
+Built on `background/control/` and Chrome DevTools Protocol, DeepSeek Zoom lets AI perform agentic browser tasks through a local tool loop:
 
 | Category         | Core commands                                                          | Implementation                                                                                 |
 | :--------------- | :--------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------- |
@@ -87,15 +87,15 @@ Built on `background/control/` and Chrome DevTools Protocol, Gemini Nexus lets A
 | Observation      | `take_snapshot`, `wait_for`, `handle_dialog`                           | Extracts reusable accessibility-tree UIDs, waits for target text, and handles blocking dialogs |
 | Script execution | `evaluate_script`                                                      | Runs custom JavaScript in the page context                                                     |
 
-After browser control is enabled, Gemini Nexus locks onto a target tab and uses a Chrome native tab group to show the current task title. `select_page` switches inside the controlled tab group by default; regular `new_page` tabs join the group, while `background: true` opens a separate popup window to reduce focus interruption.
+After browser control is enabled, DeepSeek Zoom locks onto a target tab and uses a Chrome native tab group to show the current task title. `select_page` switches inside the controlled tab group by default; regular `new_page` tabs join the group, while `background: true` opens a separate popup window to reduce focus interruption.
 
 ### External MCP Tools
 
-Gemini Nexus can connect to one or more external MCP servers through **SSE**, **streamable HTTP**, or **WebSocket**, then expose their tools to the existing tool loop.
+DeepSeek Zoom can connect to one or more external MCP servers through **SSE**, **streamable HTTP**, or **WebSocket**, then expose their tools to the existing tool loop.
 
 #### Recommended Setup: Local Proxy for stdio Servers
 
-Chrome extensions cannot directly run stdio-based MCP servers, so the recommended setup is to run a local proxy, such as [MCP SuperAssistant](https://github.com/srbhptl39/MCP-SuperAssistant) Proxy. Configure your MCP servers, including stdio servers, in the proxy, then connect Gemini Nexus to the proxy endpoint.
+Chrome extensions cannot directly run stdio-based MCP servers, so the recommended setup is to run a local proxy, such as [MCP SuperAssistant](https://github.com/srbhptl39/MCP-SuperAssistant) Proxy. Configure your MCP servers, including stdio servers, in the proxy, then connect DeepSeek Zoom to the proxy endpoint.
 
 Common proxy endpoints:
 
@@ -143,7 +143,7 @@ The repository root is the runnable Chrome extension project root. `package.json
 
 #### Install from Release
 
-1. Download the latest ZIP from [Releases](https://github.com/yeahhe365/Gemini-Nexus/releases) and unzip it.
+1. Download the latest ZIP from [Releases](https://github.com/DaveWooo/Deepseek-Nexus/releases) and unzip it.
 2. Open `chrome://extensions/` in Chrome and enable **Developer mode** in the top-right corner.
 3. Click **Load unpacked** and select the extracted folder.
 

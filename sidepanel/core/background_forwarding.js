@@ -81,7 +81,7 @@ export function isMessageForCurrentTab(state, message) {
 export function forwardToBackground(bridge, payload) {
     const scopedPayload = attachCurrentTabContext(bridge.state, payload);
     if (scopedPayload?.action === 'SEND_PROMPT') {
-        console.info('[Gemini Nexus] Forwarding SEND_PROMPT to background', {
+        console.info('[DeepSeek Zoom] Forwarding SEND_PROMPT to background', {
             sessionId: scopedPayload.sessionId || null,
             model: scopedPayload.model || null,
             enableBrowserControl: scopedPayload.enableBrowserControl === true,
@@ -106,7 +106,7 @@ export function forwardToBackground(bridge, payload) {
         })
         .catch((error) => {
             console.error(
-                '[Gemini Nexus] chrome.runtime.sendMessage failed:',
+                '[DeepSeek Zoom] chrome.runtime.sendMessage failed:',
                 scopedPayload?.action,
                 error
             );

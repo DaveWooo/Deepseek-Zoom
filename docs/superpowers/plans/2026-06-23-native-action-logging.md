@@ -171,7 +171,7 @@ Create `scripts/native-logger/host.js`:
 
 ```js
 #!/usr/bin/env node
-// Native messaging host for Gemini Nexus action logging.
+// Native messaging host for DeepSeek Zoom action logging.
 // Reads 4-byte-LE-length-prefixed JSON log entries from stdin, appends each as
 // a single line to the log file, with size-based rotation. Pure helpers are
 // exported so the logic can be unit-tested without a real stdin.
@@ -306,7 +306,7 @@ describe('buildHostManifest', () => {
         const m = buildHostManifest({ extensionId: 'ccmbheekkhlgfggi', hostScriptPath: '/Users/x/.gemini-nexus/native-logger.js' });
         expect(m).toEqual({
             name: 'com.gemini_nexus.logger',
-            description: 'Gemini Nexus action logger',
+            description: 'DeepSeek Zoom action logger',
             type: 'stdio',
             path: '/Users/x/.gemini-nexus/native-logger.js',
             allowed_origins: ['chrome-extension://ccmbheekkhlgfggi/'],
@@ -367,7 +367,7 @@ Create `scripts/install-native-logger.mjs`:
 
 ```js
 #!/usr/bin/env node
-// Installs the Gemini Nexus native logger host: copies host.js to a stable
+// Installs the DeepSeek Zoom native logger host: copies host.js to a stable
 // path under ~/.gemini-nexus/ and writes the Chrome NativeMessagingHosts
 // manifest whose allowed_origins pins this extension's ID. Run with --uninstall
 // to remove. Run from the project root so manifest.json's key can be read.
@@ -400,7 +400,7 @@ export function extensionIdFromKey(keyBase64) {
     return id;
 }
 
-export function buildHostManifest({ extensionId, hostScriptPath, name = HOST_NAME, description = 'Gemini Nexus action logger' }) {
+export function buildHostManifest({ extensionId, hostScriptPath, name = HOST_NAME, description = 'DeepSeek Zoom action logger' }) {
     return {
         name,
         description,
@@ -937,7 +937,7 @@ Run: `grep -l "com.gemini_nexus.logger" artifacts/chrome-extension/background/in
 
 - [ ] **Step 4: Reload extension and enable logging**
 
-Manual: open `chrome://extensions`, reload Gemini Nexus, click into the service worker DevTools console. In **any** extension page console (e.g. the service worker console, or a sidepanel page), run:
+Manual: open `chrome://extensions`, reload DeepSeek Zoom, click into the service worker DevTools console. In **any** extension page console (e.g. the service worker console, or a sidepanel page), run:
 ```js
 chrome.storage.local.set({ geminiNativeLogEnabled: true })
 ```

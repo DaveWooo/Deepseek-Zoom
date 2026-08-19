@@ -1,6 +1,6 @@
 # Local Debug Bridge（本地调试桥）
 
-Chrome MV3 扩展**不能**自己监听 TCP 端口。Gemini Nexus 通过 **Native Messaging Host** 在本机起一个 HTTP/SSE 服务，让本地工具（curl、脚本、AI agent）直接访问扩展运行时日志与状态。
+Chrome MV3 扩展**不能**自己监听 TCP 端口。DeepSeek Zoom 通过 **Native Messaging Host** 在本机起一个 HTTP/SSE 服务，让本地工具（curl、脚本、AI agent）直接访问扩展运行时日志与状态。
 
 ```
 本地客户端 (curl / agent)
@@ -26,7 +26,7 @@ npm run native-logger:install
 - `~/.gemini-nexus/native-logger.js` — host 脚本
 - `~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.gemini_nexus.logger.json`
 
-然后在 `chrome://extensions` **重新加载** Gemini Nexus（unpacked 开发包默认开启 native 日志）。
+然后在 `chrome://extensions` **重新加载** DeepSeek Zoom（unpacked 开发包默认开启 native 日志）。
 
 ## HTTP API
 

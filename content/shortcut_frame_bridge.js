@@ -112,7 +112,7 @@
             chrome.storage.local.get(['geminiShortcuts'], (result) => {
                 const errorMessage = getStorageReadError();
                 if (errorMessage) {
-                    console.warn('Failed to load Gemini Nexus frame shortcuts:', errorMessage);
+                    console.warn('Failed to load DeepSeek Zoom frame shortcuts:', errorMessage);
                     return;
                 }
 

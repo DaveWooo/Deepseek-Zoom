@@ -103,7 +103,7 @@ describe('context menu actions', () => {
         expect(chrome.scripting.executeScript).toHaveBeenCalledWith({
             target: { tabId: 7 },
             func: expect.any(Function),
-            args: [expect.stringContaining('Gemini Nexus')],
+            args: [expect.stringContaining('DeepSeek Zoom')],
         });
     });
 

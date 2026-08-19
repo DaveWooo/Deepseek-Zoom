@@ -198,7 +198,7 @@ describe('BrowserControlManager native tab group indicator', () => {
                       }
                     : {
                           id: 42,
-                          title: 'Gemini Nexus',
+                          title: 'DeepSeek Zoom',
                           url: 'chrome-extension://id/sidepanel/index.html',
                           active: true,
                           windowId: 1,

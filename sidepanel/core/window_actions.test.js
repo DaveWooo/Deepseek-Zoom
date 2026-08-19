@@ -122,7 +122,7 @@ describe('sidepanel window actions', () => {
 
         expect(downloadText).not.toHaveBeenCalled();
         expect(warnSpy).toHaveBeenCalledWith(
-            '[Gemini Nexus] Failed to export history data:',
+            '[DeepSeek Zoom] Failed to export history data:',
             expect.any(Error)
         );
 
@@ -141,7 +141,7 @@ describe('sidepanel window actions', () => {
 
         expect(downloadText).not.toHaveBeenCalled();
         expect(warnSpy).toHaveBeenCalledWith(
-            '[Gemini Nexus] Failed to export settings data:',
+            '[DeepSeek Zoom] Failed to export settings data:',
             expect.any(Error)
         );
 

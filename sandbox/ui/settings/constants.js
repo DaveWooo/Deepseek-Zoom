@@ -53,7 +53,6 @@ export const DOM_IDS = {
     DEEPSEEK_WEB_FIELDS: 'deepseek-web-fields',
     DEEPSEEK_WEB_PHONE: 'deepseek-web-phone',
     DEEPSEEK_WEB_PASSWORD: 'deepseek-web-password',
-    DEEPSEEK_WEB_AREA_CODE: 'deepseek-web-area-code',
     DEEPSEEK_WEB_LOGIN: 'deepseek-web-login',
     DEEPSEEK_WEB_LOGIN_STATUS: 'deepseek-web-login-status',
     DEEPSEEK_WEB_THINKING_ENABLED: 'deepseek-web-thinking-enabled',

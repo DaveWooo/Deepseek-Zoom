@@ -577,8 +577,8 @@ export class RequestDispatcher {
         };
 
         const dsOptions = {
-            thinkingEnabled: dsw.deepseek_web_thinking_enabled === true,
-            searchEnabled: dsw.deepseek_web_search_enabled === true,
+            thinkingEnabled: dsw.deepseek_web_thinking_enabled !== false,
+            searchEnabled: dsw.deepseek_web_search_enabled !== false,
             modelType: normalizeDeepSeekWebModelType(dsw.deepseek_web_model_type),
         };
 
@@ -715,7 +715,7 @@ export class RequestDispatcher {
                 if ((isLoginError || isNetworkGlitch) && attemptCount < maxAttempts) {
                     const type = isLoginError ? 'Auth' : 'Network';
                     console.warn(
-                        `[Gemini Nexus] ${type} error (${error.message}), retrying... (Attempt ${attemptCount}/${maxAttempts})`
+                        `[DeepSeek Zoom] ${type} error (${error.message}), retrying... (Attempt ${attemptCount}/${maxAttempts})`
                     );
 
                     if (this.auth.accountIndices.length > 1) {

@@ -7,7 +7,7 @@ export const SidebarTemplate = `
             <div class="sidebar-header">
                 <button id="sidebar-brand-toggle" class="sidebar-brand" type="button" data-i18n-title="toggleHistory" title="Chat History" aria-label="Chat History">
                     <img class="sidebar-brand-logo" src="../logo.png" alt="" aria-hidden="true">
-                    <span class="sidebar-header-title">Gemini Nexus</span>
+                    <span class="sidebar-header-title">DeepSeek Zoom</span>
                 </button>
                 <button id="close-sidebar" class="sidebar-icon-btn sidebar-toggle-btn" data-i18n-title="toggleHistory" title="Chat History">
                     ${TemplateIcons.SIDEBAR_TOGGLE}

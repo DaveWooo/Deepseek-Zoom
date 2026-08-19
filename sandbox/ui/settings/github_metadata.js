@@ -1,4 +1,4 @@
-const GITHUB_REPOSITORY_BASE_URL = 'https://api.github.com/repos/yeahhe365/Gemini-Nexus';
+const GITHUB_REPOSITORY_BASE_URL = 'https://api.github.com/repos/DaveWooo/Deepseek-Nexus';
 
 async function readResponseField(response, field) {
     if (!response?.ok) return null;

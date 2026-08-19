@@ -180,10 +180,10 @@ describe('GeminiToolbarController model persistence', () => {
         }
     });
 
-    it('saves toolbar provider changes without overwriting sidepanel provider keys', () => {
+    it('saves toolbar provider changes without overwriting sidepanel provider keys', async () => {
         const controller = new window.GeminiToolbarController();
 
-        controller.handleProviderChange('official');
+        await controller.handleProviderChange('official');
 
         expect(chrome.storage.local.set).toHaveBeenCalledWith({
             geminiToolbarProvider: 'official',
@@ -194,6 +194,46 @@ describe('GeminiToolbarController model persistence', () => {
         expect(chrome.storage.local.set).not.toHaveBeenCalledWith({
             geminiUseOfficialApi: true,
         });
+    });
+
+    it('re-syncs the model list after a provider change so ask-model-select follows', async () => {
+        chrome.storage.local.get.mockResolvedValue({
+            geminiToolbarProvider: 'official',
+            geminiOfficialModel: 'toolbar-api-model, other-api-model',
+        });
+        const controller = new window.GeminiToolbarController();
+        ui.updateModelList.mockClear();
+
+        await controller.handleProviderChange('official');
+
+        const lastCallSettings = ui.updateModelList.mock.calls.at(-1)?.[0];
+        expect(lastCallSettings).toMatchObject({ provider: 'official' });
+    });
+
+    it('re-syncs the model list with deepseek_web options after switching to DS Web', async () => {
+        chrome.storage.local.get.mockResolvedValue({
+            geminiToolbarProvider: 'deepseek_web',
+            deepseek_web_model_type: 'expert',
+            deepseek_web_model_enabled_default: true,
+            deepseek_web_model_enabled_expert: true,
+            deepseek_web_model_enabled_vision: true,
+        });
+        const controller = new window.GeminiToolbarController();
+        ui.updateModelList.mockClear();
+
+        await controller.handleProviderChange('deepseek_web');
+
+        expect(ui.updateModelList).toHaveBeenCalledWith(
+            expect.objectContaining({
+                provider: 'deepseek_web',
+                deepseekWeb: expect.objectContaining({
+                    enabledDefault: true,
+                    enabledExpert: true,
+                    enabledVision: true,
+                }),
+            }),
+            'expert'
+        );
     });
 
     it('saves OpenAI toolbar model changes in an OpenAI toolbar-specific key', () => {

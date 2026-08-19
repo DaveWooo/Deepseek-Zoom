@@ -130,7 +130,7 @@ export function buildSettingsExportPayload(
 
 export function normalizeHistoryImportPayload(payload) {
     if (!payload || payload.type !== HISTORY_EXPORT_TYPE || !Array.isArray(payload.history)) {
-        throw new Error('Invalid Gemini Nexus history import file.');
+        throw new Error('Invalid DeepSeek Zoom history import file.');
     }
 
     return {
@@ -141,7 +141,7 @@ export function normalizeHistoryImportPayload(payload) {
 
 export function normalizeSettingsImportPayload(payload) {
     if (!payload || payload.type !== SETTINGS_EXPORT_TYPE || !payload.settings) {
-        throw new Error('Invalid Gemini Nexus settings import file.');
+        throw new Error('Invalid DeepSeek Zoom settings import file.');
     }
 
     const update = {};

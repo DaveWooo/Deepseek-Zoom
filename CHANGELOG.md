@@ -1,5 +1,28 @@
 # Changelog
 
+## v6.0.2 - 2026-08-19
+
+### DeepSeek Web
+
+- **修复思考过程重复显示**：DeepSeek 有时会以旧格式（`response/thinking_content`）与新格式（`THINK` fragment）各发送一次同一段思考，SSE 拼接时会对思考/正文做尾部去重，避免同一段内容在回复中重复。
+- **智能搜索（Deep Search）默认开启**：未显式关闭时请求携带 `search_enabled: true`（快速模式也可联网搜索），设置页开关默认勾选。
+
+### Repo / Metadata
+
+- 仓库链接全部从 `yeahhe365/Gemini-Nexus` 更新为 **`DaveWooo/Deepseek-Nexus`**（README、设置页 "About"、GitHub API 版本检查、发布脚本）。
+
+## v6.0.1 - 2026-08-19
+
+### Branding
+
+- 全面更名：扩展名与所有用户可见文本从 "Gemini Nexus" 改为 **"DeepSeek Zoom"**（manifest、UI 标题、菜单、错误提示、日志前缀、README）。
+- 版本号基线提升至 **6.0.1**，此后每次更新同步递增 `manifest.json` / `package.json` / `package-lock.json` 与 `CHANGELOG.md`。
+
+### DeepSeek Web
+
+- **Thinking (R1) 默认开启**：未显式关闭时请求携带 `thinking_enabled: true`，思考过程以可折叠的 thoughts 块呈现在回复中（设置页开关默认勾选）。
+- **Model Type 下拉将 "DeepSeek Vision (识图)" 置顶**（默认选中仍为快速模式），侧边栏与 ask-window 的模型选项同步该顺序。
+
 ## v5.1.0 - 2026-07-22
 
 ### Models

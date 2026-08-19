@@ -12,7 +12,7 @@ function restorePreference(keys, label, handler) {
     chrome.storage.local.get(keys, (result) => {
         const errorMessage = getRuntimeLastErrorMessage();
         if (errorMessage) {
-            console.warn(`[Gemini Nexus] Failed to restore ${label}:`, errorMessage);
+            console.warn(`[DeepSeek Zoom] Failed to restore ${label}:`, errorMessage);
             return;
         }
 

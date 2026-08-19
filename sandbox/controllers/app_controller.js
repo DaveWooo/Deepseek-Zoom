@@ -451,7 +451,7 @@ export class AppController {
                 // Side panel can outlive a SW restart with a zombie generating flag.
                 if (this.isGenerating) {
                     console.warn(
-                        '[Gemini Nexus] Clearing stuck generating state after service worker start'
+                        '[DeepSeek Zoom] Clearing stuck generating state after service worker start'
                     );
                     this.prompt.forceClearGenerating();
                 }

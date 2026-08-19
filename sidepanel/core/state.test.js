@@ -163,7 +163,7 @@ describe('StateManager tab ownership', () => {
     it('does not bind an unscoped side panel to an active standalone chat tab', () => {
         setupChrome({
             id: 44,
-            title: 'Gemini Nexus',
+            title: 'DeepSeek Zoom',
             url: 'chrome-extension://id/sidepanel/index.html',
         });
         const manager = new StateManager(createFrame());
@@ -203,7 +203,7 @@ describe('StateManager tab ownership', () => {
     it('uses the standalone host tab id for message routing without page context', () => {
         setupChrome({
             id: 44,
-            title: 'Gemini Nexus',
+            title: 'DeepSeek Zoom',
             url: 'chrome-extension://id/sidepanel/index.html',
         });
         const manager = new StateManager(createFrame());
@@ -240,7 +240,7 @@ describe('StateManager tab ownership', () => {
             if (tabId === 44) {
                 callback({
                     id: 44,
-                    title: 'Gemini Nexus',
+                    title: 'DeepSeek Zoom',
                     url: 'chrome-extension://id/sidepanel/index.html',
                 });
                 return;
@@ -557,7 +557,7 @@ describe('StateManager tab ownership', () => {
             { url: 'chrome-extension://id/sidepanel/index.html' },
             {
                 id: 33,
-                title: 'Gemini Nexus',
+                title: 'DeepSeek Zoom',
                 url: 'chrome-extension://id/sidepanel/index.html',
             }
         );

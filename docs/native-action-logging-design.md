@@ -79,7 +79,7 @@ content script / sidepanel 动作
     ```json
     {
         "name": "com.gemini_nexus.logger",
-        "description": "Gemini Nexus action logger",
+        "description": "DeepSeek Zoom action logger",
         "type": "stdio",
         "path": "/Users/<user>/.gemini-nexus/native-logger.js",
         "allowed_origins": ["chrome-extension://<EXTENSION_ID>/"]
@@ -182,7 +182,7 @@ chmod +x ~/.gemini-nexus/native-logger.js     # 让 host 可执行
 npm run package:extension                      # 重新打包扩展
 ```
 
-然后在 `chrome://extensions` reload Gemini Nexus。
+然后在 `chrome://extensions` reload DeepSeek Zoom。
 
 **开启日志**(默认关):在 service worker console 或任意扩展页面 console 执行
 

@@ -228,7 +228,7 @@ export async function injectContentScriptsIntoTab(tab, options = {}) {
 
         return { tabId, status: injected ? 'injected' : 'already-injected' };
     } catch (error) {
-        console.warn('[Gemini Nexus] Failed to inject content scripts into existing tab:', error);
+        console.warn('[DeepSeek Zoom] Failed to inject content scripts into existing tab:', error);
         return { tabId, status: 'failed', error };
     }
 }
@@ -254,7 +254,7 @@ const INSTALL_INJECT_DELAY_MS = 750;
 
 function initializeOpenTabs(reason) {
     injectContentScriptsIntoOpenTabs().catch((error) => {
-        console.warn(`[Gemini Nexus] Failed to initialize existing tabs${reason}:`, error);
+        console.warn(`[DeepSeek Zoom] Failed to initialize existing tabs${reason}:`, error);
     });
 }
 
@@ -291,7 +291,7 @@ export function setupContentScriptInjection(options = {}) {
             const tab = await chrome.tabs.get(tabId);
             await injectContentScriptsIntoTab(tab);
         } catch (error) {
-            console.warn('[Gemini Nexus] Failed to check activated tab:', error);
+            console.warn('[DeepSeek Zoom] Failed to check activated tab:', error);
         }
     });
 }

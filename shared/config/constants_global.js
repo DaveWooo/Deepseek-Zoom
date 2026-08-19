@@ -1,5 +1,5 @@
 /**
- * Global configuration constants for Gemini Nexus
+ * Global configuration constants for DeepSeek Zoom
  *
  * WHY THIS FILE EXISTS:
  * - Chrome Extension Manifest V3 content_scripts cannot use ES modules
@@ -116,7 +116,7 @@
             supportsProviderRouting: true,
             providerRoutingPlaceholder: '{"order":["openai","anthropic"],"allow_fallbacks":true}',
             headers: Object.freeze({
-                'X-Title': 'Gemini Nexus',
+                'X-Title': 'DeepSeek Zoom',
             }),
             supportsWebSearch: false,
         }),

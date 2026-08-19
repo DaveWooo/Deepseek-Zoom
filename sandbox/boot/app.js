@@ -86,10 +86,10 @@ export function initAppMode() {
 
             // Initial pass may be skipped until marked is loaded.
             configureMarkdown();
-            console.info('[Gemini Nexus] Sandbox app controllers ready');
+            console.info('[DeepSeek Zoom] Sandbox app controllers ready');
         } catch (error) {
             // A failed dynamic import previously left a painted shell with dead buttons.
-            console.error('[Gemini Nexus] Failed to boot sandbox app:', error);
+            console.error('[DeepSeek Zoom] Failed to boot sandbox app:', error);
             const status = document.getElementById('status');
             if (status) {
                 status.textContent =

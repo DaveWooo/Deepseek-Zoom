@@ -1,6 +1,6 @@
 # Frontend Component Guidelines
 
-Gemini Nexus uses native DOM rendering modules rather than a component framework for the sandbox chat UI.
+DeepSeek Zoom uses native DOM rendering modules rather than a component framework for the sandbox chat UI.
 
 ## Component Structure
 

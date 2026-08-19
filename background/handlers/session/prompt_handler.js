@@ -103,7 +103,7 @@ export class PromptHandler {
             id: `sidepanel_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`,
         };
         this.activeRun = run;
-        console.info('[Gemini Nexus] SEND_PROMPT received', {
+        console.info('[DeepSeek Zoom] SEND_PROMPT received', {
             runId: run.id,
             sessionId: request?.sessionId || null,
             model: request?.model || null,

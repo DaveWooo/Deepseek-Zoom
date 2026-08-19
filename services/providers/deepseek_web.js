@@ -6,6 +6,7 @@
 import { debugLog } from '../../shared/logging/debug.js';
 import { generateUUID } from '../../shared/utils/index.js';
 import { normalizeUserAttachments } from '../../shared/attachments/index.js';
+import { createDeepSeekSession } from '../deepseek_web_auth.js';
 import {
     fetchPowChallenge,
     solvePow,
@@ -15,6 +16,8 @@ import {
 
 const CHAT_ENDPOINT = 'https://chat.deepseek.com/api/v0/chat/completion';
 const FILE_UPLOAD_ENDPOINT = 'https://chat.deepseek.com/api/v0/file/upload_file';
+const FILE_FORK_ENDPOINT = 'https://chat.deepseek.com/api/v0/file/fork_file_task';
+const FILE_FETCH_ENDPOINT = 'https://chat.deepseek.com/api/v0/file/fetch_files';
 
 /**
  * Parse DeepSeek Web SSE line into {type, value}.
@@ -33,7 +36,9 @@ function parseSSELine(line, state) {
             if (obj.code >= 40000) {
                 return { type: 'error', value: obj.msg || 'Unknown error' };
             }
-        } catch { /* ignore parse error */ }
+        } catch {
+            /* ignore parse error */
+        }
     }
 
     let obj;
@@ -130,6 +135,22 @@ function parseSSELine(line, state) {
 }
 
 /**
+ * Append a streamed fragment to an accumulated buffer, skipping a fragment
+ * that was already delivered at the tail. DeepSeek can emit the same thinking
+ * (or content) block twice — once through the old `response/thinking_content`
+ * path and once through the new THINK fragment format — which would otherwise
+ * duplicate the reasoning in the reply.
+ * @param {string} existing
+ * @param {string} fragment
+ * @returns {string}
+ */
+function appendStreamFragment(existing, fragment) {
+    if (!fragment) return existing;
+    if (existing && existing.endsWith(fragment)) return existing;
+    return existing + fragment;
+}
+
+/**
  * Upload files to DeepSeek Web and return their file_ids (for vision mode).
  * Uses multipart/form-data with PoW for the upload endpoint.
  *
@@ -148,57 +169,221 @@ async function uploadDeepSeekFiles(files, token, signal) {
         throw new Error('DeepSeek Web 识图模式仅支持图片附件。');
     }
 
-    const fileIds = [];
     await initWasm();
 
+    const fileIds = [];
     for (const img of images) {
-        const challenge = await fetchPowChallenge(token, '/api/v0/file/upload_file', signal);
-        const answer = await solvePow(challenge);
-        const powResponse = buildPowResponse(challenge, answer);
+        const fileId = await uploadDeepSeekFile(img, token, signal);
+        if (!fileId) continue;
 
-        // Use the full data URL for Blob conversion (preserves exact bytes)
-        const form = new FormData();
-        form.append(
-            'file',
-            img.base64 && img.base64.startsWith('data:')
-                ? dataUrlToBlob(img.base64)
-                : new Blob([base64ToUint8Array(img.base64 || '')], { type: img.type }),
-            img.name || 'image.png'
-        );
-
-        const resp = await fetch(FILE_UPLOAD_ENDPOINT, {
-            method: 'POST',
-            headers: {
-                'origin': 'https://chat.deepseek.com',
-                'referer': 'https://chat.deepseek.com/',
-                'user-agent':
-                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/134.0.0.0 Safari/537.36',
-                'x-client-version': '2.0.2',
-                'x-client-platform': 'web',
-                'authorization': `Bearer ${token}`,
-                'x-ds-pow-response': powResponse,
-            },
-            body: form,
-            signal,
-        });
-
-        if (resp.status === 401) {
-            throw new Error('DEEPSEEK_WEB_TOKEN_EXPIRED');
-        }
-        if (!resp.ok) {
-            const text = await resp.text().catch(() => '');
-            throw new Error(`DeepSeek Web upload error: HTTP ${resp.status} — ${text.slice(0, 200)}`);
-        }
-
-        const json = await resp.json().catch(() => null);
-        const fileId = json?.data?.file_id;
-        if (!fileId) {
-            throw new Error('DeepSeek Web upload did not return a file_id.');
-        }
-        fileIds.push(fileId);
+        // DeepSeek requires forking an uploaded file to the vision model type
+        // before it can be referenced by a vision chat request.
+        const forkedId = await forkDeepSeekFileToVision(fileId, token, signal);
+        if (forkedId) fileIds.push(forkedId);
     }
 
-    return fileIds;
+    if (fileIds.length === 0) {
+        throw new Error('DeepSeek Web upload did not return a file_id.');
+    }
+
+    // Wait for DeepSeek to finish parsing the forked files so the vision
+    // request does not reject them as "parsing".
+    const parsedIds = await waitForDeepSeekFileParsing(fileIds, token, signal);
+    debugLog(`[DeepSeek Web] Uploaded ${parsedIds.length} file(s) for vision mode`);
+    return parsedIds;
+}
+
+/**
+ * Upload a single image to DeepSeek Web and return its raw file_id.
+ * @param {object} img - {base64, type, name}
+ * @param {string} token
+ * @param {AbortSignal} signal
+ * @returns {Promise<string|null>} file_id (null when the response shape is unknown)
+ */
+async function uploadDeepSeekFile(img, token, signal) {
+    const challenge = await fetchPowChallenge(token, '/api/v0/file/upload_file', signal);
+    const answer = await solvePow(challenge);
+    const powResponse = buildPowResponse(challenge, answer);
+
+    // Use the full data URL for Blob conversion (preserves exact bytes)
+    const form = new FormData();
+    form.append(
+        'file',
+        img.base64 && img.base64.startsWith('data:')
+            ? dataUrlToBlob(img.base64)
+            : new Blob([base64ToUint8Array(img.base64 || '')], { type: img.type }),
+        img.name || 'image.png'
+    );
+
+    const resp = await fetch(FILE_UPLOAD_ENDPOINT, {
+        method: 'POST',
+        headers: {
+            origin: 'https://chat.deepseek.com',
+            referer: 'https://chat.deepseek.com/',
+            'user-agent':
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/134.0.0.0 Safari/537.36',
+            'x-client-version': '2.0.2',
+            'x-client-platform': 'web',
+            authorization: `Bearer ${token}`,
+            'x-ds-pow-response': powResponse,
+        },
+        body: form,
+        signal,
+    });
+
+    if (resp.status === 401) {
+        throw new Error('DEEPSEEK_WEB_TOKEN_EXPIRED');
+    }
+    if (!resp.ok) {
+        const text = await resp.text().catch(() => '');
+        throw new Error(`DeepSeek Web upload error: HTTP ${resp.status} — ${text.slice(0, 200)}`);
+    }
+
+    const json = await resp.json().catch(() => null);
+    // Real response shape: { data: { biz_data: { id }, ... } } (older: { data: { id } })
+    const fileId = json?.data?.biz_data?.id || json?.data?.id;
+    if (!fileId) {
+        debugLog(
+            '[DeepSeek Web] Upload response did not contain a file_id:',
+            JSON.stringify(json).slice(0, 300)
+        );
+        return null;
+    }
+    return fileId;
+}
+
+/**
+ * Fork an uploaded file to the vision model type so it can be referenced by
+ * a vision chat request. Returns the new forked file_id.
+ * @param {string} fileId
+ * @param {string} token
+ * @param {AbortSignal} signal
+ * @returns {Promise<string>}
+ */
+async function forkDeepSeekFileToVision(fileId, token, signal) {
+    const resp = await fetch(FILE_FORK_ENDPOINT, {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+            origin: 'https://chat.deepseek.com',
+            referer: 'https://chat.deepseek.com/',
+            'user-agent':
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/134.0.0.0 Safari/537.36',
+            'x-client-version': '2.0.2',
+            'x-client-platform': 'web',
+            authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ file_id: fileId, to_model_type: 'vision' }),
+        signal,
+    });
+
+    if (resp.status === 401) {
+        throw new Error('DEEPSEEK_WEB_TOKEN_EXPIRED');
+    }
+    if (!resp.ok) {
+        const text = await resp.text().catch(() => '');
+        throw new Error(`DeepSeek Web fork error: HTTP ${resp.status} — ${text.slice(0, 200)}`);
+    }
+
+    const json = await resp.json().catch(() => null);
+    const bizData = json?.data?.biz_data || {};
+    const forkedId = bizData.id || bizData.file_id;
+    if (!forkedId || forkedId === fileId) {
+        debugLog(
+            '[DeepSeek Web] Fork response did not contain a new file_id:',
+            JSON.stringify(json).slice(0, 300)
+        );
+        throw new Error('DeepSeek Web did not return a forked vision file_id.');
+    }
+    return forkedId;
+}
+
+/**
+ * Poll DeepSeek Web until the given files finish parsing (or a timeout is hit).
+ * Files that are still parsing after 5s are accepted anyway to avoid blocking
+ * the request forever.
+ * @param {string[]} fileIds
+ * @param {string} token
+ * @param {AbortSignal} signal
+ * @param {number} [timeoutMs]
+ * @returns {Promise<string[]>} file_ids that reached a usable state
+ */
+async function waitForDeepSeekFileParsing(fileIds, token, signal, timeoutMs = 15000) {
+    if (fileIds.length === 0) return [];
+    const start = Date.now();
+    const pending = new Set(fileIds);
+    const ready = [];
+
+    while (pending.size > 0 && Date.now() - start < timeoutMs) {
+        if (signal?.aborted) break;
+        const statuses = await fetchDeepSeekFileStatuses([...pending], token, signal);
+        for (const fid of [...pending]) {
+            const status = String(statuses?.[fid]?.status || '').toUpperCase();
+            if (status === 'SUCCESS' || status === 'COMPLETED') {
+                pending.delete(fid);
+                ready.push(fid);
+            } else if (
+                status === 'CONTENT_EMPTY' ||
+                status === 'FAILED' ||
+                status === 'ERROR' ||
+                status === 'PARSE_FAILED'
+            ) {
+                // Reached a terminal state but the file is not usable — drop it.
+                pending.delete(fid);
+            } else if (Date.now() - start > 5000) {
+                // Still parsing after 5s: accept it anyway (matches upstream).
+                pending.delete(fid);
+                ready.push(fid);
+            }
+        }
+        if (pending.size > 0) {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+    }
+
+    // Whatever is still pending after the timeout is returned as-is so a
+    // slow-but-valid upload does not hard-fail the whole vision request.
+    return [...ready, ...pending];
+}
+
+/**
+ * Fetch parse status for the given DeepSeek Web files.
+ * @param {string[]} fileIds
+ * @param {string} token
+ * @param {AbortSignal} signal
+ * @returns {Promise<Object<string, object>|null>} map of file_id → file info
+ */
+async function fetchDeepSeekFileStatuses(fileIds, token, signal) {
+    const params = new URLSearchParams();
+    for (const fid of fileIds) params.append('file_ids', fid);
+
+    const resp = await fetch(`${FILE_FETCH_ENDPOINT}?${params.toString()}`, {
+        method: 'GET',
+        headers: {
+            origin: 'https://chat.deepseek.com',
+            referer: 'https://chat.deepseek.com/',
+            'user-agent':
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/134.0.0.0 Safari/537.36',
+            'x-client-version': '2.0.2',
+            'x-client-platform': 'web',
+            authorization: `Bearer ${token}`,
+        },
+        signal,
+    });
+    if (!resp.ok) return null;
+
+    const json = await resp.json().catch(() => null);
+    const files =
+        json?.data?.biz_data?.files ||
+        json?.data?.files ||
+        json?.data?.biz_data?.file_statuses ||
+        [];
+    const statuses = {};
+    for (const file of files) {
+        const fid = file?.id || file?.file_id || file?._id;
+        if (fid) statuses[fid] = file;
+    }
+    return statuses;
 }
 
 function base64ToUint8Array(base64) {
@@ -247,19 +432,19 @@ export async function sendDeepSeekWebMessage(
     options = {}
 ) {
     if (!context?.token) {
-        throw new Error('DeepSeek Web token is missing. Please configure DeepSeek Web in settings.');
+        throw new Error(
+            'DeepSeek Web token is missing. Please configure DeepSeek Web in settings.'
+        );
     }
     if (!context?.session_id) {
         throw new Error('DeepSeek Web session_id is missing. Please re-login.');
     }
 
-    const {
-        thinkingEnabled = false,
-        searchEnabled = false,
-        modelType = 'default',
-    } = options;
+    const { thinkingEnabled = false, searchEnabled = false, modelType = 'default' } = options;
 
-    debugLog(`[DeepSeek Web] Requesting: thinking=${thinkingEnabled}, search=${searchEnabled}, modelType=${modelType}`);
+    debugLog(
+        `[DeepSeek Web] Requesting: thinking=${thinkingEnabled}, search=${searchEnabled}, modelType=${modelType}`
+    );
 
     // ── Step 0: Ensure WASM is loaded ──
     await initWasm();
@@ -271,9 +456,24 @@ export async function sendDeepSeekWebMessage(
 
     // ── Step 1.5: Upload attachments (vision/multimodal) ──
     let refFileIds = [];
+    let chatSessionId = context.session_id;
     if (modelType === 'vision') {
         refFileIds = await uploadDeepSeekFiles(files, context.token, signal);
         debugLog(`[DeepSeek Web] Uploaded ${refFileIds.length} file(s) for vision mode`);
+
+        if (refFileIds.length > 0) {
+            // DeepSeek applies parallel_chat_limit_by_queue to the shared
+            // session; vision requests need a FRESH session so the uploaded
+            // files are accepted instead of an empty/queued response.
+            try {
+                chatSessionId = await createDeepSeekSession(context.token);
+                debugLog(`[DeepSeek Web] Created fresh vision session: ${chatSessionId}`);
+            } catch (e) {
+                debugLog(
+                    `[DeepSeek Web] Fresh vision session failed, reusing existing: ${e.message}`
+                );
+            }
+        }
     }
 
     debugLog('[DeepSeek Web] PoW solved, sending chat request...');
@@ -281,17 +481,18 @@ export async function sendDeepSeekWebMessage(
     // ── Step 2: Build request ──
     const reqHeaders = {
         'content-type': 'application/json',
-        'origin': 'https://chat.deepseek.com',
-        'referer': `https://chat.deepseek.com/a/chat/s/${context.session_id}`,
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/134.0.0.0 Safari/537.36',
+        origin: 'https://chat.deepseek.com',
+        referer: `https://chat.deepseek.com/a/chat/s/${chatSessionId}`,
+        'user-agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/134.0.0.0 Safari/537.36',
         'x-client-version': '2.0.2',
         'x-client-platform': 'web',
-        'authorization': `Bearer ${context.token}`,
+        authorization: `Bearer ${context.token}`,
         'x-ds-pow-response': powResponse,
     };
 
     const reqBody = {
-        chat_session_id: context.session_id,
+        chat_session_id: chatSessionId,
         parent_message_id: null,
         prompt: prompt,
         ref_file_ids: refFileIds,
@@ -317,12 +518,30 @@ export async function sendDeepSeekWebMessage(
         throw new Error(`DeepSeek Web error: HTTP ${resp.status} — ${text.slice(0, 200)}`);
     }
 
+    // ── Pre-flight: reject non-SSE responses (HTML/JSON error pages) with the
+    // response body in the message so an empty/queued vision reply is not
+    // silently misread as "no content". ──
+    const contentType = resp.headers?.get?.('content-type') || '';
+    if (
+        contentType &&
+        !contentType.includes('text/event-stream') &&
+        !contentType.includes('application/json') &&
+        !contentType.includes('text/plain')
+    ) {
+        const text = await resp.text().catch(() => '');
+        throw new Error(
+            `DeepSeek Web returned non-SSE response (Content-Type: ${contentType}) — ${text.slice(0, 300)}`
+        );
+    }
+
     // ── Step 3: Parse SSE stream ──
     const reader = resp.body.getReader();
     const decoder = new TextDecoder('utf-8');
     let buffer = '';
     let contentText = '';
     let thinkingText = '';
+    let nonJsonLineCount = 0;
+    const rawSampleLines = [];
     const parserState = { phase: 'content', fragmentType: null };
 
     while (true) {
@@ -340,21 +559,43 @@ export async function sendDeepSeekWebMessage(
             if (line.startsWith('event:')) continue;
             if (line.startsWith(':')) continue;
 
+            // HTML error page instead of SSE
+            if (
+                line.startsWith('<!DOCTYPE') ||
+                line.startsWith('<html') ||
+                line.startsWith('<HTML')
+            ) {
+                throw new Error(`DeepSeek Web returned HTML error: ${line.slice(0, 200)}`);
+            }
+
             // Strip "data: " prefix
             const data = line.startsWith('data: ') ? line.slice(6) : line;
             if (data === '[DONE]') continue;
 
+            if (rawSampleLines.length < 3) rawSampleLines.push(line.slice(0, 200));
+
             const parsed = parseSSELine(data, parserState);
-            if (!parsed) continue;
+            if (!parsed) {
+                // Plain text that is neither SSE JSON nor [DONE] — an error page.
+                if (data && !data.startsWith('{')) {
+                    nonJsonLineCount += 1;
+                    if (nonJsonLineCount >= 3) {
+                        throw new Error(
+                            `DeepSeek Web returned non-SSE text: ${rawSampleLines.join(' | ')}`
+                        );
+                    }
+                }
+                continue;
+            }
 
             if (parsed.type === 'error') {
                 throw new Error(`DeepSeek Web stream error: ${parsed.value}`);
             }
 
             if (parsed.type === 'thinking') {
-                thinkingText += parsed.value;
+                thinkingText = appendStreamFragment(thinkingText, parsed.value);
             } else {
-                contentText += parsed.value;
+                contentText = appendStreamFragment(contentText, parsed.value);
             }
 
             if (onUpdate) {
@@ -370,17 +611,24 @@ export async function sendDeepSeekWebMessage(
         if (data !== '[DONE]') {
             const parsed = parseSSELine(data, parserState);
             if (parsed && parsed.type !== 'error') {
-                if (parsed.type === 'thinking') thinkingText += parsed.value;
-                else contentText += parsed.value;
+                if (parsed.type === 'thinking')
+                    thinkingText = appendStreamFragment(thinkingText, parsed.value);
+                else contentText = appendStreamFragment(contentText, parsed.value);
             }
         }
     }
 
     if (!contentText && !thinkingText) {
-        throw new Error('DeepSeek Web returned an empty response.');
+        throw new Error(
+            `DeepSeek Web returned an empty response${
+                refFileIds.length > 0 ? ` (vision ref_file_ids: ${refFileIds.join(',')})` : ''
+            }${rawSampleLines.length > 0 ? `; raw lines: ${rawSampleLines.join(' | ')}` : ''}.`
+        );
     }
 
-    debugLog(`[DeepSeek Web] Response received: content=${contentText.length} chars, thinking=${thinkingText.length} chars`);
+    debugLog(
+        `[DeepSeek Web] Response received: content=${contentText.length} chars, thinking=${thinkingText.length} chars`
+    );
 
     return {
         text: contentText,

@@ -43,7 +43,7 @@ export class AppMessageBridge {
                     // A single bad restore message must not abort sandbox boot
                     // (historically RESTORE_IMAGE_TOOLS threw on chrome.storage).
                     console.error(
-                        '[Gemini Nexus] Failed to dispatch queued parent message:',
+                        '[DeepSeek Zoom] Failed to dispatch queued parent message:',
                         action,
                         error
                     );

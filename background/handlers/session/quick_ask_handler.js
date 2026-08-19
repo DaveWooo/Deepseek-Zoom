@@ -126,7 +126,7 @@ export class QuickAskHandler {
             );
             this._sendStreamDone(tabId, result, savedSession, request);
         } catch (error) {
-            console.error('[Gemini Nexus] Quick ask failed:', error);
+            console.error('[DeepSeek Zoom] Quick ask failed:', error);
             this._sendStreamDone(tabId, createErrorResult(error), undefined, request);
         }
     }
@@ -185,7 +185,7 @@ export class QuickAskHandler {
             );
             this._sendStreamDone(tabId, normalizedResult, savedSession, request);
         } catch (error) {
-            console.error('[Gemini Nexus] Image quick ask failed:', error);
+            console.error('[DeepSeek Zoom] Image quick ask failed:', error);
             this._sendStreamDone(tabId, createErrorResult(error), undefined, request);
         }
     }

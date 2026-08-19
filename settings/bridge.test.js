@@ -279,6 +279,100 @@ describe('StandaloneSettingsBridge', () => {
         );
     });
 
+    it('forwards DeepSeek Web login responses to the settings page', async () => {
+        chrome.runtime.sendMessage.mockResolvedValueOnce({
+            action: 'DEEPSEEK_WEB_LOGIN_RESULT',
+            token: 'jwt-token',
+            session_id: 'sess-1',
+        });
+        const controller = createController();
+        const bridge = new StandaloneSettingsBridge(controller);
+        const postSpy = vi.spyOn(window, 'postMessage');
+
+        bridge.handleWindowMessage({
+            source: window,
+            data: {
+                action: 'FORWARD_TO_BACKGROUND',
+                payload: { action: 'DEEPSEEK_WEB_LOGIN', phone: 'u', password: 'p' },
+            },
+        });
+
+        await vi.waitFor(() =>
+            expect(postSpy).toHaveBeenCalledWith(
+                {
+                    action: 'DEEPSEEK_WEB_LOGIN_RESULT',
+                    payload: {
+                        action: 'DEEPSEEK_WEB_LOGIN_RESULT',
+                        token: 'jwt-token',
+                        session_id: 'sess-1',
+                    },
+                },
+                '*'
+            )
+        );
+    });
+
+    it('forwards DeepSeek Web connectivity test results to the settings page', async () => {
+        chrome.runtime.sendMessage.mockResolvedValueOnce({
+            action: 'DEEPSEEK_WEB_TEST_RESULT',
+            success: true,
+        });
+        const controller = createController();
+        const bridge = new StandaloneSettingsBridge(controller);
+        const postSpy = vi.spyOn(window, 'postMessage');
+
+        bridge.handleWindowMessage({
+            source: window,
+            data: {
+                action: 'FORWARD_TO_BACKGROUND',
+                payload: { action: 'DEEPSEEK_WEB_TEST_CONNECTION' },
+            },
+        });
+
+        await vi.waitFor(() =>
+            expect(postSpy).toHaveBeenCalledWith(
+                {
+                    action: 'DEEPSEEK_WEB_TEST_RESULT',
+                    payload: { action: 'DEEPSEEK_WEB_TEST_RESULT', success: true },
+                },
+                '*'
+            )
+        );
+    });
+
+    it('forwards failed DeepSeek Web connectivity test results to the settings page', async () => {
+        chrome.runtime.sendMessage.mockResolvedValueOnce({
+            action: 'DEEPSEEK_WEB_TEST_RESULT',
+            success: false,
+            error: 'Not logged in',
+        });
+        const controller = createController();
+        const bridge = new StandaloneSettingsBridge(controller);
+        const postSpy = vi.spyOn(window, 'postMessage');
+
+        bridge.handleWindowMessage({
+            source: window,
+            data: {
+                action: 'FORWARD_TO_BACKGROUND',
+                payload: { action: 'DEEPSEEK_WEB_TEST_CONNECTION' },
+            },
+        });
+
+        await vi.waitFor(() =>
+            expect(postSpy).toHaveBeenCalledWith(
+                {
+                    action: 'DEEPSEEK_WEB_TEST_RESULT',
+                    payload: {
+                        action: 'DEEPSEEK_WEB_TEST_RESULT',
+                        success: false,
+                        error: 'Not logged in',
+                    },
+                },
+                '*'
+            )
+        );
+    });
+
     it('exports settings data without API keys from the standalone settings page', async () => {
         chrome.storage.local.get.mockImplementation((keys, callback) =>
             callback({

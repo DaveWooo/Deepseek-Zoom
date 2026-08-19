@@ -30,7 +30,7 @@
     }
 
     function getRuntimeMessageErrorText(error) {
-        return error?.message || String(error) || 'Could not contact Gemini Nexus.';
+        return error?.message || String(error) || 'Could not contact DeepSeek Zoom.';
     }
 
     class ToolbarActions {

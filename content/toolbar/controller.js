@@ -387,7 +387,7 @@
             saveToolbarSettings({ [TOOLBAR_MODEL_STORAGE_KEY]: model });
         }
 
-        handleProviderChange(provider) {
+        async handleProviderChange(provider) {
             if (provider !== 'web') {
                 this.ui.updateWebThinkingToggle?.();
             } else {
@@ -396,6 +396,10 @@
                 });
             }
             saveToolbarSettings({ [TOOLBAR_PROVIDER_STORAGE_KEY]: provider });
+            // Immediately re-sync so ask-model-select follows ask-provider-select
+            // instead of waiting on the async storage.onChanged round-trip (which
+            // can lag or be missed, leaving the two selects out of sync).
+            await this.syncSettings();
         }
 
         syncWebThinkingForModel(
@@ -535,8 +539,8 @@
             };
             const strings = window.GeminiToolbarStrings || {};
 
-            this.ui.showAskWindow(rect, null, strings.error || 'Gemini Nexus');
-            this.ui.showError(message || 'Could not open Gemini Nexus');
+            this.ui.showAskWindow(rect, null, strings.error || 'DeepSeek Zoom');
+            this.ui.showError(message || 'Could not open DeepSeek Zoom');
             this.visible = true;
         }
         destroy() {
