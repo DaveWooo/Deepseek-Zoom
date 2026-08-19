@@ -1,5 +1,22 @@
 # Changelog
 
+## v6.0.4 - 2026-08-19
+
+### Content Toolbar
+
+- **划词引用转 LaTeX 展示**：选中含数学公式/图片的内容时，引用文本自动转换为 LaTeX 格式（优先取 KaTeX/MathML 的 `application/x-tex` 注解源码，fallback 轻量 MathML→LaTeX 结构转换，图片公式取 `alt` 或 `[formula]` 占位），使数学公式等无法在纯文本输入框中显示的格式以 LaTeX 源码正确呈现（新增 `content/toolbar/selection_latex.js`）。
+
+## v6.0.3 - 2026-08-19
+
+### Docs
+
+- README（中/英）"多驱动核心对比"表新增 **DeepSeek 网页(免费版)** 行（驱动方案、逻辑入口 `deepseek_web.js`、支持模型、核心优势、使用前提）。
+- README（中/英）新增 **DeepSeek Web 维护说明** 章节，披露逆向协议风险与 `docs/deepseek-web-reverse.md` 契约文档入口。
+
+### UI
+
+- 模型来源下拉将 **DeepSeek 网页(免费版)** 置顶（设置页与 ask-window 弹窗均在 Gemini 网页之上；默认选中仍为 Gemini Web，不受影响）。
+
 ## v6.0.2 - 2026-08-19
 
 ### DeepSeek Web

@@ -115,6 +115,7 @@ describe('GeminiToolbarTemplates', () => {
         expect(providerSelect).not.toBeNull();
         expect(providerSelect.getAttribute('title')).toBe('Popup provider');
         expect(options.map((option) => option.value)).toEqual([
+            'deepseek_web',
             'web',
             'official',
             'openai',
@@ -126,6 +127,7 @@ describe('GeminiToolbarTemplates', () => {
             'zhipu',
         ]);
         expect(options.map((option) => option.textContent)).toEqual([
+            'DS Web',
             'Web',
             'API',
             'OpenAI',

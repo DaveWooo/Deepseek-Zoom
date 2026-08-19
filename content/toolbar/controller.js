@@ -264,7 +264,10 @@
             } else if (mode === 'read_page') {
                 this.readPageAloud();
             } else if (mode === 'read_selection') {
-                this.currentSelection = window.getSelection?.().toString().trim() || '';
+                this.currentSelection =
+                    window.GeminiSelectionLatex?.getSelectionLatexText() ||
+                    window.getSelection?.().toString().trim() ||
+                    '';
                 this.readSelectionAloud();
             } else {
                 this.sendCaptureInitiationRequest();
@@ -345,7 +348,11 @@
             if (!this.isSelectionEnabled) return;
 
             const { text, rect, mousePoint } = data;
-            this.currentSelection = text;
+            // Convert math/image formulas inside the selection to
+            // LaTeX-friendly text so the referenced content renders in the
+            // plain-text ask input instead of MathML noise or empty images.
+            this.currentSelection =
+                window.GeminiSelectionLatex?.getSelectionLatexText() || text || '';
             this.lastRect = rect;
             this.lastMousePoint = mousePoint;
 

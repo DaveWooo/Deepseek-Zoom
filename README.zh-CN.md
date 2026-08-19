@@ -64,17 +64,18 @@ DeepSeek Zoom 当前围绕浏览器内 AI 工作流提供以下能力：
 
 项目内置了多种驱动方案，位于 `services/providers`，并通过代码逻辑动态适配不同的使用场景：
 
-| 驱动方案              | 逻辑入口               | 支持模型                                    | 核心优势                                                            | 使用前提                |
-| :-------------------- | :--------------------- | :------------------------------------------ | :------------------------------------------------------------------ | :---------------------- |
-| **Web Client**        | `web.js`               | 当前 Gemini Web 聊天模式                    | **免 API Key**，复用 Gemini 网页版会话，支持可选临时对话            | 需保持 Google 账号登录  |
-| **Official API**      | `official.js`          | Gemini 3.6 Flash / 3.5 Flash-Lite / 3.1 Pro | **极速响应**，支持 **Thinking** 与 Google Search grounding          | 需 Google AI Studio Key |
-| **OpenAI Compatible** | `openai_compatible.js` | GPT/Claude/兼容模型                         | **高扩展性**，支持 Chat Completions / Responses API 与可选联网搜索  | 需第三方服务密钥        |
-| **OpenAI 官方 API**   | `openai_compatible.js` | GPT 推理/搜索模型                           | 专门走 Responses API，支持 reasoning summary 与可选联网搜索         | 需 OpenAI API Key       |
-| **DeepSeek API**      | `openai_compatible.js` | DeepSeek 对话/推理模型                      | DeepSeek Chat Completions 默认端点，并显示 `reasoning_content`      | 需 DeepSeek API Key     |
-| **OpenRouter API**    | `openai_compatible.js` | OpenRouter 模型 ID                          | 可拉取 `/models`，支持 provider routing JSON 与原生 `reasoning`     | 需 OpenRouter API Key   |
-| **通义 / DashScope**  | `openai_compatible.js` | Qwen 文本与 VL 模型                         | 专门 DashScope 兼容端点，发送 `enable_thinking` 并支持 VL 图片输入  | 需 DashScope API Key    |
-| **Anthropic API**     | `anthropic.js`         | Claude 模型                                 | 原生 Messages API，支持图片输入与 extended thinking 流式显示        | 需 Anthropic API Key    |
-| **智谱 API**          | `openai_compatible.js` | GLM 模型                                    | 专门 GLM Chat Completions profile，并发送原生 thinking 开关 payload | 需智谱 API Key          |
+| 驱动方案                  | 逻辑入口               | 支持模型                                                     | 核心优势                                                                                                          | 使用前提                                             |
+| :------------------------ | :--------------------- | :----------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------- |
+| **Web Client**            | `web.js`               | 当前 Gemini Web 聊天模式                                     | **免 API Key**，复用 Gemini 网页版会话，支持可选临时对话                                                          | 需保持 Google 账号登录                               |
+| **Official API**          | `official.js`          | Gemini 3.6 Flash / 3.5 Flash-Lite / 3.1 Pro                  | **极速响应**，支持 **Thinking** 与 Google Search grounding                                                        | 需 Google AI Studio Key                              |
+| **OpenAI Compatible**     | `openai_compatible.js` | GPT/Claude/兼容模型                                          | **高扩展性**，支持 Chat Completions / Responses API 与可选联网搜索                                                | 需第三方服务密钥                                     |
+| **OpenAI 官方 API**       | `openai_compatible.js` | GPT 推理/搜索模型                                            | 专门走 Responses API，支持 reasoning summary 与可选联网搜索                                                       | 需 OpenAI API Key                                    |
+| **DeepSeek API**          | `openai_compatible.js` | DeepSeek 对话/推理模型                                       | DeepSeek Chat Completions 默认端点，并显示 `reasoning_content`                                                    | 需 DeepSeek API Key                                  |
+| **DeepSeek 网页(免费版)** | `deepseek_web.js`      | 快速模式（V4 3.6 Flash）/ 专家模式（R1）/ 识图模式（Vision） | **免 API Key**，复用 `chat.deepseek.com` 免费会话；三模式切换，支持思考过程展示与联网搜索；识图上传（PoW + fork） | 需 DeepSeek 账号登录（设置页配置手机号/邮箱 + 密码） |
+| **OpenRouter API**        | `openai_compatible.js` | OpenRouter 模型 ID                                           | 可拉取 `/models`，支持 provider routing JSON 与原生 `reasoning`                                                   | 需 OpenRouter API Key                                |
+| **通义 / DashScope**      | `openai_compatible.js` | Qwen 文本与 VL 模型                                          | 专门 DashScope 兼容端点，发送 `enable_thinking` 并支持 VL 图片输入                                                | 需 DashScope API Key                                 |
+| **Anthropic API**         | `anthropic.js`         | Claude 模型                                                  | 原生 Messages API，支持图片输入与 extended thinking 流式显示                                                      | 需 Anthropic API Key                                 |
+| **智谱 API**              | `openai_compatible.js` | GLM 模型                                                     | 专门 GLM Chat Completions profile，并发送原生 thinking 开关 payload                                               | 需智谱 API Key                                       |
 
 ### 浏览器控制能力集
 
@@ -134,6 +135,12 @@ DeepSeek Zoom 可以选择连接到一个或多个外部 MCP 服务器（通过 
 ### Gemini Web 维护说明
 
 Gemini Web **依赖逆向协议**,在无官方授权的情况下访问 Google 内部 API,这很可能违反 Google 服务条款。契约可能随网站更新而变化,当前状态记录在 [`docs/gemini-web-reverse.md`](docs/gemini-web-reverse.md),包含已验证 token、RPC 路径、上传流程、模型 hash、临时对话标记、暂不支持的 image-preview 模型路由,以及手动漂移检查命令。
+
+### DeepSeek Web 维护说明
+
+DeepSeek Web 渠道同样**依赖逆向协议**，在无官方授权的情况下访问 `chat.deepseek.com` 的私有接口（账号登录、PoW 挑战求解、聊天 SSE 流、文件上传与 fork），这很可能违反 DeepSeek 服务条款。契约可能随网站更新而变化，当前状态记录在 [`docs/deepseek-web-reverse.md`](docs/deepseek-web-reverse.md)，包含登录流程、PoW 机制、三模式（快速/专家/识图）路由、思考与联网搜索开关、文件上传与 fork 流程，以及漂移检查建议。
+
+**风险自负**：使用 DeepSeek Web 渠道即意味着您承认潜在的服务条款违反，并承担相应后果。
 
 ### 快速开始
 

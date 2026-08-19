@@ -8,6 +8,7 @@ export const ConnectionSettingsTemplate = `
         <div class="setting-panel">
             <label class="setting-label" data-i18n="connectionProvider">Model Provider</label>
             <select id="provider-select" class="settings-input settings-select">
+                <option value="deepseek_web" data-i18n="providerDeepSeekWeb">DeepSeek 网页(免费版)</option>
                 <option value="web" data-i18n="providerWeb">Gemini Web Client (Free)</option>
                 <option value="official" data-i18n="providerOfficial">Google Gemini API</option>
                 <option value="openai" data-i18n="providerOpenAI">OpenAI Compatible API</option>
@@ -17,7 +18,6 @@ export const ConnectionSettingsTemplate = `
                 <option value="dashscope" data-i18n="providerDashScope">Qwen / DashScope API</option>
                 <option value="anthropic" data-i18n="providerAnthropic">Anthropic API</option>
                 <option value="zhipu" data-i18n="providerZhipu">Zhipu API</option>
-                <option value="deepseek_web" data-i18n="providerDeepSeekWeb">DeepSeek 网页(免费版)</option>
             </select>
 
             <div id="web-fields" class="settings-stack settings-section-offset">

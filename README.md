@@ -64,17 +64,18 @@ DeepSeek Zoom currently focuses on these browser AI workflows:
 
 The project includes provider drivers under `services/providers` and adapts behavior dynamically in code:
 
-| Provider              | Entry                  | Models                                      | Strength                                                                             | Requirement                     |
-| :-------------------- | :--------------------- | :------------------------------------------ | :----------------------------------------------------------------------------------- | :------------------------------ |
-| **Web Client**        | `web.js`               | Current Gemini Web chat modes               | No API key; reuses the Gemini web session; optional temporary chats                  | Keep a Google account signed in |
-| **Official API**      | `official.js`          | Gemini 3.6 Flash / 3.5 Flash-Lite / 3.1 Pro | Fast responses with **Thinking** and Google Search grounding                         | Google AI Studio key            |
-| **OpenAI Compatible** | `openai_compatible.js` | GPT, Claude, and compatible models          | Highly extensible; supports Chat Completions / Responses API and optional web search | Third-party service key         |
-| **OpenAI Official**   | `openai_compatible.js` | GPT reasoning/search models                 | Dedicated Responses API path with reasoning summary and optional web search          | OpenAI API key                  |
-| **DeepSeek API**      | `openai_compatible.js` | DeepSeek chat/reasoning models              | Dedicated defaults for DeepSeek Chat Completions and `reasoning_content` display     | DeepSeek API key                |
-| **OpenRouter API**    | `openai_compatible.js` | OpenRouter model IDs                        | Fetches `/models`, supports provider routing JSON, and sends native `reasoning`      | OpenRouter API key              |
-| **Qwen / DashScope**  | `openai_compatible.js` | Qwen text and VL models                     | Dedicated DashScope compatible endpoint with `enable_thinking` and VL image input    | DashScope API key               |
-| **Anthropic API**     | `anthropic.js`         | Claude models                               | Native Messages API adapter with image input and extended-thinking stream display    | Anthropic API key               |
-| **Zhipu API**         | `openai_compatible.js` | GLM models                                  | Dedicated GLM Chat Completions profile with native thinking toggle payloads          | Zhipu API key                   |
+| Provider                | Entry                  | Models                                                     | Strength                                                                                                                                           | Requirement                                                 |
+| :---------------------- | :--------------------- | :--------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------- |
+| **Web Client**          | `web.js`               | Current Gemini Web chat modes                              | No API key; reuses the Gemini web session; optional temporary chats                                                                                | Keep a Google account signed in                             |
+| **Official API**        | `official.js`          | Gemini 3.6 Flash / 3.5 Flash-Lite / 3.1 Pro                | Fast responses with **Thinking** and Google Search grounding                                                                                       | Google AI Studio key                                        |
+| **OpenAI Compatible**   | `openai_compatible.js` | GPT, Claude, and compatible models                         | Highly extensible; supports Chat Completions / Responses API and optional web search                                                               | Third-party service key                                     |
+| **OpenAI Official**     | `openai_compatible.js` | GPT reasoning/search models                                | Dedicated Responses API path with reasoning summary and optional web search                                                                        | OpenAI API key                                              |
+| **DeepSeek API**        | `openai_compatible.js` | DeepSeek chat/reasoning models                             | Dedicated defaults for DeepSeek Chat Completions and `reasoning_content` display                                                                   | DeepSeek API key                                            |
+| **DeepSeek Web (Free)** | `deepseek_web.js`      | Quick mode (V4 3.6 Flash) / Expert mode (R1) / Vision mode | **No API key**; reuses the free `chat.deepseek.com` session; three-mode switching with reasoning display and web search; image upload (PoW + fork) | DeepSeek account login (phone/email + password in Settings) |
+| **OpenRouter API**      | `openai_compatible.js` | OpenRouter model IDs                                       | Fetches `/models`, supports provider routing JSON, and sends native `reasoning`                                                                    | OpenRouter API key                                          |
+| **Qwen / DashScope**    | `openai_compatible.js` | Qwen text and VL models                                    | Dedicated DashScope compatible endpoint with `enable_thinking` and VL image input                                                                  | DashScope API key                                           |
+| **Anthropic API**       | `anthropic.js`         | Claude models                                              | Native Messages API adapter with image input and extended-thinking stream display                                                                  | Anthropic API key                                           |
+| **Zhipu API**           | `openai_compatible.js` | GLM models                                                 | Dedicated GLM Chat Completions profile with native thinking toggle payloads                                                                        | Zhipu API key                                               |
 
 ### Browser Control
 
@@ -134,6 +135,12 @@ Common proxy endpoints:
 ### Gemini Web Maintenance
 
 Gemini Web is **reverse-engineered** and accesses Google's internal APIs without official authorization, which likely violates Google's Terms of Service. The contract can change without notice and is documented in [`docs/gemini-web-reverse.md`](docs/gemini-web-reverse.md), including the verified tokens, RPC paths, upload flow, model hashes, temporary-chat markers, unsupported image-preview model routes, and the manual drift check command.
+
+### DeepSeek Web Maintenance
+
+The DeepSeek Web channel is likewise **reverse-engineered** and accesses private endpoints of `chat.deepseek.com` without official authorization (account login, PoW challenge solving, chat SSE streaming, file upload and fork), which likely violates DeepSeek's Terms of Service. The contract can change without notice and is documented in [`docs/deepseek-web-reverse.md`](docs/deepseek-web-reverse.md), including the login flow, PoW mechanism, three-mode (Quick/Expert/Vision) routing, thinking and web-search toggles, file upload/fork flow, and drift-check guidance.
+
+**Use at your own risk**: using the DeepSeek Web channel acknowledges that you accept potential Terms-of-Service violations and their consequences.
 
 ### Quick Start
 
