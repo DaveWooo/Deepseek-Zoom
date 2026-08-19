@@ -21,6 +21,10 @@ import {
     isDedicatedApiProvider,
 } from './dedicated_providers.js';
 
+import {
+    DEEPSEEK_WEB_MODEL_ENABLED_KEYS,
+} from './deepseek_web.js';
+
 export const DEEPSEEK_WEB_STORAGE_KEYS = [
     'deepseek_web_token',
     'deepseek_web_session_id',
@@ -32,6 +36,7 @@ export const DEEPSEEK_WEB_STORAGE_KEYS = [
     'deepseek_web_thinking_enabled',
     'deepseek_web_search_enabled',
     'deepseek_web_model_type',
+    ...DEEPSEEK_WEB_MODEL_ENABLED_KEYS,
 ];
 
 export const CONNECTION_STORAGE_KEYS = [
@@ -84,6 +89,16 @@ export function isDeepSeekWebProvider(provider) {
     return provider === 'deepseek_web';
 }
 
+export function createDeepSeekWebStorageUpdate(deepseekWeb = {}) {
+    const update = {};
+    for (const key of DEEPSEEK_WEB_STORAGE_KEYS) {
+        if (deepseekWeb[key] !== undefined) {
+            update[key] = deepseekWeb[key];
+        }
+    }
+    return update;
+}
+
 export function getConnectionProvider(storageData = {}) {
     return (
         storageData.geminiProvider ||
@@ -116,6 +131,12 @@ export function createConnectionSettingsPayload(storageData = {}, options = {}) 
         getOpenAIWebSearchStorageKeys(options)
     );
 
+    // DeepSeek Web settings (full object with token, session, model type, per-model enabled flags)
+    const deepseekWeb = {};
+    for (const key of DEEPSEEK_WEB_STORAGE_KEYS) {
+        if (storageData[key] !== undefined) deepseekWeb[key] = storageData[key];
+    }
+
     return {
         provider,
         useOfficialApi: storageData.geminiUseOfficialApi === true,
@@ -142,6 +163,7 @@ export function createConnectionSettingsPayload(storageData = {}, options = {}) 
             ? storageData.geminiMcpServers
             : null,
         mcpActiveServerId: storageData.geminiMcpActiveServerId || null,
+        deepseekWeb,
     };
 }
 
@@ -163,6 +185,7 @@ export function createConnectionStorageUpdate(payload = {}) {
         geminiOpenaiUseResponsesApi: payload.openaiUseResponsesApi === true,
         geminiOpenaiWebSearch: payload.openaiWebSearch === true,
         ...createDedicatedApiStorageUpdate(payload.dedicatedApiProviders),
+        ...createDeepSeekWebStorageUpdate(payload.deepseekWeb),
         geminiMcpEnabled: payload.mcpEnabled === true,
         geminiMcpTransport: payload.mcpTransport || DEFAULT_MCP_TRANSPORT,
         geminiMcpServerUrl: payload.mcpServerUrl || '',

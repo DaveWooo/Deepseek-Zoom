@@ -64,5 +64,8 @@ export function queryConnectionElements(getElement = getSettingsElement) {
         deepseekWebThinkingEnabled: getElement(DOM_IDS.DEEPSEEK_WEB_THINKING_ENABLED),
         deepseekWebSearchEnabled: getElement(DOM_IDS.DEEPSEEK_WEB_SEARCH_ENABLED),
         deepseekWebModelType: getElement(DOM_IDS.DEEPSEEK_WEB_MODEL_TYPE),
+        deepseekWebModelEnabledDefault: getElement(DOM_IDS.DEEPSEEK_WEB_MODEL_ENABLED_DEFAULT),
+        deepseekWebModelEnabledExpert: getElement(DOM_IDS.DEEPSEEK_WEB_MODEL_ENABLED_EXPERT),
+        deepseekWebModelEnabledVision: getElement(DOM_IDS.DEEPSEEK_WEB_MODEL_ENABLED_VISION),
     };
 }

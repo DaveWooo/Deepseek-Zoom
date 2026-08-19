@@ -5,6 +5,7 @@
 
 import { debugLog } from '../../shared/logging/debug.js';
 import { generateUUID } from '../../shared/utils/index.js';
+import { normalizeUserAttachments } from '../../shared/attachments/index.js';
 import {
     fetchPowChallenge,
     solvePow,
@@ -13,6 +14,7 @@ import {
 } from './shared/deepseek_web_pow.js';
 
 const CHAT_ENDPOINT = 'https://chat.deepseek.com/api/v0/chat/completion';
+const FILE_UPLOAD_ENDPOINT = 'https://chat.deepseek.com/api/v0/file/upload_file';
 
 /**
  * Parse DeepSeek Web SSE line into {type, value}.
@@ -128,6 +130,102 @@ function parseSSELine(line, state) {
 }
 
 /**
+ * Upload files to DeepSeek Web and return their file_ids (for vision mode).
+ * Uses multipart/form-data with PoW for the upload endpoint.
+ *
+ * @param {Array} files - attachments [{base64, type, name}]
+ * @param {string} token - DeepSeek Web JWT
+ * @param {AbortSignal} signal
+ * @returns {Promise<string[]>} file_ids
+ */
+async function uploadDeepSeekFiles(files, token, signal) {
+    const attachments = normalizeUserAttachments(files);
+    if (attachments.length === 0) return [];
+
+    // Only images are supported for vision mode
+    const images = attachments.filter((a) => a.type.startsWith('image/'));
+    if (images.length === 0) {
+        throw new Error('DeepSeek Web 识图模式仅支持图片附件。');
+    }
+
+    const fileIds = [];
+    await initWasm();
+
+    for (const img of images) {
+        const challenge = await fetchPowChallenge(token, '/api/v0/file/upload_file', signal);
+        const answer = await solvePow(challenge);
+        const powResponse = buildPowResponse(challenge, answer);
+
+        // Use the full data URL for Blob conversion (preserves exact bytes)
+        const form = new FormData();
+        form.append(
+            'file',
+            img.base64 && img.base64.startsWith('data:')
+                ? dataUrlToBlob(img.base64)
+                : new Blob([base64ToUint8Array(img.base64 || '')], { type: img.type }),
+            img.name || 'image.png'
+        );
+
+        const resp = await fetch(FILE_UPLOAD_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'origin': 'https://chat.deepseek.com',
+                'referer': 'https://chat.deepseek.com/',
+                'user-agent':
+                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/134.0.0.0 Safari/537.36',
+                'x-client-version': '2.0.2',
+                'x-client-platform': 'web',
+                'authorization': `Bearer ${token}`,
+                'x-ds-pow-response': powResponse,
+            },
+            body: form,
+            signal,
+        });
+
+        if (resp.status === 401) {
+            throw new Error('DEEPSEEK_WEB_TOKEN_EXPIRED');
+        }
+        if (!resp.ok) {
+            const text = await resp.text().catch(() => '');
+            throw new Error(`DeepSeek Web upload error: HTTP ${resp.status} — ${text.slice(0, 200)}`);
+        }
+
+        const json = await resp.json().catch(() => null);
+        const fileId = json?.data?.file_id;
+        if (!fileId) {
+            throw new Error('DeepSeek Web upload did not return a file_id.');
+        }
+        fileIds.push(fileId);
+    }
+
+    return fileIds;
+}
+
+function base64ToUint8Array(base64) {
+    try {
+        const binaryString = atob(base64);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes;
+    } catch {
+        return new Uint8Array(0);
+    }
+}
+
+function dataUrlToBlob(dataUrl) {
+    const [meta, payload] = dataUrl.split(',');
+    const type = /data:([^;]+)/.exec(meta)?.[1] || 'application/octet-stream';
+    const binaryString = atob(payload);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+    return new Blob([bytes], { type });
+}
+
+/**
  * Send a message via DeepSeek Web free tier.
  *
  * @param {string} prompt - User message text
@@ -171,6 +269,13 @@ export async function sendDeepSeekWebMessage(
     const answer = await solvePow(challenge);
     const powResponse = buildPowResponse(challenge, answer);
 
+    // ── Step 1.5: Upload attachments (vision/multimodal) ──
+    let refFileIds = [];
+    if (modelType === 'vision') {
+        refFileIds = await uploadDeepSeekFiles(files, context.token, signal);
+        debugLog(`[DeepSeek Web] Uploaded ${refFileIds.length} file(s) for vision mode`);
+    }
+
     debugLog('[DeepSeek Web] PoW solved, sending chat request...');
 
     // ── Step 2: Build request ──
@@ -189,7 +294,7 @@ export async function sendDeepSeekWebMessage(
         chat_session_id: context.session_id,
         parent_message_id: null,
         prompt: prompt,
-        ref_file_ids: [],
+        ref_file_ids: refFileIds,
         thinking_enabled: thinkingEnabled,
         search_enabled: searchEnabled,
         model_type: modelType,

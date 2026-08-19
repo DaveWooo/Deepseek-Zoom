@@ -8,6 +8,10 @@ import {
     getDedicatedApiRuntimeSettings,
     isDedicatedApiProvider,
 } from '../../shared/settings/dedicated_providers.js';
+import {
+    getEnabledDeepSeekWebModelOptions,
+} from '../../shared/settings/deepseek_web.js';
+import { isDeepSeekWebProvider } from '../../shared/settings/connection.js';
 import { createWebModelOptions } from '../../shared/models/web_models.js';
 import { t } from '../core/i18n.js';
 
@@ -48,6 +52,13 @@ export function createModelOptions(settings) {
             : [{ value: fallback, label: fallback || t('customModel') }];
     }
 
+    if (isDeepSeekWebProvider(provider)) {
+        const enabled = getEnabledDeepSeekWebModelOptions(settings.deepseekWeb || {});
+        return enabled.length > 0
+            ? enabled
+            : [{ value: 'default', label: 'DeepSeek V4 3.6 Flash (快速)' }];
+    }
+
     return createWebModelOptions();
 }
 
@@ -55,6 +66,9 @@ export function getPreferredModel(settings, currentValue) {
     const provider = getModelProvider(settings);
     if (provider === 'openai') {
         return settings.openaiSelectedModel || settings.selectedModel || currentValue;
+    }
+    if (isDeepSeekWebProvider(provider)) {
+        return settings.deepseekWeb?.deepseek_web_model_type || 'default';
     }
     if (isDedicatedApiProvider(provider)) {
         const providerSettings = getDedicatedApiRuntimeSettings(settings, provider);

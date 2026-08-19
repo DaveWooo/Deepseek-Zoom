@@ -154,9 +154,12 @@ x-ds-pow-response: <base64-pow-result>
 
 | 值 | 对应模型 | 说明 |
 |----|---------|------|
-| `default` | DeepSeek-V3 (快速) | 默认对话模型 |
+| `default` | DeepSeek-V4 3.6 Flash (快速) | 默认对话模型（Nexus 中默认模式） |
 | `expert` | DeepSeek-R1 (专家) | 推理模型，**不支持文件上传** |
-| `vision` | Vision 模型 | 多模态，需配合 `ref_file_ids` |
+| `vision` | Vision 模型 (识图) | 多模态，需配合 `ref_file_ids`（已实现上传） |
+
+> Nexus 中三个模式均开放，默认快速模式（default）。settings UI 中可分别开关每个模式，右键弹窗仅展示已开启的模式。
+> 识图模式（vision）已实现：上传图片（multipart + PoW 对应 `/api/v0/file/upload_file`）获取 `file_id` 后填入 `ref_file_ids`。
 
 ### 3.3 流式响应格式 (SSE)
 

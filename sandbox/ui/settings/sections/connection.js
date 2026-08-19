@@ -117,6 +117,9 @@ export class ConnectionSection {
         if (this.elements.deepseekWebThinkingEnabled) this.elements.deepseekWebThinkingEnabled.checked = dsw.deepseek_web_thinking_enabled === true;
         if (this.elements.deepseekWebSearchEnabled) this.elements.deepseekWebSearchEnabled.checked = dsw.deepseek_web_search_enabled === true;
         if (this.elements.deepseekWebModelType) this.elements.deepseekWebModelType.value = dsw.deepseek_web_model_type || 'default';
+        if (this.elements.deepseekWebModelEnabledDefault) this.elements.deepseekWebModelEnabledDefault.checked = dsw.deepseek_web_model_enabled_default !== false;
+        if (this.elements.deepseekWebModelEnabledExpert) this.elements.deepseekWebModelEnabledExpert.checked = dsw.deepseek_web_model_enabled_expert !== false;
+        if (this.elements.deepseekWebModelEnabledVision) this.elements.deepseekWebModelEnabledVision.checked = dsw.deepseek_web_model_enabled_vision !== false;
         if (this.elements.deepseekWebLoginStatus && dsw.deepseek_web_token) {
             this.elements.deepseekWebLoginStatus.textContent = '✅ Logged in';
         }
@@ -226,6 +229,9 @@ export class ConnectionSection {
                 deepseek_web_thinking_enabled: this.elements.deepseekWebThinkingEnabled ? this.elements.deepseekWebThinkingEnabled.checked : false,
                 deepseek_web_search_enabled: this.elements.deepseekWebSearchEnabled ? this.elements.deepseekWebSearchEnabled.checked : false,
                 deepseek_web_model_type: this.elements.deepseekWebModelType ? this.elements.deepseekWebModelType.value : 'default',
+                deepseek_web_model_enabled_default: this.elements.deepseekWebModelEnabledDefault ? this.elements.deepseekWebModelEnabledDefault.checked === true : true,
+                deepseek_web_model_enabled_expert: this.elements.deepseekWebModelEnabledExpert ? this.elements.deepseekWebModelEnabledExpert.checked === true : true,
+                deepseek_web_model_enabled_vision: this.elements.deepseekWebModelEnabledVision ? this.elements.deepseekWebModelEnabledVision.checked === true : true,
             },
             dedicatedApiProviders: this.dedicatedApiProviders,
 

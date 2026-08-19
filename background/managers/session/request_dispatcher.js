@@ -4,6 +4,7 @@ import { sendOpenAIMessage } from '../../../services/providers/openai_compatible
 import { sendAnthropicMessage } from '../../../services/providers/anthropic.js';
 import { sendDeepSeekWebMessage } from '../../../services/providers/deepseek_web.js';
 import { loadDeepSeekWebAuth, refreshDeepSeekToken } from '../../../services/deepseek_web_auth.js';
+import { normalizeDeepSeekWebModelType } from '../../../shared/settings/deepseek_web.js';
 import { isDeepSeekWebProvider } from '../../../shared/settings/connection.js';
 import {
     DEFAULT_CONTEXT_MODE,
@@ -578,7 +579,7 @@ export class RequestDispatcher {
         const dsOptions = {
             thinkingEnabled: dsw.deepseek_web_thinking_enabled === true,
             searchEnabled: dsw.deepseek_web_search_enabled === true,
-            modelType: dsw.deepseek_web_model_type || 'default',
+            modelType: normalizeDeepSeekWebModelType(dsw.deepseek_web_model_type),
         };
 
         // Retry with token refresh on 401

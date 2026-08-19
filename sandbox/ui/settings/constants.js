@@ -59,6 +59,9 @@ export const DOM_IDS = {
     DEEPSEEK_WEB_THINKING_ENABLED: 'deepseek-web-thinking-enabled',
     DEEPSEEK_WEB_SEARCH_ENABLED: 'deepseek-web-search-enabled',
     DEEPSEEK_WEB_MODEL_TYPE: 'deepseek-web-model-type',
+    DEEPSEEK_WEB_MODEL_ENABLED_DEFAULT: 'deepseek-web-model-enabled-default',
+    DEEPSEEK_WEB_MODEL_ENABLED_EXPERT: 'deepseek-web-model-enabled-expert',
+    DEEPSEEK_WEB_MODEL_ENABLED_VISION: 'deepseek-web-model-enabled-vision',
 
     MCP_ENABLED: 'mcp-enabled',
     MCP_FIELDS: 'mcp-fields',

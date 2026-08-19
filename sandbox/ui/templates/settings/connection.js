@@ -17,7 +17,7 @@ export const ConnectionSettingsTemplate = `
                 <option value="dashscope" data-i18n="providerDashScope">Qwen / DashScope API</option>
                 <option value="anthropic" data-i18n="providerAnthropic">Anthropic API</option>
                 <option value="zhipu" data-i18n="providerZhipu">Zhipu API</option>
-                <option value="deepseek_web" data-i18n="providerDeepSeekWeb">DeepSeek Web (Free)</option>
+                <option value="deepseek_web" data-i18n="providerDeepSeekWeb">Deepseek网页版(免费)</option>
             </select>
 
             <div id="web-fields" class="settings-stack settings-section-offset">
@@ -61,9 +61,28 @@ export const ConnectionSettingsTemplate = `
                 <div class="setting-field settings-section-offset">
                     <span>Model Type</span>
                     <select id="deepseek-web-model-type" class="settings-input settings-select">
-                        <option value="default" selected>DeepSeek V4 3.6 Flash (Default)</option>
-                        <option value="expert">DeepSeek R1 (Reasoning)</option>
+                        <option value="default" selected>DeepSeek V4 3.6 Flash (快速)</option>
+                        <option value="expert">DeepSeek R1 (专家)</option>
+                        <option value="vision">DeepSeek Vision (识图)</option>
                     </select>
+                </div>
+                <div class="setting-panel-row settings-section-offset">
+                    <div class="setting-panel-header">
+                        <h5>快速模式 (DeepSeek V4 3.6 Flash)</h5>
+                    </div>
+                    <input type="checkbox" id="deepseek-web-model-enabled-default" class="setting-toggle" checked />
+                </div>
+                <div class="setting-panel-row">
+                    <div class="setting-panel-header">
+                        <h5>专家模式 (DeepSeek R1)</h5>
+                    </div>
+                    <input type="checkbox" id="deepseek-web-model-enabled-expert" class="setting-toggle" checked />
+                </div>
+                <div class="setting-panel-row">
+                    <div class="setting-panel-header">
+                        <h5>识图模式 (DeepSeek Vision)</h5>
+                    </div>
+                    <input type="checkbox" id="deepseek-web-model-enabled-vision" class="setting-toggle" checked />
                 </div>
             </div>
 

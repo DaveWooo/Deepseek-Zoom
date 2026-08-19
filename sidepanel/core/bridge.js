@@ -2,7 +2,10 @@ import {
     DEFAULT_CONTEXT_MODE,
     normalizeContextRecentTurns,
 } from '../../shared/config/constants.js';
-import { createConnectionStorageUpdate } from '../../shared/settings/connection.js';
+import {
+    createConnectionStorageUpdate,
+    isDeepSeekWebProvider,
+} from '../../shared/settings/connection.js';
 import { getDedicatedApiStorageKeys } from '../../shared/settings/dedicated_providers.js';
 import {
     mergeSessionSaveWithCurrent,
@@ -28,6 +31,7 @@ import {
 
 function getModelSaveKey(payload) {
     if (payload && typeof payload === 'object') {
+        if (isDeepSeekWebProvider(payload.provider)) return 'deepseek_web_model_type';
         const dedicatedKeys = getDedicatedApiStorageKeys(payload.provider);
         if (dedicatedKeys) return dedicatedKeys.selectedModel;
         return payload.provider === 'openai' ? 'geminiOpenaiSelectedModel' : 'geminiModel';
