@@ -9,6 +9,7 @@ import {
     fetchPowChallenge,
     solvePow,
     buildPowResponse,
+    initWasm,
 } from './shared/deepseek_web_pow.js';
 
 const CHAT_ENDPOINT = 'https://chat.deepseek.com/api/v0/chat/completion';
@@ -163,7 +164,6 @@ export async function sendDeepSeekWebMessage(
     debugLog(`[DeepSeek Web] Requesting: thinking=${thinkingEnabled}, search=${searchEnabled}, modelType=${modelType}`);
 
     // ── Step 0: Ensure WASM is loaded ──
-    const { initWasm } = await import('./shared/deepseek_web_pow.js');
     await initWasm();
 
     // ── Step 1: Fetch and solve PoW ──

@@ -153,7 +153,7 @@
         deepseek_web: Object.freeze({
             id: 'deepseek_web',
             storagePrefix: 'DeepseekWeb',
-            defaultModel: 'deepseek-default',
+            defaultModel: 'deepseek-v4-3.6-flash',
             transport: 'deepseek-web',
             supportsWebSearch: false,
         }),

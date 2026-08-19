@@ -61,8 +61,8 @@ export const ConnectionSettingsTemplate = `
                 <div class="setting-field settings-section-offset">
                     <span>Model Type</span>
                     <select id="deepseek-web-model-type" class="settings-input settings-select">
-                        <option value="default">DeepSeek-V3 (Fast)</option>
-                        <option value="expert">DeepSeek-R1 (Reasoning)</option>
+                        <option value="default" selected>DeepSeek V4 3.6 Flash (Default)</option>
+                        <option value="expert">DeepSeek R1 (Reasoning)</option>
                     </select>
                 </div>
             </div>
