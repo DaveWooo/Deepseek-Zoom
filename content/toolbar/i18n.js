@@ -144,6 +144,7 @@
             providerDashScopeShort: isZh ? '通义' : 'DashScope',
             providerAnthropicShort: 'Anthropic',
             providerZhipuShort: isZh ? '智谱' : 'Zhipu',
+            providerDeepSeekWebShort: isZh ? 'DS 网页' : 'DS Web',
             windowTitle: 'Gemini Nexus',
             retry: isZh ? '重试' : 'Retry',
             openSidebar: isZh ? '在侧边栏继续' : 'Open in Sidebar',

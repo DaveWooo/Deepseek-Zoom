@@ -15,6 +15,44 @@ export function bindConnectionSectionEvents(section) {
         });
     }
 
+    // DeepSeek Web model enabled checkboxes → update status dots
+    const modelEnabledMap = [
+        { checkbox: section.elements.deepseekWebModelEnabledDefault, dot: section.elements.deepseekWebStatusDotDefault },
+        { checkbox: section.elements.deepseekWebModelEnabledExpert, dot: section.elements.deepseekWebStatusDotExpert },
+        { checkbox: section.elements.deepseekWebModelEnabledVision, dot: section.elements.deepseekWebStatusDotVision },
+    ];
+    for (const { checkbox, dot } of modelEnabledMap) {
+        if (checkbox && dot) {
+            checkbox.addEventListener('change', () => {
+                dot.className = checkbox.checked ? 'model-status-dot model-status-enabled' : 'model-status-dot model-status-disabled';
+            });
+        }
+    }
+
+    // DeepSeek Web connectivity test
+    const testBtn = section.elements.deepseekWebTestBtn;
+    const testStatus = section.elements.deepseekWebTestStatus;
+    if (testBtn) {
+        testBtn.addEventListener('click', () => {
+            testBtn.className = 'deepseek-web-test-btn test-loading';
+            if (testStatus) testStatus.textContent = '测试中...';
+            sendToBackground({ action: 'DEEPSEEK_WEB_TEST_CONNECTION' });
+        });
+    }
+
+    // Listen for test result
+    const deepseekTestHandler = (event) => {
+        if (event.data?.action !== 'DEEPSEEK_WEB_TEST_RESULT') return;
+        const result = event.data.payload;
+        if (testBtn) {
+            testBtn.className = result?.success ? 'deepseek-web-test-btn test-passed' : 'deepseek-web-test-btn test-failed';
+        }
+        if (testStatus) {
+            testStatus.textContent = result?.success ? '✅ 连通正常' : ('❌ ' + (result?.error || '连接失败'));
+        }
+    };
+    window.addEventListener('message', deepseekTestHandler);
+
     // DeepSeek Web login
     const { deepseekWebLogin, deepseekWebLoginStatus, deepseekWebPhone, deepseekWebPassword, deepseekWebAreaCode } = section.elements;
     if (deepseekWebLogin) {

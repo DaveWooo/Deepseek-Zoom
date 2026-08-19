@@ -17,7 +17,7 @@ export const ConnectionSettingsTemplate = `
                 <option value="dashscope" data-i18n="providerDashScope">Qwen / DashScope API</option>
                 <option value="anthropic" data-i18n="providerAnthropic">Anthropic API</option>
                 <option value="zhipu" data-i18n="providerZhipu">Zhipu API</option>
-                <option value="deepseek_web" data-i18n="providerDeepSeekWeb">Deepseek网页版(免费)</option>
+                <option value="deepseek_web" data-i18n="providerDeepSeekWeb">DeepSeek 网页(免费版)</option>
             </select>
 
             <div id="web-fields" class="settings-stack settings-section-offset">
@@ -61,28 +61,35 @@ export const ConnectionSettingsTemplate = `
                 <div class="setting-field settings-section-offset">
                     <span>Model Type</span>
                     <select id="deepseek-web-model-type" class="settings-input settings-select">
-                        <option value="default" selected>DeepSeek V4 3.6 Flash (快速)</option>
+                        <option value="default" selected>DeepSeek最新版模型 (快速)</option>
                         <option value="expert">DeepSeek R1 (专家)</option>
                         <option value="vision">DeepSeek Vision (识图)</option>
                     </select>
                 </div>
-                <div class="setting-panel-row settings-section-offset">
+                <div class="setting-panel-row settings-section-offset deepseek-web-model-status-row" data-model-type="default">
                     <div class="setting-panel-header">
-                        <h5>快速模式 (DeepSeek V4 3.6 Flash)</h5>
+                        <span class="model-status-dot model-status-enabled" id="deepseek-web-status-default"></span>
+                        <h5>快速模式 (DeepSeek最新版模型)</h5>
                     </div>
                     <input type="checkbox" id="deepseek-web-model-enabled-default" class="setting-toggle" checked />
                 </div>
-                <div class="setting-panel-row">
+                <div class="setting-panel-row deepseek-web-model-status-row" data-model-type="expert">
                     <div class="setting-panel-header">
+                        <span class="model-status-dot model-status-enabled" id="deepseek-web-status-expert"></span>
                         <h5>专家模式 (DeepSeek R1)</h5>
                     </div>
                     <input type="checkbox" id="deepseek-web-model-enabled-expert" class="setting-toggle" checked />
                 </div>
-                <div class="setting-panel-row">
+                <div class="setting-panel-row deepseek-web-model-status-row" data-model-type="vision">
                     <div class="setting-panel-header">
+                        <span class="model-status-dot model-status-enabled" id="deepseek-web-status-vision"></span>
                         <h5>识图模式 (DeepSeek Vision)</h5>
                     </div>
                     <input type="checkbox" id="deepseek-web-model-enabled-vision" class="setting-toggle" checked />
+                </div>
+                <div class="setting-panel-row" style="padding-top: 4px;">
+                    <button type="button" id="deepseek-web-test-btn" class="deepseek-web-test-btn">验证连通性</button>
+                    <span id="deepseek-web-test-status" style="font-size: 12px; margin-left: 8px;"></span>
                 </div>
             </div>
 

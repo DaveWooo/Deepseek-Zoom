@@ -723,6 +723,58 @@
     }
 }
 
+/* ── DeepSeek Web model status dots ── */
+.model-status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+.model-status-enabled {
+    background-color: #22c55e;
+}
+.model-status-disabled {
+    background-color: #9ca3af;
+}
+.deepseek-web-model-status-row .setting-panel-header {
+    display: flex;
+    align-items: center;
+}
+
+/* ── DeepSeek Web connectivity test button ── */
+.deepseek-web-test-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border: 1px solid var(--color-border-subtle, #e5e7eb);
+    border-radius: 6px;
+    background: var(--color-surface-elevated, #f9fafb);
+    color: var(--color-text-primary, #374151);
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+.deepseek-web-test-btn:hover {
+    background: var(--color-surface-hover, #f3f4f6);
+    border-color: var(--color-border-default, #d1d5db);
+}
+.deepseek-web-test-btn.test-passed {
+    border-color: #22c55e;
+    color: #16a34a;
+}
+.deepseek-web-test-btn.test-failed {
+    border-color: #ef4444;
+    color: #dc2626;
+}
+.deepseek-web-test-btn.test-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
 @media (max-width: 430px) {
     .settings-header {
         align-items: center;

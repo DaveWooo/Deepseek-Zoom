@@ -122,6 +122,7 @@
                         <option value="dashscope">${toolbarStrings.providerDashScopeShort || 'DashScope'}</option>
                         <option value="anthropic">${toolbarStrings.providerAnthropicShort || 'Anthropic'}</option>
                         <option value="zhipu">${toolbarStrings.providerZhipuShort || 'Zhipu'}</option>
+                        <option value="deepseek_web">${toolbarStrings.providerDeepSeekWebShort || 'DS Web'}</option>
                     </select>
                     <select id="ask-model-select" class="ask-model-select">
                         ${WEB_MODEL_OPTIONS}

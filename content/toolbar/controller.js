@@ -49,6 +49,11 @@
         'geminiOfficialModel',
         'geminiOpenaiModel',
         'geminiOpenaiSelectedModel',
+        // DeepSeek Web
+        'deepseek_web_model_type',
+        'deepseek_web_model_enabled_default',
+        'deepseek_web_model_enabled_expert',
+        'deepseek_web_model_enabled_vision',
         ...getDedicatedStorageKeys(),
     ];
 
@@ -202,6 +207,12 @@
                 openaiModel: result.geminiOpenaiModel,
                 webThinkingLevel: result.geminiWebThinkingLevel,
                 dedicatedApiProviders: createDedicatedProviderSettings(result),
+                deepseekWeb: {
+                    modelType: result.deepseek_web_model_type || 'default',
+                    enabledDefault: result.deepseek_web_model_enabled_default !== false,
+                    enabledExpert: result.deepseek_web_model_enabled_expert !== false,
+                    enabledVision: result.deepseek_web_model_enabled_vision !== false,
+                },
             };
 
             const provider =
@@ -210,15 +221,17 @@
                 (settings.useOfficialApi ? 'official' : 'web');
             settings.provider = provider;
             const selectedModel =
-                provider === 'openai'
-                    ? result[TOOLBAR_OPENAI_MODEL_STORAGE_KEY] ||
-                      result.geminiOpenaiSelectedModel ||
-                      result.geminiModel
-                    : getDedicatedProviderConfig(provider)
-                      ? getDedicatedSelectedModel(result, provider) ||
-                        result[TOOLBAR_MODEL_STORAGE_KEY] ||
+                provider === 'deepseek_web'
+                    ? result.deepseek_web_model_type || 'default'
+                    : provider === 'openai'
+                      ? result[TOOLBAR_OPENAI_MODEL_STORAGE_KEY] ||
+                        result.geminiOpenaiSelectedModel ||
                         result.geminiModel
-                      : result[TOOLBAR_MODEL_STORAGE_KEY] || result.geminiModel;
+                      : getDedicatedProviderConfig(provider)
+                        ? getDedicatedSelectedModel(result, provider) ||
+                          result[TOOLBAR_MODEL_STORAGE_KEY] ||
+                          result.geminiModel
+                        : result[TOOLBAR_MODEL_STORAGE_KEY] || result.geminiModel;
             this.ui.updateModelList(settings, selectedModel);
         }
 
@@ -358,6 +371,10 @@
             }
             if (provider === 'openai') {
                 saveToolbarSettings({ [TOOLBAR_OPENAI_MODEL_STORAGE_KEY]: model });
+                return;
+            }
+            if (provider === 'deepseek_web') {
+                saveToolbarSettings({ deepseek_web_model_type: model });
                 return;
             }
 

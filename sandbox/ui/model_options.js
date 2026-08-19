@@ -56,7 +56,7 @@ export function createModelOptions(settings) {
         const enabled = getEnabledDeepSeekWebModelOptions(settings.deepseekWeb || {});
         return enabled.length > 0
             ? enabled
-            : [{ value: 'default', label: 'DeepSeek V4 3.6 Flash (快速)' }];
+            : [{ value: 'default', label: 'DeepSeek最新版模型 (快速)' }];
     }
 
     return createWebModelOptions();

@@ -14,7 +14,7 @@ export const DEEPSEEK_WEB_MODEL_TYPES = Object.freeze([
     {
         value: 'default',
         labelKey: 'deepseekWebModelDefault',
-        labelFallback: 'DeepSeek V4 3.6 Flash (快速)',
+        labelFallback: 'DeepSeek最新版模型 (快速)',
         supportsFile: false,
     },
     {

@@ -120,6 +120,7 @@ export class ConnectionSection {
         if (this.elements.deepseekWebModelEnabledDefault) this.elements.deepseekWebModelEnabledDefault.checked = dsw.deepseek_web_model_enabled_default !== false;
         if (this.elements.deepseekWebModelEnabledExpert) this.elements.deepseekWebModelEnabledExpert.checked = dsw.deepseek_web_model_enabled_expert !== false;
         if (this.elements.deepseekWebModelEnabledVision) this.elements.deepseekWebModelEnabledVision.checked = dsw.deepseek_web_model_enabled_vision !== false;
+        this._updateDeepSeekWebStatusDots();
         if (this.elements.deepseekWebLoginStatus && dsw.deepseek_web_token) {
             this.elements.deepseekWebLoginStatus.textContent = '✅ Logged in';
         }
@@ -244,6 +245,19 @@ export class ConnectionSection {
                 : DEFAULT_MCP_TRANSPORT,
             mcpServerUrl: firstEnabled ? firstEnabled.url || '' : '',
         };
+    }
+
+    _updateDeepSeekWebStatusDots() {
+        const dots = [
+            { checkbox: this.elements.deepseekWebModelEnabledDefault, dot: this.elements.deepseekWebStatusDotDefault },
+            { checkbox: this.elements.deepseekWebModelEnabledExpert, dot: this.elements.deepseekWebStatusDotExpert },
+            { checkbox: this.elements.deepseekWebModelEnabledVision, dot: this.elements.deepseekWebStatusDotVision },
+        ];
+        for (const { checkbox, dot } of dots) {
+            if (dot) {
+                dot.className = 'model-status-dot ' + (checkbox?.checked !== false ? 'model-status-enabled' : 'model-status-disabled');
+            }
+        }
     }
 
     updateVisibility(provider) {
