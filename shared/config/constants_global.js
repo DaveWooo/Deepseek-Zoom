@@ -150,6 +150,13 @@
             reasoningAdapter: 'zhipu_thinking',
             supportsWebSearch: false,
         }),
+        deepseek_web: Object.freeze({
+            id: 'deepseek_web',
+            storagePrefix: 'DeepseekWeb',
+            defaultModel: 'deepseek-default',
+            transport: 'deepseek-web',
+            supportsWebSearch: false,
+        }),
     });
 
     globalThis.GeminiNexusConfig = Object.freeze({

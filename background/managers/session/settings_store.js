@@ -5,6 +5,7 @@ import {
     DEFAULT_OFFICIAL_MODELS,
     DEFAULT_THINKING_LEVEL,
 } from '../../../shared/config/constants.js';
+import { DEEPSEEK_WEB_STORAGE_KEYS, isDeepSeekWebProvider } from '../../../shared/settings/connection.js';
 import {
     getConnectionProvider,
     getOpenAIWebSearchStorageKeys,
@@ -23,7 +24,8 @@ function normalizeProviderOverride(provider) {
     return normalized === 'web' ||
         normalized === 'official' ||
         normalized === 'openai' ||
-        isDedicatedApiProvider(normalized)
+        isDedicatedApiProvider(normalized) ||
+        isDeepSeekWebProvider(normalized)
         ? normalized
         : null;
 }
@@ -82,6 +84,12 @@ export async function getConnectionSettings(options = {}) {
         getOpenAIWebSearchStorageKeys()
     );
 
+    // DeepSeek Web settings
+    const deepseekWeb = {};
+    for (const key of DEEPSEEK_WEB_STORAGE_KEYS) {
+        deepseekWeb[key] = stored[key];
+    }
+
     return {
         provider: provider,
         webThinkingLevel: normalizeWebThinkingLevel(stored.geminiWebThinkingLevel),
@@ -100,5 +108,6 @@ export async function getConnectionSettings(options = {}) {
         dedicatedApiProviders: createDedicatedApiSettingsPayload(stored),
         contextMode: stored.geminiContextMode || DEFAULT_CONTEXT_MODE,
         contextRecentTurns: stored.geminiContextRecentTurns || DEFAULT_CONTEXT_RECENT_TURNS,
+        deepseekWeb,
     };
 }

@@ -15,6 +15,41 @@ export function bindConnectionSectionEvents(section) {
         });
     }
 
+    // DeepSeek Web login
+    const { deepseekWebLogin, deepseekWebLoginStatus, deepseekWebPhone, deepseekWebPassword, deepseekWebAreaCode } = section.elements;
+    if (deepseekWebLogin) {
+        deepseekWebLogin.addEventListener('click', () => {
+            const phone = deepseekWebPhone?.value.trim();
+            const password = deepseekWebPassword?.value.trim();
+            const areaCode = deepseekWebAreaCode?.value.trim() || '+86';
+            if (!phone || !password) {
+                deepseekWebLoginStatus.textContent = '❌ Phone/Email and password required';
+                return;
+            }
+            deepseekWebLoginStatus.textContent = 'Logging in...';
+            deepseekWebLogin.disabled = true;
+
+            const handler = (event) => {
+                if (event.data?.action !== 'DEEPSEEK_WEB_LOGIN_RESULT') return;
+                window.removeEventListener('message', handler);
+                const result = event.data.payload;
+                if (result?.token) {
+                    deepseekWebLoginStatus.textContent = '✅ Logged in';
+                } else {
+                    deepseekWebLoginStatus.textContent = '❌ ' + (result?.error || 'Login failed');
+                }
+                deepseekWebLogin.disabled = false;
+            };
+            window.addEventListener('message', handler);
+            sendToBackground({
+                action: 'DEEPSEEK_WEB_LOGIN',
+                phone,
+                password,
+                area_code: areaCode,
+            });
+        });
+    }
+
     const { dedicatedApiRefreshModels } = section.elements;
     if (dedicatedApiRefreshModels) {
         dedicatedApiRefreshModels.addEventListener('click', () => {

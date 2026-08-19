@@ -50,6 +50,16 @@ export const DOM_IDS = {
     DEDICATED_API_PROVIDER_ROUTING_ROW: 'dedicated-api-provider-routing-row',
     DEDICATED_API_PROVIDER_ROUTING: 'dedicated-api-provider-routing',
 
+    DEEPSEEK_WEB_FIELDS: 'deepseek-web-fields',
+    DEEPSEEK_WEB_PHONE: 'deepseek-web-phone',
+    DEEPSEEK_WEB_PASSWORD: 'deepseek-web-password',
+    DEEPSEEK_WEB_AREA_CODE: 'deepseek-web-area-code',
+    DEEPSEEK_WEB_LOGIN: 'deepseek-web-login',
+    DEEPSEEK_WEB_LOGIN_STATUS: 'deepseek-web-login-status',
+    DEEPSEEK_WEB_THINKING_ENABLED: 'deepseek-web-thinking-enabled',
+    DEEPSEEK_WEB_SEARCH_ENABLED: 'deepseek-web-search-enabled',
+    DEEPSEEK_WEB_MODEL_TYPE: 'deepseek-web-model-type',
+
     MCP_ENABLED: 'mcp-enabled',
     MCP_FIELDS: 'mcp-fields',
     MCP_SERVER_SELECT: 'mcp-server-select',

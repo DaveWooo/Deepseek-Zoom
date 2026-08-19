@@ -1,5 +1,6 @@
 import { SessionMessageHandler } from './handlers/session/index.js';
 import { UIMessageHandler } from './handlers/ui.js';
+import { loginDeepSeekWeb } from '../services/deepseek_web_auth.js';
 
 /**
  * Sets up the global runtime message listener.
@@ -41,6 +42,26 @@ export function setupMessageListener(
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (request.action === 'GET_LOGS') {
             sendResponse({ logs: logManager.getLogs() });
+            return true;
+        }
+
+        if (request.action === 'DEEPSEEK_WEB_LOGIN') {
+            const isEmail = request.phone.includes('@');
+            loginDeepSeekWeb(isEmail ? 'email' : 'phone', request.phone, request.password, request.area_code)
+                .then(async (result) => {
+                    // Persist to chrome.storage.local so settings_store can read it
+                    await chrome.storage.local.set({
+                        deepseek_web_token: result.token,
+                        deepseek_web_session_id: result.session_id,
+                        deepseek_web_login_type: isEmail ? 'email' : 'phone',
+                        deepseek_web_mobile: isEmail ? '' : request.phone,
+                        deepseek_web_email: isEmail ? request.phone : '',
+                        deepseek_web_area_code: request.area_code || '+86',
+                        deepseek_web_password: request.password,
+                    });
+                    sendResponse({ action: 'DEEPSEEK_WEB_LOGIN_RESULT', ...result });
+                })
+                .catch((e) => sendResponse({ action: 'DEEPSEEK_WEB_LOGIN_RESULT', error: e.message }));
             return true;
         }
 

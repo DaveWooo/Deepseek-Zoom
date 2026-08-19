@@ -54,5 +54,15 @@ export function queryConnectionElements(getElement = getSettingsElement) {
         mcpToolSearch: getElement(DOM_IDS.MCP_TOOL_SEARCH),
         mcpToolsSummary: getElement(DOM_IDS.MCP_TOOLS_SUMMARY),
         mcpToolList: getElement(DOM_IDS.MCP_TOOL_LIST),
+
+        deepseekWebFields: getElement(DOM_IDS.DEEPSEEK_WEB_FIELDS),
+        deepseekWebPhone: getElement(DOM_IDS.DEEPSEEK_WEB_PHONE),
+        deepseekWebPassword: getElement(DOM_IDS.DEEPSEEK_WEB_PASSWORD),
+        deepseekWebAreaCode: getElement(DOM_IDS.DEEPSEEK_WEB_AREA_CODE),
+        deepseekWebLogin: getElement(DOM_IDS.DEEPSEEK_WEB_LOGIN),
+        deepseekWebLoginStatus: getElement(DOM_IDS.DEEPSEEK_WEB_LOGIN_STATUS),
+        deepseekWebThinkingEnabled: getElement(DOM_IDS.DEEPSEEK_WEB_THINKING_ENABLED),
+        deepseekWebSearchEnabled: getElement(DOM_IDS.DEEPSEEK_WEB_SEARCH_ENABLED),
+        deepseekWebModelType: getElement(DOM_IDS.DEEPSEEK_WEB_MODEL_TYPE),
     };
 }

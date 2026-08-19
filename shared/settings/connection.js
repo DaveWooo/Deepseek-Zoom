@@ -21,6 +21,19 @@ import {
     isDedicatedApiProvider,
 } from './dedicated_providers.js';
 
+export const DEEPSEEK_WEB_STORAGE_KEYS = [
+    'deepseek_web_token',
+    'deepseek_web_session_id',
+    'deepseek_web_login_type',
+    'deepseek_web_mobile',
+    'deepseek_web_area_code',
+    'deepseek_web_email',
+    'deepseek_web_password',
+    'deepseek_web_thinking_enabled',
+    'deepseek_web_search_enabled',
+    'deepseek_web_model_type',
+];
+
 export const CONNECTION_STORAGE_KEYS = [
     'geminiProvider',
     'geminiUseOfficialApi',
@@ -46,6 +59,7 @@ export const CONNECTION_STORAGE_KEYS = [
     'geminiMcpServers',
     'geminiMcpActiveServerId',
     ...DEDICATED_API_STORAGE_KEYS,
+    ...DEEPSEEK_WEB_STORAGE_KEYS,
 ];
 
 export const GEMINI_OPENAI_WEB_SEARCH_KEYS = {
@@ -64,6 +78,10 @@ export function getOpenAIWebSearchStorageKeys({ includeLegacyFallbacks = false }
     return includeLegacyFallbacks
         ? { ...GEMINI_OPENAI_WEB_SEARCH_KEYS, ...LEGACY_OPENAI_WEB_SEARCH_KEYS }
         : GEMINI_OPENAI_WEB_SEARCH_KEYS;
+}
+
+export function isDeepSeekWebProvider(provider) {
+    return provider === 'deepseek_web';
 }
 
 export function getConnectionProvider(storageData = {}) {

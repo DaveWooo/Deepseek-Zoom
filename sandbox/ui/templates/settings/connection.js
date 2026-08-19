@@ -17,6 +17,7 @@ export const ConnectionSettingsTemplate = `
                 <option value="dashscope" data-i18n="providerDashScope">Qwen / DashScope API</option>
                 <option value="anthropic" data-i18n="providerAnthropic">Anthropic API</option>
                 <option value="zhipu" data-i18n="providerZhipu">Zhipu API</option>
+                <option value="deepseek_web" data-i18n="providerDeepSeekWeb">DeepSeek Web (Free)</option>
             </select>
 
             <div id="web-fields" class="settings-stack settings-section-offset">
@@ -25,6 +26,44 @@ export const ConnectionSettingsTemplate = `
                         <h5 data-i18n="webTemporaryChat">Temporary chat</h5>
                     </div>
                     <input type="checkbox" id="web-temporary-chat-enabled" class="setting-toggle" />
+                </div>
+            </div>
+
+            <div id="deepseek-web-fields" class="settings-stack settings-section-offset" hidden>
+                <div class="setting-field">
+                    <span>Phone / Email</span>
+                    <input type="text" id="deepseek-web-phone" class="settings-input settings-full-input" placeholder="手机号 or email@example.com">
+                </div>
+                <div class="setting-field">
+                    <span>Password</span>
+                    <input type="password" id="deepseek-web-password" class="settings-input settings-full-input" placeholder="密码">
+                </div>
+                <div class="setting-field">
+                    <span>Area Code</span>
+                    <input type="text" id="deepseek-web-area-code" class="settings-input settings-full-input" placeholder="+86" value="+86">
+                </div>
+                <div class="settings-action-row">
+                    <button id="deepseek-web-login" class="btn-primary settings-small-button" type="button">Login</button>
+                    <div id="deepseek-web-login-status" class="settings-muted-text"></div>
+                </div>
+                <div class="setting-panel-row settings-section-offset">
+                    <div class="setting-panel-header">
+                        <h5>Thinking (R1)</h5>
+                    </div>
+                    <input type="checkbox" id="deepseek-web-thinking-enabled" class="setting-toggle" />
+                </div>
+                <div class="setting-panel-row">
+                    <div class="setting-panel-header">
+                        <h5>Deep Search</h5>
+                    </div>
+                    <input type="checkbox" id="deepseek-web-search-enabled" class="setting-toggle" />
+                </div>
+                <div class="setting-field settings-section-offset">
+                    <span>Model Type</span>
+                    <select id="deepseek-web-model-type" class="settings-input settings-select">
+                        <option value="default">DeepSeek-V3 (Fast)</option>
+                        <option value="expert">DeepSeek-R1 (Reasoning)</option>
+                    </select>
                 </div>
             </div>
 

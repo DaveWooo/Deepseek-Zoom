@@ -109,6 +109,18 @@ export class ConnectionSection {
         if (openaiUseResponsesApi) openaiUseResponsesApi.checked = openaiSettings.useResponsesApi;
         if (openaiWebSearch) openaiWebSearch.checked = openaiSettings.webSearch;
 
+        // DeepSeek Web fields
+        const dsw = data?.deepseekWeb || {};
+        if (this.elements.deepseekWebPhone) this.elements.deepseekWebPhone.value = dsw.deepseek_web_phone || '';
+        if (this.elements.deepseekWebPassword) this.elements.deepseekWebPassword.value = dsw.deepseek_web_password || '';
+        if (this.elements.deepseekWebAreaCode) this.elements.deepseekWebAreaCode.value = dsw.deepseek_web_area_code || '+86';
+        if (this.elements.deepseekWebThinkingEnabled) this.elements.deepseekWebThinkingEnabled.checked = dsw.deepseek_web_thinking_enabled === true;
+        if (this.elements.deepseekWebSearchEnabled) this.elements.deepseekWebSearchEnabled.checked = dsw.deepseek_web_search_enabled === true;
+        if (this.elements.deepseekWebModelType) this.elements.deepseekWebModelType.value = dsw.deepseek_web_model_type || 'default';
+        if (this.elements.deepseekWebLoginStatus && dsw.deepseek_web_token) {
+            this.elements.deepseekWebLoginStatus.textContent = '✅ Logged in';
+        }
+
         this.dedicatedApiProviders = normalizeDedicatedApiSettingsPayload(
             data?.dedicatedApiProviders
         );
@@ -206,6 +218,15 @@ export class ConnectionSection {
                 ? openaiUseResponsesApi.checked === true
                 : false,
             openaiWebSearch: openaiWebSearch ? openaiWebSearch.checked === true : false,
+
+            deepseekWeb: {
+                deepseek_web_phone: this.elements.deepseekWebPhone ? this.elements.deepseekWebPhone.value.trim() : '',
+                deepseek_web_password: this.elements.deepseekWebPassword ? this.elements.deepseekWebPassword.value.trim() : '',
+                deepseek_web_area_code: this.elements.deepseekWebAreaCode ? this.elements.deepseekWebAreaCode.value.trim() : '+86',
+                deepseek_web_thinking_enabled: this.elements.deepseekWebThinkingEnabled ? this.elements.deepseekWebThinkingEnabled.checked : false,
+                deepseek_web_search_enabled: this.elements.deepseekWebSearchEnabled ? this.elements.deepseekWebSearchEnabled.checked : false,
+                deepseek_web_model_type: this.elements.deepseekWebModelType ? this.elements.deepseekWebModelType.value : 'default',
+            },
             dedicatedApiProviders: this.dedicatedApiProviders,
 
             mcpEnabled: mcpEnabled ? mcpEnabled.checked === true : false,
@@ -220,7 +241,7 @@ export class ConnectionSection {
     }
 
     updateVisibility(provider) {
-        const { apiKeyContainer, webFields, officialFields, openaiFields, dedicatedApiFields } =
+        const { apiKeyContainer, webFields, officialFields, openaiFields, dedicatedApiFields, deepseekWebFields } =
             this.elements;
         if (!apiKeyContainer) return;
 
@@ -228,7 +249,8 @@ export class ConnectionSection {
         if (officialFields) officialFields.hidden = provider !== 'official';
         if (openaiFields) openaiFields.hidden = provider !== 'openai';
         if (dedicatedApiFields) dedicatedApiFields.hidden = !isDedicatedApiProvider(provider);
-        if (provider === 'web') {
+        if (deepseekWebFields) deepseekWebFields.hidden = provider !== 'deepseek_web';
+        if (provider === 'web' || provider === 'deepseek_web') {
             apiKeyContainer.hidden = true;
         } else {
             apiKeyContainer.hidden = false;

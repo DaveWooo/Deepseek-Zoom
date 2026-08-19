@@ -333,6 +333,8 @@ export class StandaloneSettingsBridge {
             this.controller.updateMcpToolsResult(response);
         } else if (response.action === 'PROVIDER_MODELS_RESULT') {
             this.controller.updateProviderModelsResult(response);
+        } else if (response.action === 'DEEPSEEK_WEB_LOGIN_RESULT') {
+            window.postMessage({ action: 'DEEPSEEK_WEB_LOGIN_RESULT', payload: response }, '*');
         } else if (response.logs) {
             this.controller.saveLogFile(response.logs);
         }
