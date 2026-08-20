@@ -1,5 +1,59 @@
 # Changelog
 
+## v6.1.0 - 2026-08-20
+
+### Settings UI & User Experience
+
+- **优化 DeepSeek 网页版连接设置界面与视觉层级**：
+    - 将账号登录表单重构为独立的卡片容器（`.settings-subcard`），使输入与登录状态更加聚焦。
+    - 将“深度思考 (R1)”与“联网搜索 (Deep Search)”重构为对称卡片网格布局（`.deepseek-web-options-grid`），提升在宽屏与窄屏下的对齐和交互体验。
+    - 明确“默认模型”下拉框与“快捷模型（工具栏与侧边栏）”药丸标签的功能分工，消除视觉冗余与理解歧义。
+    - 补充全面的中英文多语言国际化标签（`data-i18n` 与 `data-i18n-placeholder`）。
+
+## v6.0.9 - 2026-08-20
+
+### DeepSeek Web & Vision Integration
+
+- **DeepSeek Vision 识图与划词提问图片自动关联修复**：
+    - 修复 `request_dispatcher.js` 中 DeepSeek Web `modelType` 未正确应用请求中的模型参数（如下拉选择 `DeepSeek Vision` 时未生效）的问题。
+    - `handleQuickAsk` 增加对输入内容中 Markdown 图像链接（`![...](url)`）的自动拉取与文件附件构建，使 DeepSeek Vision 模式及多模态模型能直接接收并上传图片进行视觉解析。
+    - `deepseek_web.js` 在无图片附件时优雅降级为默认文本模式，避免请求因附件缺失报错。
+
+## v6.0.8 - 2026-08-20
+
+### Content Toolbar & Multimodal Context
+
+- **划词含公式图片时保留 Markdown 图像链接**：
+    - 当选中文本中包含未带 DOM 文本属性的公式图片时，`selection_latex.js` 不再直接替换为无信息的 `[formula]` 文本，而是保留为标准 Markdown 图像链接 `![formula](url)`。
+    - 多模态 AI 模型（Gemini Flash、DeepSeek、GPT-4o、Claude 等）在接收选区上下文（Context）时，可直接读取图片 URL 视觉识别数学公式并准确解答。
+
+## v6.0.7 - 2026-08-20
+
+### Content Toolbar & OCR
+
+- **公式图片识别与 OCR 提示词增强**：
+    - OCR 提取提示词增加对数学公式和符号转换为标准 LaTeX 格式（行内 $...$、块级 $$...$$、集合 \\{\\}、分式 \\frac{}{}、根式 \\sqrt{} 等）的专项指令。
+    - `GeminiSelectionLatex` 新增公式缓存机制（`cacheFormula` / `getCachedFormula` / `clearFormulaCache`），支持 OCR 识别结果就地缓存并自动回填至划选 LaTeX 转换中。
+    - 增强试卷填空（带句点下划线 `<u>&nbsp;&nbsp;.</u>`）识别，规范转换为 `______ .`。
+
+## v6.0.6 - 2026-08-20
+
+### Content Toolbar & LaTeX
+
+- **页面公式与题库图片公式转 LaTeX 深度增强**：
+    - 支持 WIRIS MathML 实体转义编码（`«math ...»`）自动还原与 MathML 结构解析转 LaTeX。
+    - 支持 MathType 与各大在线题库/教育平台（如菁优网、百度教育、组卷网、学科网、21世纪教育）各类公式属性（`data-mathml`、`data-wiris-mathml`、`data-latex`、`data-formula`、`data-mathtype` 等）与父级容器（`.q-math`、`.MathType`、`.Wirisformula` 等）公式提取。
+    - 支持 URL 查询参数中携带的各类公式（`?formula=`、`?tex=`、`?math=`、`?eq=`、`?mathml=` 等）解码与转换。
+    - 完善集合符号与定界符转换（如集合花括号 `\{`、`\}`、绝对值与条件竖线 `|`、子集 `\subseteq`、属于 `\in`、不等号 `\le`、`\ge`）。
+    - 支持试卷填空下划线（`______`）与富文本样式规范转换。
+
+## v6.0.5 - 2026-08-19
+
+### Fixes
+
+- **ask-window 模型联动修复**：切换"弹窗模型来源"（provider）时，先 `await` storage 写入再刷新模型列表，消除 `set`/`get` 竞态——此前 provider 变更后 `ask-model-select` 可能仍显示旧厂商的模型。
+- **侧边栏"引用网页选中内容"转 LaTeX**：`GET_SELECTION` 响应复用 `GeminiSelectionLatex` 转换，网页中选取的公式/图片在侧边栏对话框以 LaTeX 源码显示（`> $\frac{1}{2}$ ...`）。
+
 ## v6.0.4 - 2026-08-19
 
 ### Content Toolbar

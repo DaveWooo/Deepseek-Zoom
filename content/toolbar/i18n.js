@@ -192,8 +192,8 @@
 
             prompts: {
                 ocr: isZh
-                    ? '请识别并提取这张图片中的可见文字 (OCR)。按阅读顺序输出，尽量保留换行、列表、表格和原始标点。仅输出识别到的文本；如果没有文字，仅输出“未检测到文字”。'
-                    : 'OCR this image. Extract visible text exactly as written, following reading order and preserving line breaks, lists, tables, and punctuation where practical. Output only the extracted text; if no text is visible, output "No text detected."',
+                    ? '请识别并提取这张图片中的可见文字 (OCR)。如果包含数学公式或符号，请精确转换为标准的 LaTeX 格式（行内公式用 $...$，块级公式用 $$...$$，如集合 \\{ \\}、分式 \\frac{}{}、根式 \\sqrt{}、上下标等）。按阅读顺序输出，尽量保留换行、列表、表格和原始标点。仅输出识别到的文本；如果没有文字，仅输出“未检测到文字”。'
+                    : 'OCR this image. Extract visible text exactly as written. If the image contains mathematical formulas or symbols, convert them accurately into standard LaTeX format (inline math with $...$, display math with $$...$$, such as \\{ \\}, \\frac{}{}, \\sqrt{}, etc.). Follow reading order and preserve line breaks, lists, tables, and punctuation where practical. Output only the extracted text; if no text is visible, output "No text detected."',
 
                 imageTranslate: (targets) => buildImageTranslatePrompt(isZh, targets),
 

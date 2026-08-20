@@ -744,11 +744,44 @@
     align-items: center;
 }
 
+/* ── Subcard & Grouping Layout ── */
+.settings-subcard {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid var(--color-border-subtle, #e5e7eb);
+    border-radius: 8px;
+    background: var(--color-surface-elevated, #f9fafb);
+}
+
 /* ── DeepSeek Web compact layout ── */
 .deepseek-web-login-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
+}
+
+.deepseek-web-options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.deepseek-web-option-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border: 1px solid var(--color-border-subtle, #e5e7eb);
+    border-radius: 8px;
+    background: var(--color-surface-elevated, #f9fafb);
+}
+
+.deepseek-web-option-card .setting-panel-header h5 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 500;
 }
 
 .deepseek-web-options-row {
@@ -772,19 +805,21 @@
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 5px 12px;
+    gap: 6px;
+    padding: 6px 14px;
     border: 1px solid var(--color-border-subtle, #e5e7eb);
     border-radius: 999px;
     background: var(--color-surface-elevated, #f9fafb);
     color: var(--color-text-primary, #374151);
     font-size: 12px;
+    font-weight: 500;
     cursor: pointer;
     white-space: nowrap;
     user-select: none;
     transition:
         border-color 0.15s,
-        background 0.15s;
+        background 0.15s,
+        box-shadow 0.15s;
 }
 
 .deepseek-web-model-toggle:hover {
@@ -802,7 +837,8 @@
 }
 
 @media (max-width: 480px) {
-    .deepseek-web-login-grid {
+    .deepseek-web-login-grid,
+    .deepseek-web-options-grid {
         grid-template-columns: 1fr;
     }
 }

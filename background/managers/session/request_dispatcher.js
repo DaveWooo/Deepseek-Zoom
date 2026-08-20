@@ -579,7 +579,7 @@ export class RequestDispatcher {
         const dsOptions = {
             thinkingEnabled: dsw.deepseek_web_thinking_enabled !== false,
             searchEnabled: dsw.deepseek_web_search_enabled !== false,
-            modelType: normalizeDeepSeekWebModelType(dsw.deepseek_web_model_type),
+            modelType: normalizeDeepSeekWebModelType(request.model || dsw.deepseek_web_model_type),
         };
 
         // Retry with token refresh on 401

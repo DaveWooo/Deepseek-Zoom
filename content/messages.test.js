@@ -269,4 +269,38 @@ describe('GeminiMessageRouter capture routing', () => {
             warnSpy.mockRestore();
         }
     });
+
+    it('returns LaTeX-converted text for GET_SELECTION', async () => {
+        const router = await installMessageRouter();
+        window.GeminiSelectionLatex = {
+            getSelectionLatexText: vi.fn(() => '$x^2 + 1$'),
+        };
+        try {
+            const sendResponse = vi.fn();
+            const handled = router.handle({ action: 'GET_SELECTION' }, null, sendResponse);
+
+            expect(handled).toBe(true);
+            expect(sendResponse).toHaveBeenCalledWith({ selection: '$x^2 + 1$' });
+        } finally {
+            delete window.GeminiSelectionLatex;
+        }
+    });
+
+    it('falls back to plain selection text when LaTeX conversion is unavailable', async () => {
+        const router = await installMessageRouter();
+        delete window.GeminiSelectionLatex;
+
+        const selection = {
+            toString: vi.fn(() => 'plain text'),
+        };
+        vi.spyOn(window, 'getSelection').mockReturnValue(selection);
+        try {
+            const sendResponse = vi.fn();
+            router.handle({ action: 'GET_SELECTION' }, null, sendResponse);
+
+            expect(sendResponse).toHaveBeenCalledWith({ selection: 'plain text' });
+        } finally {
+            vi.restoreAllMocks();
+        }
+    });
 });

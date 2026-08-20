@@ -155,7 +155,14 @@
             }
 
             if (request.action === 'GET_SELECTION') {
-                sendResponse({ selection: window.getSelection().toString() });
+                // Convert math/image formulas in the page selection to
+                // LaTeX-friendly text so the side panel quote can display them
+                // in its plain-text input (fall back to the plain text).
+                const selectionText =
+                    window.GeminiSelectionLatex?.getSelectionLatexText() ||
+                    window.getSelection()?.toString() ||
+                    '';
+                sendResponse({ selection: selectionText });
                 return true;
             }
 

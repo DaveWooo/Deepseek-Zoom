@@ -22,10 +22,13 @@
 
             try {
                 switch (actionType) {
-                    case 'copy_selection':
-                        if (this.controller.currentSelection) {
+                    case 'copy_selection': {
+                        const textToCopy =
+                            window.GeminiSelectionLatex?.getSelectionLatexText() ||
+                            this.controller.currentSelection;
+                        if (textToCopy) {
                             navigator.clipboard
-                                .writeText(this.controller.currentSelection)
+                                .writeText(textToCopy)
                                 .then(() => this.ui.showCopySelectionFeedback(true))
                                 .catch((clipboardError) => {
                                     console.error('Failed to copy text:', clipboardError);
@@ -33,6 +36,7 @@
                                 });
                         }
                         break;
+                    }
 
                     case 'image_analyze':
                     case 'image_describe':

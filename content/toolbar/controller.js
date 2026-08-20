@@ -101,8 +101,10 @@
             writeResult?.catch?.((error) => {
                 console.warn('Failed to save toolbar settings:', error?.message || error);
             });
+            return writeResult;
         } catch (error) {
             console.warn('Failed to save toolbar settings:', error?.message || error);
+            return null;
         }
     }
 
@@ -402,10 +404,10 @@
                     saveIfChanged: false,
                 });
             }
-            saveToolbarSettings({ [TOOLBAR_PROVIDER_STORAGE_KEY]: provider });
-            // Immediately re-sync so ask-model-select follows ask-provider-select
-            // instead of waiting on the async storage.onChanged round-trip (which
-            // can lag or be missed, leaving the two selects out of sync).
+            // Await the storage write before re-syncing so ask-model-select
+            // reads the newly stored provider instead of racing the async
+            // set and falling back to the previous value.
+            await saveToolbarSettings({ [TOOLBAR_PROVIDER_STORAGE_KEY]: provider });
             await this.syncSettings();
         }
 

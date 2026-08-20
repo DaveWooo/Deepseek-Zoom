@@ -498,7 +498,7 @@ export async function sendDeepSeekWebMessage(
         ref_file_ids: refFileIds,
         thinking_enabled: thinkingEnabled,
         search_enabled: searchEnabled,
-        model_type: modelType,
+        model_type: modelType === 'vision' && refFileIds.length === 0 ? 'default' : modelType,
     };
 
     const resp = await fetch(CHAT_ENDPOINT, {

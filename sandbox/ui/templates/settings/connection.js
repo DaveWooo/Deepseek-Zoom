@@ -30,61 +30,70 @@ export const ConnectionSettingsTemplate = `
             </div>
 
             <div id="deepseek-web-fields" class="settings-stack settings-section-offset" hidden>
-                <div class="deepseek-web-login-grid">
-                    <div class="setting-field">
-                        <span>Phone / Email</span>
-                        <input type="text" id="deepseek-web-phone" class="settings-input settings-full-input" placeholder="手机号 or email@example.com">
+                <div class="settings-subcard">
+                    <div class="deepseek-web-login-grid">
+                        <div class="setting-field">
+                            <span data-i18n="deepseekWebPhoneOrEmail">Phone / Email</span>
+                            <input type="text" id="deepseek-web-phone" class="settings-input settings-full-input" data-i18n-placeholder="deepseekWebPhoneOrEmailPlaceholder" placeholder="手机号 or email@example.com">
+                        </div>
+                        <div class="setting-field">
+                            <span data-i18n="deepseekWebPassword">Password</span>
+                            <input type="password" id="deepseek-web-password" class="settings-input settings-full-input" data-i18n-placeholder="deepseekWebPasswordPlaceholder" placeholder="密码">
+                        </div>
                     </div>
-                    <div class="setting-field">
-                        <span>Password</span>
-                        <input type="password" id="deepseek-web-password" class="settings-input settings-full-input" placeholder="密码">
+                    <div class="settings-action-row">
+                        <button id="deepseek-web-login" class="btn-primary settings-small-button" type="button" data-i18n="deepseekWebLogin">Login</button>
+                        <div id="deepseek-web-login-status" class="settings-muted-text"></div>
                     </div>
                 </div>
-                <div class="settings-action-row">
-                    <button id="deepseek-web-login" class="btn-primary settings-small-button" type="button">Login</button>
-                    <div id="deepseek-web-login-status" class="settings-muted-text"></div>
-                </div>
-                <div class="deepseek-web-options-row">
-                    <div class="setting-panel-row deepseek-web-option">
+
+                <div class="deepseek-web-options-grid">
+                    <div class="setting-panel-row deepseek-web-option-card">
                         <div class="setting-panel-header">
-                            <h5>Thinking (R1)</h5>
+                            <h5 data-i18n="deepseekWebThinkingR1">Deep Thinking (R1)</h5>
                         </div>
                         <input type="checkbox" id="deepseek-web-thinking-enabled" class="setting-toggle" checked />
                     </div>
-                    <div class="setting-panel-row deepseek-web-option">
+                    <div class="setting-panel-row deepseek-web-option-card">
                         <div class="setting-panel-header">
-                            <h5>Deep Search</h5>
+                            <h5 data-i18n="deepseekWebDeepSearch">Deep Search (Web)</h5>
                         </div>
                         <input type="checkbox" id="deepseek-web-search-enabled" class="setting-toggle" checked />
                     </div>
                 </div>
+
                 <div class="setting-field">
-                    <span>Model Type</span>
+                    <span data-i18n="deepseekWebDefaultModel">Default Model</span>
                     <select id="deepseek-web-model-type" class="settings-input settings-select">
-                        <option value="vision">DeepSeek Vision (识图)</option>
-                        <option value="default" selected>DeepSeek最新版模型 (快速)</option>
-                        <option value="expert">DeepSeek R1 (专家)</option>
+                        <option value="vision" data-i18n="deepseekWebModelVision">DeepSeek Vision (识图)</option>
+                        <option value="default" data-i18n="deepseekWebModelDefault" selected>DeepSeek最新版模型 (快速)</option>
+                        <option value="expert" data-i18n="deepseekWebModelExpert">DeepSeek R1 (专家)</option>
                     </select>
                 </div>
-                <div class="deepseek-web-model-toggles">
-                    <label class="deepseek-web-model-toggle" data-model-type="default" title="快速模式 (DeepSeek最新版模型)">
-                        <span class="model-status-dot model-status-enabled" id="deepseek-web-status-default"></span>
-                        <span class="deepseek-web-model-toggle-label">快速</span>
-                        <input type="checkbox" id="deepseek-web-model-enabled-default" class="setting-toggle" checked />
-                    </label>
-                    <label class="deepseek-web-model-toggle" data-model-type="expert" title="专家模式 (DeepSeek R1)">
-                        <span class="model-status-dot model-status-enabled" id="deepseek-web-status-expert"></span>
-                        <span class="deepseek-web-model-toggle-label">专家</span>
-                        <input type="checkbox" id="deepseek-web-model-enabled-expert" class="setting-toggle" checked />
-                    </label>
-                    <label class="deepseek-web-model-toggle" data-model-type="vision" title="识图模式 (DeepSeek Vision)">
-                        <span class="model-status-dot model-status-enabled" id="deepseek-web-status-vision"></span>
-                        <span class="deepseek-web-model-toggle-label">识图</span>
-                        <input type="checkbox" id="deepseek-web-model-enabled-vision" class="setting-toggle" checked />
-                    </label>
+
+                <div class="setting-field">
+                    <span data-i18n="deepseekWebEnabledModels">Quick Models (Toolbar & Sidepanel)</span>
+                    <div class="deepseek-web-model-toggles">
+                        <label class="deepseek-web-model-toggle" data-model-type="default" title="快速模式 (DeepSeek最新版模型)">
+                            <span class="model-status-dot model-status-enabled" id="deepseek-web-status-default"></span>
+                            <span class="deepseek-web-model-toggle-label" data-i18n="deepseekWebModelDefaultShort">快速</span>
+                            <input type="checkbox" id="deepseek-web-model-enabled-default" class="setting-toggle" checked />
+                        </label>
+                        <label class="deepseek-web-model-toggle" data-model-type="expert" title="专家模式 (DeepSeek R1)">
+                            <span class="model-status-dot model-status-enabled" id="deepseek-web-status-expert"></span>
+                            <span class="deepseek-web-model-toggle-label" data-i18n="deepseekWebModelExpertShort">专家</span>
+                            <input type="checkbox" id="deepseek-web-model-enabled-expert" class="setting-toggle" checked />
+                        </label>
+                        <label class="deepseek-web-model-toggle" data-model-type="vision" title="识图模式 (DeepSeek Vision)">
+                            <span class="model-status-dot model-status-enabled" id="deepseek-web-status-vision"></span>
+                            <span class="deepseek-web-model-toggle-label" data-i18n="deepseekWebModelVisionShort">识图</span>
+                            <input type="checkbox" id="deepseek-web-model-enabled-vision" class="setting-toggle" checked />
+                        </label>
+                    </div>
                 </div>
+
                 <div class="settings-action-row">
-                    <button type="button" id="deepseek-web-test-btn" class="deepseek-web-test-btn">验证连通性</button>
+                    <button type="button" id="deepseek-web-test-btn" class="deepseek-web-test-btn" data-i18n="deepseekWebTestConnection">验证连通性</button>
                     <span id="deepseek-web-test-status" class="settings-muted-text"></span>
                 </div>
             </div>

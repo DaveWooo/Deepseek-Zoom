@@ -110,6 +110,37 @@ export class QuickAskHandler {
         try {
             const promptRequest = await this._withPageContext(request, tabId);
 
+            // If prompt text contains markdown images (![...](http...)), auto-fetch them
+            // so vision models (like DeepSeek Vision, Gemini Flash, etc.) receive image files.
+            if (!promptRequest.files && promptRequest.text) {
+                const markdownImageMatches = [
+                    ...promptRequest.text.matchAll(
+                        /!\[.*?\]\((https?:\/\/[^\s\)]+|data:image\/[^\s\)]+)\)/g
+                    ),
+                ];
+                if (markdownImageMatches.length > 0 && this.imageHandler) {
+                    const fetchedFiles = [];
+                    for (const match of markdownImageMatches.slice(0, 3)) {
+                        const imgUrl = match[1];
+                        try {
+                            const imgRes = await this.imageHandler.fetchImage(imgUrl);
+                            if (imgRes && !imgRes.error && imgRes.base64) {
+                                fetchedFiles.push({
+                                    base64: imgRes.base64,
+                                    type: imgRes.type || 'image/png',
+                                    name: imgRes.name || 'image.png',
+                                });
+                            }
+                        } catch {
+                            // Ignore fetch failure
+                        }
+                    }
+                    if (fetchedFiles.length > 0) {
+                        promptRequest.files = fetchedFiles;
+                    }
+                }
+            }
+
             if (!promptRequest.sessionId) {
                 await this.sessionManager.resetContext();
             } else {
