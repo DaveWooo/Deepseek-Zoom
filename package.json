@@ -1,8 +1,15 @@
 {
-    "name": "deepseek-zoom",
-    "private": true,
-    "version": "6.1.0",
+    "name": "@davewooo/deepseek-zoom",
+    "private": false,
+    "version": "6.1.1",
     "type": "module",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DaveWooo/Deepseek-Zoom.git"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
+    },
     "scripts": {
         "dev": "vite",
         "build": "vite build",
@@ -13,6 +20,10 @@
         "test": "vitest run",
         "test:watch": "vitest",
         "check": "npm run format:check && npm run build && npm exec tsc -- --noEmit && npm run lint:unused && npm run test",
+        "version:bump": "node scripts/bump-version.mjs",
+        "version:patch": "node scripts/bump-version.mjs patch",
+        "version:minor": "node scripts/bump-version.mjs minor",
+        "version:major": "node scripts/bump-version.mjs major",
         "package:extension": "npm run build && node scripts/package-extension.mjs",
         "package:local": "npm run package:extension && node scripts/package-local.mjs",
         "sync:local": "node scripts/package-local.mjs",

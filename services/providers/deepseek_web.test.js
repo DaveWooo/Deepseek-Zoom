@@ -106,7 +106,7 @@ describe('sendDeepSeekWebMessage vision mode file upload', () => {
             [IMAGE],
             undefined,
             undefined,
-            { modelType: 'vision' }
+            { modelType: 'vision', thinkingEnabled: true, searchEnabled: true }
         );
 
         expect(result.text).toBe('识图成功');
@@ -125,6 +125,8 @@ describe('sendDeepSeekWebMessage vision mode file upload', () => {
         const chatBody = JSON.parse(chatCall[1].body);
         expect(chatBody.ref_file_ids).toEqual(['vision-1']);
         expect(chatBody.model_type).toBe('vision');
+        expect(chatBody.thinking_enabled).toBe(false);
+        expect(chatBody.search_enabled).toBe(false);
     });
 
     it('accepts the older upload response shape { data: { id } }', async () => {
@@ -253,7 +255,7 @@ describe('sendDeepSeekWebMessage vision mode file upload', () => {
                 return {
                     ok: true,
                     status: 200,
-                    json: async () => ({ data: { biz_data: { id: 'raw-1' } } }),
+                    json: async () => ({ data: { biz_data: {} } }),
                 };
             }
             return { ok: true, status: 200, body: makeStream('data: {"v":"x"}\n') };
@@ -588,4 +590,67 @@ describe('sendDeepSeekWebMessage vision mode file upload', () => {
             )
         ).rejects.toThrow(/empty response.*vision ref_file_ids: vision-1/);
     });
+
+    it('parses indexed fragments emitted during search and reasoning', async () => {
+        mockPow();
+        const sseLines = [
+            'data: {"p":"response/fragments","o":"APPEND","v":[{"type":"SEARCH","content":"今日AI新闻"}]}',
+            'data: {"p":"response/fragments/0/status","v":"FINISHED"}',
+            'data: {"p":"response/fragments","o":"APPEND","v":[{"type":"THINK","content":"正在搜索相关新闻..."}]}',
+            'data: {"p":"response/fragments/1/content","o":"APPEND","v":"找到若干条热点。"}',
+            'data: {"p":"response/fragments","o":"APPEND","v":[{"type":"RESPONSE","content":"今天AI领域的重大新闻包括："}]}',
+            'data: {"p":"response/fragments/2/content","o":"APPEND","v":" 1. 新模型发布。"}',
+            'data: {"p":"response/status","v":"FINISHED"}',
+            'data: [DONE]',
+        ].join('\n') + '\n';
+
+        global.fetch = vi.fn(async (url) => {
+            if (url.includes('/chat/completion')) {
+                return { ok: true, status: 200, body: makeStream(sseLines) };
+            }
+            return { ok: true, status: 200, json: async () => ({}) };
+        });
+
+        const updates = [];
+        const result = await sendDeepSeekWebMessage(
+            '今日AI 新闻',
+            { token: 't-1', session_id: 's-1' },
+            'default',
+            [],
+            undefined,
+            (content, thinking) => updates.push({ content, thinking }),
+            { searchEnabled: true, modelType: 'default' }
+        );
+
+        expect(result.text).toBe('今天AI领域的重大新闻包括： 1. 新模型发布。');
+        expect(result.thoughts).toBe('正在搜索相关新闻...找到若干条热点。');
+        expect(updates.length).toBeGreaterThan(0);
+    });
+
+    it('automatically creates a session when session_id is missing', async () => {
+        mockPow();
+        createDeepSeekSession.mockResolvedValue('auto-created-session');
+        global.fetch = vi.fn(async (url) => {
+            if (url.includes('/chat/completion')) {
+                return { ok: true, status: 200, body: makeStream('data: {"v":"hello"}\n') };
+            }
+            return { ok: true, status: 200, json: async () => ({}) };
+        });
+
+        const context = { token: 't-1' };
+        const result = await sendDeepSeekWebMessage(
+            'hi',
+            context,
+            'default',
+            [],
+            undefined,
+            undefined,
+            { modelType: 'default' }
+        );
+
+        expect(result.text).toBe('hello');
+        expect(createDeepSeekSession).toHaveBeenCalledWith('t-1');
+        expect(context.session_id).toBe('auto-created-session');
+    });
 });
+

@@ -8,7 +8,7 @@ export const ConnectionSettingsTemplate = `
         <div class="setting-panel">
             <label class="setting-label" data-i18n="connectionProvider">Model Provider</label>
             <select id="provider-select" class="settings-input settings-select">
-                <option value="deepseek_web" data-i18n="providerDeepSeekWeb">DeepSeek 网页(免费版)</option>
+                <option value="deepseek_web" data-i18n="providerDeepSeekWeb">DeepSeek 网页版(免费)</option>
                 <option value="web" data-i18n="providerWeb">Gemini Web Client (Free)</option>
                 <option value="official" data-i18n="providerOfficial">Google Gemini API</option>
                 <option value="openai" data-i18n="providerOpenAI">OpenAI Compatible API</option>
@@ -34,11 +34,11 @@ export const ConnectionSettingsTemplate = `
                     <div class="deepseek-web-login-grid">
                         <div class="setting-field">
                             <span data-i18n="deepseekWebPhoneOrEmail">Phone / Email</span>
-                            <input type="text" id="deepseek-web-phone" class="settings-input settings-full-input" data-i18n-placeholder="deepseekWebPhoneOrEmailPlaceholder" placeholder="手机号 or email@example.com">
+                            <input type="text" id="deepseek-web-phone" class="settings-input settings-full-input" data-i18n-placeholder="deepseekWebPhoneOrEmailPlaceholder">
                         </div>
                         <div class="setting-field">
                             <span data-i18n="deepseekWebPassword">Password</span>
-                            <input type="password" id="deepseek-web-password" class="settings-input settings-full-input" data-i18n-placeholder="deepseekWebPasswordPlaceholder" placeholder="密码">
+                            <input type="password" id="deepseek-web-password" class="settings-input settings-full-input" data-i18n-placeholder="deepseekWebPasswordPlaceholder">
                         </div>
                     </div>
                     <div class="settings-action-row">

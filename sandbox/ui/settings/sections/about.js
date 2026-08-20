@@ -77,7 +77,7 @@ export class AboutSection {
 
         if (isUpdateAvailable) {
             const link = document.createElement('a');
-            link.href = 'https://github.com/DaveWooo/Deepseek-Nexus/releases';
+            link.href = 'https://github.com/DaveWooo/Deepseek-Zoom/releases';
             link.target = '_blank';
             link.className = 'app-update-link';
             link.textContent = `Update available: ${latest}`;

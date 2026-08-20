@@ -20,7 +20,7 @@ describe('toolbar web model helper', () => {
 
     it('lists only current Web chat models', () => {
         expect(window.GeminiWebModels.createOptions()).toEqual([
-            { value: 'fbb127bbb056c959', label: '3.6 Flash' },
+            { value: 'fbb127bbb056c959', label: '3.7 Flash' },
             { value: 'cf41b0e0dd7d53e5', label: '3.5 Flash-Lite' },
             { value: 'e6fa609c3fa255c0', label: '3.1 Pro' },
         ]);
@@ -42,5 +42,15 @@ describe('toolbar web model helper', () => {
                 model: 'e6fa609c3fa255c0',
             })
         ).toBe('e6fa609c3fa255c0');
+    });
+
+    it('resolves deepseek_web provider to vision for image prompts', () => {
+        expect(
+            window.GeminiWebModels.resolveImagePromptModel({
+                provider: 'deepseek_web',
+                mode: 'ocr',
+                model: 'default',
+            })
+        ).toBe('vision');
     });
 });

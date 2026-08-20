@@ -1,4 +1,4 @@
-const GITHUB_REPOSITORY_BASE_URL = 'https://api.github.com/repos/DaveWooo/Deepseek-Nexus';
+const GITHUB_REPOSITORY_BASE_URL = 'https://api.github.com/repos/DaveWooo/Deepseek-Zoom';
 
 async function readResponseField(response, field) {
     if (!response?.ok) return null;

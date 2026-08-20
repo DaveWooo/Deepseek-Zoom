@@ -10,6 +10,9 @@
     }
 
     function resolveImagePromptModel({ provider = 'web', mode, model } = {}) {
+        if (provider === 'deepseek_web') {
+            return 'vision';
+        }
         return model || catalog.DEFAULT_WEB_MODEL;
     }
 

@@ -5,13 +5,14 @@
 
     const WEB_MODEL_OPTIONS = Object.freeze(
         [
-            { value: 'fbb127bbb056c959', label: '3.6 Flash' },
+            { value: 'fbb127bbb056c959', label: '3.7 Flash' },
             { value: 'cf41b0e0dd7d53e5', label: '3.5 Flash-Lite' },
             { value: 'e6fa609c3fa255c0', label: '3.1 Pro' },
         ].map((option) => Object.freeze(option))
     );
 
     const LEGACY_WEB_MODEL_ALIASES = Object.freeze({
+        'gemini-3.7-flash': 'fbb127bbb056c959',
         'gemini-3.6-flash': 'fbb127bbb056c959',
         'gemini-3-flash-thinking': 'fbb127bbb056c959',
         'gemini-3.5-flash-lite': 'cf41b0e0dd7d53e5',
@@ -20,7 +21,7 @@
     });
 
     const WEB_MODEL_HEADER_CONFIGS = Object.freeze({
-        // Current free-tier / GA Flash workhorse (Gemini 3.6 Flash).
+        // Current free-tier / GA Flash workhorse (Gemini 3.7 Flash).
         fbb127bbb056c959: Object.freeze({
             hash: 'fbb127bbb056c959',
             mode: 1,

@@ -20,7 +20,7 @@ describe('connection settings helpers', () => {
             openaiSelectedModel: '',
             officialBaseUrl: 'https://generativelanguage.googleapis.com/v1beta',
             apiKey: '',
-            officialModel: 'gemini-3.6-flash, gemini-3.5-flash-lite, gemini-3.1-pro-preview',
+            officialModel: 'gemini-3.7-flash, gemini-3.5-flash-lite, gemini-3.1-pro-preview',
             thinkingLevel: 'low',
             officialWebSearch: false,
             openaiBaseUrl: '',
@@ -30,6 +30,16 @@ describe('connection settings helpers', () => {
             openaiUseResponsesApi: false,
             openaiWebSearch: false,
             dedicatedApiProviders: {
+                deepseek_web: {
+                    provider: 'deepseek_web',
+                    baseUrl: undefined,
+                    apiKey: '',
+                    model: undefined,
+                    selectedModel: '',
+                    thinkingLevel: 'low',
+                    webSearch: false,
+                    providerRouting: '',
+                },
                 openai_official: {
                     provider: 'openai_official',
                     baseUrl: 'https://api.openai.com/v1',
@@ -91,6 +101,7 @@ describe('connection settings helpers', () => {
                     providerRouting: '',
                 },
             },
+            deepseekWeb: {},
             mcpEnabled: false,
             mcpTransport: 'streamable-http',
             mcpServerUrl: 'http://127.0.0.1:3006/mcp',

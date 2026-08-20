@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 // Installs the DeepSeek Zoom native logger host: copies host.js to a stable
 // path under ~/.gemini-nexus/ and writes the Chrome NativeMessagingHosts
 // manifest whose allowed_origins pins this extension's ID. Run with --uninstall

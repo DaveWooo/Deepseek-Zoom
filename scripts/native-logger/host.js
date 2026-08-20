@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 // Native messaging host for DeepSeek Zoom: writes framed log entries from the
 // extension to a rotating log file AND exposes a localhost HTTP/SSE bridge so
 // local tools (agents, curl, IDE) can pull real-time errors without DevTools.

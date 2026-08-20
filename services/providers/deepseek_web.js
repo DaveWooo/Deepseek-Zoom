@@ -59,18 +59,20 @@ function parseSSELine(line, state) {
     const op = obj.o || null;
 
     // ── New format: metadata with fragments ──
-    if (typeof val === 'object' && val !== null) {
-        const frags = val.response?.fragments;
-        if (Array.isArray(frags) && frags.length > 0) {
+    if (val && typeof val === 'object' && Array.isArray(val.response?.fragments)) {
+        const frags = val.response.fragments;
+        if (frags.length > 0) {
             const last = frags[frags.length - 1];
             if (last.type) {
                 state.fragmentType = last.type;
             }
             if (last.content && typeof last.content === 'string') {
-                return {
-                    type: state.fragmentType === 'THINK' ? 'thinking' : 'content',
-                    value: last.content,
-                };
+                if (state.fragmentType === 'THINK') {
+                    return { type: 'thinking', value: last.content };
+                }
+                if (state.fragmentType === 'RESPONSE' || state.fragmentType === 'TEXT') {
+                    return { type: 'content', value: last.content };
+                }
             }
         }
         return null;
@@ -82,22 +84,61 @@ function parseSSELine(line, state) {
             const last = val[val.length - 1];
             if (last.type) state.fragmentType = last.type;
             if (last.content && typeof last.content === 'string') {
-                return {
-                    type: state.fragmentType === 'THINK' ? 'thinking' : 'content',
-                    value: last.content,
-                };
+                if (state.fragmentType === 'THINK') {
+                    return { type: 'thinking', value: last.content };
+                }
+                if (state.fragmentType === 'RESPONSE' || state.fragmentType === 'TEXT') {
+                    return { type: 'content', value: last.content };
+                }
             }
         }
         return null;
     }
 
-    // ── Fragment content continuation ──
-    if (path === 'response/fragments/-1/content') {
+    // ── Fragment type update (e.g. response/fragments/0/type, response/fragments/1/type, response/fragments/-1/type) ──
+    if (/^response\/fragments\/(?:-?\d+)\/type$/.test(path)) {
+        if (typeof val === 'string') {
+            state.fragmentType = val;
+        }
+        return null;
+    }
+
+    // ── Fragment content continuation (e.g. response/fragments/-1/content, response/fragments/0/content, response/fragments/1/content) ──
+    if (/^response\/fragments\/(?:-?\d+)\/content$/.test(path)) {
         if (typeof val === 'string' && val) {
+            if (state.fragmentType === 'THINK') {
+                return { type: 'thinking', value: val };
+            }
+            if (state.fragmentType === 'RESPONSE' || state.fragmentType === 'TEXT') {
+                return { type: 'content', value: val };
+            }
+            return { type: state.phase === 'thinking' ? 'thinking' : 'content', value: val };
+        }
+        return null;
+    }
+
+    // ── Fragment thinking_content continuation ──
+    if (/^response\/fragments\/(?:-?\d+)\/thinking_content$/.test(path)) {
+        if (typeof val === 'string' && val) {
+            state.fragmentType = 'THINK';
             return {
-                type: state.fragmentType === 'THINK' ? 'thinking' : 'content',
+                type: 'thinking',
                 value: val,
             };
+        }
+        return null;
+    }
+
+    // ── Fragment item object update (e.g. response/fragments/1) ──
+    if (/^response\/fragments\/(?:-?\d+)$/.test(path) && typeof val === 'object' && val !== null) {
+        if (val.type) state.fragmentType = val.type;
+        if (val.content && typeof val.content === 'string') {
+            if (state.fragmentType === 'THINK') {
+                return { type: 'thinking', value: val.content };
+            }
+            if (state.fragmentType === 'RESPONSE' || state.fragmentType === 'TEXT') {
+                return { type: 'content', value: val.content };
+            }
         }
         return null;
     }
@@ -121,14 +162,17 @@ function parseSSELine(line, state) {
 
     // ── Pathless continuation (both formats) ──
     if (typeof val === 'string' && val && !path) {
-        if (state.fragmentType === 'THINK') {
+        if (state.fragmentType === 'THINK' || state.phase === 'thinking') {
             return { type: 'thinking', value: val };
         }
-        if (state.fragmentType === 'RESPONSE') {
+        if (
+            state.fragmentType === 'RESPONSE' ||
+            state.fragmentType === 'TEXT' ||
+            state.phase === 'content'
+        ) {
             return { type: 'content', value: val };
         }
-        // Old format fallback
-        return { type: state.phase === 'thinking' ? 'thinking' : 'content', value: val };
+        return null;
     }
 
     return null;
@@ -287,8 +331,8 @@ async function forkDeepSeekFileToVision(fileId, token, signal) {
 
     const json = await resp.json().catch(() => null);
     const bizData = json?.data?.biz_data || {};
-    const forkedId = bizData.id || bizData.file_id;
-    if (!forkedId || forkedId === fileId) {
+    const forkedId = bizData.id || bizData.file_id || bizData.task_id;
+    if (!forkedId) {
         debugLog(
             '[DeepSeek Web] Fork response did not contain a new file_id:',
             JSON.stringify(json).slice(0, 300)
@@ -402,7 +446,7 @@ function base64ToUint8Array(base64) {
 function dataUrlToBlob(dataUrl) {
     const [meta, payload] = dataUrl.split(',');
     const type = /data:([^;]+)/.exec(meta)?.[1] || 'application/octet-stream';
-    const binaryString = atob(payload);
+    const binaryString = atob((payload || '').replace(/\s+/g, ''));
     const bytes = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {
         bytes[i] = binaryString.charCodeAt(i);
@@ -436,8 +480,20 @@ export async function sendDeepSeekWebMessage(
             'DeepSeek Web token is missing. Please configure DeepSeek Web in settings.'
         );
     }
-    if (!context?.session_id) {
-        throw new Error('DeepSeek Web session_id is missing. Please re-login.');
+
+    let chatSessionId = context?.session_id;
+    if (!chatSessionId) {
+        try {
+            chatSessionId = await createDeepSeekSession(context.token);
+            context.session_id = chatSessionId;
+            if (typeof chrome !== 'undefined' && chrome?.storage?.local?.set) {
+                chrome.storage.local
+                    .set({ deepseek_web_session_id: chatSessionId })
+                    .catch(() => {});
+            }
+        } catch (e) {
+            throw new Error(`DeepSeek Web session creation failed: ${e.message}`);
+        }
     }
 
     const { thinkingEnabled = false, searchEnabled = false, modelType = 'default' } = options;
@@ -456,7 +512,6 @@ export async function sendDeepSeekWebMessage(
 
     // ── Step 1.5: Upload attachments (vision/multimodal) ──
     let refFileIds = [];
-    let chatSessionId = context.session_id;
     if (modelType === 'vision') {
         refFileIds = await uploadDeepSeekFiles(files, context.token, signal);
         debugLog(`[DeepSeek Web] Uploaded ${refFileIds.length} file(s) for vision mode`);
@@ -496,8 +551,8 @@ export async function sendDeepSeekWebMessage(
         parent_message_id: null,
         prompt: prompt,
         ref_file_ids: refFileIds,
-        thinking_enabled: thinkingEnabled,
-        search_enabled: searchEnabled,
+        thinking_enabled: modelType === 'vision' ? false : thinkingEnabled,
+        search_enabled: modelType === 'vision' ? false : searchEnabled,
         model_type: modelType === 'vision' && refFileIds.length === 0 ? 'default' : modelType,
     };
 

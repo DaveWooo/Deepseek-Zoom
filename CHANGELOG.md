@@ -1,5 +1,16 @@
 # Changelog
 
+## v6.1.1 - 2026-08-20
+
+### Versioning & DeepSeek Web Stream Fixes
+
+- **自动版本号递增管理**：
+    - 新增 `scripts/bump-version.mjs` 自动化版本递增与同步脚本，一键同步更新 `package.json`、`manifest.json`、`package-lock.json` 与 `CHANGELOG.md`。
+    - 在 `package.json` 中配置 `npm run version:bump` 脚本。
+- **修复 Alt+Q 中 DeepSeek 搜索无响应问题**：
+    - 增强 `deepseek_web.js` 中 SSE 流解析器（`parseSSELine`），全面支持包含网络搜索及分片索引的流式数据（如 `response/fragments/0/content`、`response/fragments/1/content`），解决联网搜索及最新版快速模型下正文被丢弃的问题。
+    - 增强 DeepSeek Web 会话管理，在缺少 `session_id` 时自动调用接口新建会话，确保请求稳定响应。
+
 ## v6.1.0 - 2026-08-20
 
 ### Settings UI & User Experience
@@ -69,7 +80,7 @@
 
 ### UI
 
-- 模型来源下拉将 **DeepSeek 网页(免费版)** 置顶（设置页与 ask-window 弹窗均在 Gemini 网页之上；默认选中仍为 Gemini Web，不受影响）。
+- 模型来源下拉将 **DeepSeek 网页版(免费)** 置顶（设置页与 ask-window 弹窗均在 Gemini 网页之上；默认选中仍为 Gemini Web，不受影响）。
 
 ## v6.0.2 - 2026-08-19
 

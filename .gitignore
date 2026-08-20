@@ -33,6 +33,7 @@ artifacts/
 coverage/
 .cache/
 .vite/
+.npmrc
 *.tsbuildinfo
 
 # Local design drafts

@@ -22,6 +22,17 @@ import {
     loadDedicatedApiProviderIntoForm,
     saveDedicatedApiProviderEdits,
 } from './dedicated_api_fields.js';
+import {
+    loadDeepSeekWebIntoForm,
+    saveDeepSeekWebEdits,
+    updateDeepSeekWebStatusDots,
+} from './deepseek_web_fields.js';
+import {
+    initializeMcpServers,
+    loadActiveMcpServerIntoForm,
+    renderMcpServerOptions,
+    saveCurrentMcpServerEdits,
+} from './mcp_server_fields.js';
 import { setProviderModelList, setProviderModelListStatus } from './provider_model_list.js';
 import { queryConnectionElements } from './connection_elements.js';
 import { renderMcpToolsUI } from './mcp_tools_view.js';
@@ -110,36 +121,7 @@ export class ConnectionSection {
         if (openaiWebSearch) openaiWebSearch.checked = openaiSettings.webSearch;
 
         // DeepSeek Web fields
-        const dsw = data?.deepseekWeb || {};
-        if (this.elements.deepseekWebPhone)
-            this.elements.deepseekWebPhone.value = dsw.deepseek_web_phone || '';
-        if (this.elements.deepseekWebPassword)
-            this.elements.deepseekWebPassword.value = dsw.deepseek_web_password || '';
-        // Area Code input is hidden in the UI; keep the last saved value for login.
-        this.deepseekWebAreaCodeValue = dsw.deepseek_web_area_code || '+86';
-        if (this.elements.deepseekWebAreaCode)
-            this.elements.deepseekWebAreaCode.value = this.deepseekWebAreaCodeValue;
-        if (this.elements.deepseekWebThinkingEnabled)
-            this.elements.deepseekWebThinkingEnabled.checked =
-                dsw.deepseek_web_thinking_enabled !== false;
-        if (this.elements.deepseekWebSearchEnabled)
-            this.elements.deepseekWebSearchEnabled.checked =
-                dsw.deepseek_web_search_enabled !== false;
-        if (this.elements.deepseekWebModelType)
-            this.elements.deepseekWebModelType.value = dsw.deepseek_web_model_type || 'default';
-        if (this.elements.deepseekWebModelEnabledDefault)
-            this.elements.deepseekWebModelEnabledDefault.checked =
-                dsw.deepseek_web_model_enabled_default !== false;
-        if (this.elements.deepseekWebModelEnabledExpert)
-            this.elements.deepseekWebModelEnabledExpert.checked =
-                dsw.deepseek_web_model_enabled_expert !== false;
-        if (this.elements.deepseekWebModelEnabledVision)
-            this.elements.deepseekWebModelEnabledVision.checked =
-                dsw.deepseek_web_model_enabled_vision !== false;
-        this._updateDeepSeekWebStatusDots();
-        if (this.elements.deepseekWebLoginStatus && dsw.deepseek_web_token) {
-            this.elements.deepseekWebLoginStatus.textContent = '✅ Logged in';
-        }
+        loadDeepSeekWebIntoForm(this, data?.deepseekWeb);
 
         this.dedicatedApiProviders = normalizeDedicatedApiSettingsPayload(
             data?.dedicatedApiProviders
@@ -151,38 +133,7 @@ export class ConnectionSection {
             this.updateMcpVisibility(mcpEnabled.checked);
         }
 
-        const servers = data && Array.isArray(data.mcpServers) ? data.mcpServers : null;
-        const activeId =
-            data && typeof data.mcpActiveServerId === 'string' ? data.mcpActiveServerId : null;
-
-        if (servers && servers.length > 0) {
-            this.mcpServers = servers.map((serverConfig) => ({
-                id: serverConfig.id || this._makeServerId(),
-                name: serverConfig.name || '',
-                transport: serverConfig.transport || DEFAULT_MCP_TRANSPORT,
-                url: serverConfig.url || '',
-                headers: normalizeMcpHeaders(serverConfig.headers),
-                enabled: serverConfig.enabled !== false,
-                toolMode: serverConfig.toolMode === 'selected' ? 'selected' : 'all',
-                enabledTools: Array.isArray(serverConfig.enabledTools)
-                    ? serverConfig.enabledTools
-                    : [],
-            }));
-            this.mcpActiveServerId =
-                activeId && this.mcpServers.some((serverConfig) => serverConfig.id === activeId)
-                    ? activeId
-                    : this.mcpServers[0].id;
-        } else {
-            const legacyUrl = data?.mcpServerUrl || '';
-            const legacyTransport = data?.mcpTransport || DEFAULT_MCP_TRANSPORT;
-            const server = this._getDefaultServer();
-            server.transport = legacyTransport;
-            server.url = legacyUrl || server.url;
-            server.headers = normalizeMcpHeaders(data?.mcpHeaders);
-            server.enabled = data?.mcpEnabled === true;
-            this.mcpServers = [server];
-            this.mcpActiveServerId = server.id;
-        }
+        initializeMcpServers(this, data);
 
         this._renderMcpServerOptions();
         this._loadActiveServerIntoForm();
@@ -239,35 +190,7 @@ export class ConnectionSection {
                 : false,
             openaiWebSearch: openaiWebSearch ? openaiWebSearch.checked === true : false,
 
-            deepseekWeb: {
-                deepseek_web_phone: this.elements.deepseekWebPhone
-                    ? this.elements.deepseekWebPhone.value.trim()
-                    : '',
-                deepseek_web_password: this.elements.deepseekWebPassword
-                    ? this.elements.deepseekWebPassword.value.trim()
-                    : '',
-                deepseek_web_area_code: this.elements.deepseekWebAreaCode
-                    ? this.elements.deepseekWebAreaCode.value.trim()
-                    : this.deepseekWebAreaCodeValue || '+86',
-                deepseek_web_thinking_enabled: this.elements.deepseekWebThinkingEnabled
-                    ? this.elements.deepseekWebThinkingEnabled.checked
-                    : false,
-                deepseek_web_search_enabled: this.elements.deepseekWebSearchEnabled
-                    ? this.elements.deepseekWebSearchEnabled.checked
-                    : false,
-                deepseek_web_model_type: this.elements.deepseekWebModelType
-                    ? this.elements.deepseekWebModelType.value
-                    : 'default',
-                deepseek_web_model_enabled_default: this.elements.deepseekWebModelEnabledDefault
-                    ? this.elements.deepseekWebModelEnabledDefault.checked === true
-                    : true,
-                deepseek_web_model_enabled_expert: this.elements.deepseekWebModelEnabledExpert
-                    ? this.elements.deepseekWebModelEnabledExpert.checked === true
-                    : true,
-                deepseek_web_model_enabled_vision: this.elements.deepseekWebModelEnabledVision
-                    ? this.elements.deepseekWebModelEnabledVision.checked === true
-                    : true,
-            },
+            deepseekWeb: saveDeepSeekWebEdits(this),
             dedicatedApiProviders: this.dedicatedApiProviders,
 
             mcpEnabled: mcpEnabled ? mcpEnabled.checked === true : false,
@@ -282,29 +205,7 @@ export class ConnectionSection {
     }
 
     _updateDeepSeekWebStatusDots() {
-        const dots = [
-            {
-                checkbox: this.elements.deepseekWebModelEnabledDefault,
-                dot: this.elements.deepseekWebStatusDotDefault,
-            },
-            {
-                checkbox: this.elements.deepseekWebModelEnabledExpert,
-                dot: this.elements.deepseekWebStatusDotExpert,
-            },
-            {
-                checkbox: this.elements.deepseekWebModelEnabledVision,
-                dot: this.elements.deepseekWebStatusDotVision,
-            },
-        ];
-        for (const { checkbox, dot } of dots) {
-            if (dot) {
-                dot.className =
-                    'model-status-dot ' +
-                    (checkbox?.checked !== false
-                        ? 'model-status-enabled'
-                        : 'model-status-disabled');
-            }
-        }
+        updateDeepSeekWebStatusDots(this);
     }
 
     updateVisibility(provider) {
@@ -356,49 +257,7 @@ export class ConnectionSection {
     }
 
     _saveCurrentServerEdits() {
-        const {
-            mcpServerName,
-            mcpTransport,
-            mcpServerUrl,
-            mcpHeaders,
-            mcpServerEnabled,
-            mcpToolMode,
-        } = this.elements;
-
-        const server = this._getActiveServer();
-        if (!server) return false;
-
-        const prevKey = this._serverKey(server);
-
-        if (mcpServerName) server.name = mcpServerName.value || '';
-        if (mcpServerUrl) server.url = (mcpServerUrl.value || '').trim();
-        if (mcpTransport)
-            server.transport = inferMcpTransport(mcpTransport.value || 'sse', server.url);
-        if (mcpHeaders) {
-            try {
-                server.headers = parseMcpHeadersText(mcpHeaders.value);
-                this.setMcpTestStatus('');
-            } catch (error) {
-                this.setMcpTestStatus(error.message || t('mcpConnectionFailed'), true);
-                return false;
-            }
-        }
-        if (mcpServerEnabled) server.enabled = mcpServerEnabled.checked === true;
-        if (mcpToolMode) server.toolMode = mcpToolMode.value === 'selected' ? 'selected' : 'all';
-
-        // If the connection identity (transport/url/headers) changed, the
-        // previously-fetched tool list and live transport are stale. Disconnect
-        // the live connection so the next call reconnects with the new config,
-        // and drop the cached tool list. Disabling a server also tears down its
-        // transport so it stops consuming the connection / streaming in the
-        // background.
-        const nextKey = this._serverKey(server);
-        const becameDisabled = server.enabled === false;
-        if (prevKey !== nextKey || becameDisabled) {
-            this.disconnectMcpServer(server.id);
-            this.mcpToolsCache.delete(server.id);
-        }
-        return true;
+        return saveCurrentMcpServerEdits(this);
     }
 
     // Ask the background to close the live MCP transport for a server and
@@ -416,54 +275,11 @@ export class ConnectionSection {
     }
 
     _loadActiveServerIntoForm() {
-        const {
-            mcpServerSelect,
-            mcpServerName,
-            mcpTransport,
-            mcpServerUrl,
-            mcpHeaders,
-            mcpServerEnabled,
-            mcpToolMode,
-        } = this.elements;
-
-        const server = this._getActiveServer();
-        if (!server) return;
-
-        if (mcpServerSelect) mcpServerSelect.value = server.id;
-        if (mcpServerName) mcpServerName.value = server.name || '';
-        const transport = inferMcpTransport(server.transport || 'sse', server.url || '');
-        server.transport = transport;
-        if (mcpTransport) mcpTransport.value = transport;
-        if (mcpServerUrl) mcpServerUrl.value = server.url || '';
-        if (mcpServerUrl)
-            mcpServerUrl.placeholder = this._getDefaultUrlForTransport(server.transport || 'sse');
-        if (mcpHeaders) mcpHeaders.value = formatMcpHeaders(server.headers);
-        if (mcpServerEnabled) mcpServerEnabled.checked = server.enabled !== false;
-        if (mcpToolMode) mcpToolMode.value = server.toolMode === 'selected' ? 'selected' : 'all';
-
-        this._renderToolsUI();
+        loadActiveMcpServerIntoForm(this);
     }
 
     _renderMcpServerOptions() {
-        const { mcpServerSelect } = this.elements;
-        if (!mcpServerSelect) return;
-
-        const active = this._getActiveServer();
-        if (active) this.mcpActiveServerId = active.id;
-
-        mcpServerSelect.innerHTML = '';
-        for (const server of this.mcpServers) {
-            const optionElement = document.createElement('option');
-            optionElement.value = server.id;
-
-            const name = (server.name || '').trim();
-            const label = name || server.url || t('defaultMcpServer');
-            const status = server.enabled === false ? '✗' : '✓';
-            optionElement.textContent = `${status} ${label}`;
-            mcpServerSelect.appendChild(optionElement);
-        }
-
-        if (active) mcpServerSelect.value = active.id;
+        renderMcpServerOptions(this);
     }
 
     setMcpTestStatus(text, isError = false) {

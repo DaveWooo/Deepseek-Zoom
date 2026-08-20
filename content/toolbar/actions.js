@@ -213,6 +213,10 @@
                 this.getCurrentWebThinkingLevel()
             );
 
+            this.pendingImageChat = {
+                url: imageDataUrl,
+                mode,
+            };
             this.lastRequest = message;
             this.lastTranslationRequest =
                 mode === 'translate' ? { type: 'image', promptType: 'imageTranslate' } : null;
@@ -223,6 +227,7 @@
             this.lastTranslationRequest = null;
             this.pendingImageChat = {
                 url: imageDataUrl,
+                mode: 'chat',
             };
 
             const title = this.t.chatWithImage || this.t.titles.analyze;
@@ -344,9 +349,10 @@
             const provider = this.getCurrentProvider();
 
             if (this.pendingImageChat) {
+                const imageMode = this.pendingImageChat.mode || 'chat';
                 const targetModel = window.GeminiWebModels.resolveImagePromptModel({
                     provider,
-                    mode: 'chat',
+                    mode: imageMode,
                     model: selectedModel,
                 });
                 const message = withProviderOptions(
@@ -355,7 +361,7 @@
                         url: this.pendingImageChat.url,
                         text: question,
                         model: targetModel,
-                        imageMode: 'chat',
+                        imageMode,
                         sessionId,
                     },
                     provider,

@@ -15,13 +15,13 @@ export const AboutSettingsTemplate = `
         </div>
 
         <div class="about-link-row">
-            <a href="https://github.com/DaveWooo/Deepseek-Nexus" target="_blank" class="github-link">
+            <a href="https://github.com/DaveWooo/Deepseek-Zoom" target="_blank" class="github-link">
                 ${TemplateIcons.GITHUB}
                 <span data-i18n="sourceCode">Source</span>
                 <span id="star-count" class="star-badge"></span>
             </a>
 
-            <a href="https://github.com/DaveWooo/Deepseek-Nexus/releases" target="_blank" class="github-link">
+            <a href="https://github.com/DaveWooo/Deepseek-Zoom/releases" target="_blank" class="github-link">
                 ${TemplateIcons.RELEASES}
                 <span data-i18n="releases">Releases</span>
             </a>

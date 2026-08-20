@@ -67,11 +67,11 @@ DeepSeek Zoom 当前围绕浏览器内 AI 工作流提供以下能力：
 | 驱动方案                  | 逻辑入口               | 支持模型                                                     | 核心优势                                                                                                          | 使用前提                                             |
 | :------------------------ | :--------------------- | :----------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------- |
 | **Web Client**            | `web.js`               | 当前 Gemini Web 聊天模式                                     | **免 API Key**，复用 Gemini 网页版会话，支持可选临时对话                                                          | 需保持 Google 账号登录                               |
-| **Official API**          | `official.js`          | Gemini 3.6 Flash / 3.5 Flash-Lite / 3.1 Pro                  | **极速响应**，支持 **Thinking** 与 Google Search grounding                                                        | 需 Google AI Studio Key                              |
+| **Official API**          | `official.js`          | Gemini 3.7 Flash / 3.5 Flash-Lite / 3.1 Pro                  | **极速响应**，支持 **Thinking** 与 Google Search grounding                                                        | 需 Google AI Studio Key                              |
 | **OpenAI Compatible**     | `openai_compatible.js` | GPT/Claude/兼容模型                                          | **高扩展性**，支持 Chat Completions / Responses API 与可选联网搜索                                                | 需第三方服务密钥                                     |
 | **OpenAI 官方 API**       | `openai_compatible.js` | GPT 推理/搜索模型                                            | 专门走 Responses API，支持 reasoning summary 与可选联网搜索                                                       | 需 OpenAI API Key                                    |
 | **DeepSeek API**          | `openai_compatible.js` | DeepSeek 对话/推理模型                                       | DeepSeek Chat Completions 默认端点，并显示 `reasoning_content`                                                    | 需 DeepSeek API Key                                  |
-| **DeepSeek 网页(免费版)** | `deepseek_web.js`      | 快速模式（V4 3.6 Flash）/ 专家模式（R1）/ 识图模式（Vision） | **免 API Key**，复用 `chat.deepseek.com` 免费会话；三模式切换，支持思考过程展示与联网搜索；识图上传（PoW + fork） | 需 DeepSeek 账号登录（设置页配置手机号/邮箱 + 密码） |
+| **DeepSeek 网页(免费)** | `deepseek_web.js`      | 快速模式（V4 3.6 Flash）/ 专家模式（R1）/ 识图模式（Vision） | **免 API Key**，复用 `chat.deepseek.com` 免费会话；三模式切换，支持思考过程展示与联网搜索；识图上传（PoW + fork） | 需 DeepSeek 账号登录（设置页配置手机号/邮箱 + 密码） |
 | **OpenRouter API**        | `openai_compatible.js` | OpenRouter 模型 ID                                           | 可拉取 `/models`，支持 provider routing JSON 与原生 `reasoning`                                                   | 需 OpenRouter API Key                                |
 | **通义 / DashScope**      | `openai_compatible.js` | Qwen 文本与 VL 模型                                          | 专门 DashScope 兼容端点，发送 `enable_thinking` 并支持 VL 图片输入                                                | 需 DashScope API Key                                 |
 | **Anthropic API**         | `anthropic.js`         | Claude 模型                                                  | 原生 Messages API，支持图片输入与 extended thinking 流式显示                                                      | 需 Anthropic API Key                                 |
@@ -150,7 +150,7 @@ DeepSeek Web 渠道同样**依赖逆向协议**，在无官方授权的情况下
 
 #### 安装步骤
 
-1. 从 [Releases](https://github.com/DaveWooo/Deepseek-Nexus/releases) 下载最新 ZIP 包并解压。
+1. 从 [Releases](https://github.com/DaveWooo/Deepseek-Zoom/releases) 下载最新 ZIP 包并解压。
 2. Chrome 访问 `chrome://extensions/`，右上角开启 **“开发者模式”**。
 3. 点击 **“加载已解压的扩展程序”**，选择解压后的文件夹即可。
 
