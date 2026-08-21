@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { existsSync, mkdtempSync, readFileSync, rmSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
     extensionIdFromKey,
     buildHostManifest,
@@ -57,7 +58,7 @@ describe('install / uninstall', () => {
         const hostDir = join(work, 'host');
         const hostScriptPath = join(hostDir, 'native-logger.js');
         const manifestDir = join(work, 'manifest');
-        const sourceHost = new URL('./native-logger/host.js', import.meta.url).pathname;
+        const sourceHost = fileURLToPath(new URL('./native-logger/host.js', import.meta.url));
 
         const result = install({
             extensionId: GN_EXTENSION_ID,
@@ -87,7 +88,7 @@ describe('install / uninstall', () => {
             extensionId: GN_EXTENSION_ID,
             hostScriptPath: join(work, 'native-logger.js'),
             manifestDir: join(work, 'manifest'),
-            sourceHost: new URL('./native-logger/host.js', import.meta.url).pathname,
+            sourceHost: fileURLToPath(new URL('./native-logger/host.js', import.meta.url)),
         };
         install(opts);
         expect(() => install(opts)).not.toThrow();
@@ -101,9 +102,11 @@ describe('install / uninstall', () => {
             extensionId: GN_EXTENSION_ID,
             hostScriptPath,
             manifestDir: join(work, 'manifest'),
-            sourceHost: new URL('./native-logger/host.js', import.meta.url).pathname,
+            sourceHost: fileURLToPath(new URL('./native-logger/host.js', import.meta.url)),
         });
-        expect(statSync(hostScriptPath).mode & 0o111).toBeTruthy(); // any execute bit
+        if (process.platform !== 'win32') {
+            expect(statSync(hostScriptPath).mode & 0o111).toBeTruthy(); // any execute bit
+        }
         rmSync(work, { recursive: true, force: true });
     });
 });
