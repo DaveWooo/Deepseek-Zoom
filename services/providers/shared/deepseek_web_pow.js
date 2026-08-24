@@ -1,11 +1,11 @@
 /**
  * DeepSeek Web PoW (Proof of Work) solver
- * 
+ *
  * Strategy: WASM (sha3_wasm_bg.wasm) primary, pure JS keccak-256 fallback.
- * 
+ *
  * The WASM module exports `wasm_solve(retptr, ch_ptr, ch_len, pfx_ptr, pfx_len, difficulty)`
  * and `wasm_deepseek_hash_v1(ptr, len)` for keccak-256 hashing.
- * 
+ *
  * difficulty=18 → ~262k expected iterations → ~0.5-2s with WASM vs 60s+ with pure JS BigInt.
  */
 
@@ -92,19 +92,38 @@ function wasmSolve(challenge) {
 // ── Pure JS keccak-256 fallback (slow, for difficulty <= 8) ─────
 const KECCAK_ROUNDS = 24;
 const KECCAK_RC = [
-    0x0000000000000001n, 0x0000000000008082n, 0x800000000000808an,
-    0x8000000080008000n, 0x000000000000808bn, 0x0000000080000001n,
-    0x8000000080008081n, 0x8000000000008009n, 0x000000000000008an,
-    0x0000000000000088n, 0x0000000080008009n, 0x000000008000000an,
-    0x000000008000808bn, 0x800000000000008bn, 0x8000000000008089n,
-    0x8000000000008003n, 0x8000000000008002n, 0x8000000000000080n,
-    0x000000000000800an, 0x800000008000000an, 0x8000000080008081n,
-    0x8000000000008080n, 0x0000000080000001n, 0x8000000080008008n,
+    0x0000000000000001n,
+    0x0000000000008082n,
+    0x800000000000808an,
+    0x8000000080008000n,
+    0x000000000000808bn,
+    0x0000000080000001n,
+    0x8000000080008081n,
+    0x8000000000008009n,
+    0x000000000000008an,
+    0x0000000000000088n,
+    0x0000000080008009n,
+    0x000000008000000an,
+    0x000000008000808bn,
+    0x800000000000008bn,
+    0x8000000000008089n,
+    0x8000000000008003n,
+    0x8000000000008002n,
+    0x8000000000000080n,
+    0x000000000000800an,
+    0x800000008000000an,
+    0x8000000080008081n,
+    0x8000000000008080n,
+    0x0000000080000001n,
+    0x8000000080008008n,
 ];
 
 const ROTATIONS = [
-    [0, 1, 62, 28, 27], [36, 44, 6, 55, 20], [3, 10, 43, 25, 39],
-    [41, 45, 15, 21, 8], [18, 2, 61, 56, 14],
+    [0, 1, 62, 28, 27],
+    [36, 44, 6, 55, 20],
+    [3, 10, 43, 25, 39],
+    [41, 45, 15, 21, 8],
+    [18, 2, 61, 56, 14],
 ];
 
 function rotl64(x, n) {
@@ -121,10 +140,13 @@ function keccakP(state) {
         for (let i = 0; i < 5; i++) d[i] = c[(i + 4) % 5] ^ rotl64(c[(i + 1) % 5], 1n);
         for (let i = 0; i < 5; i++) for (let j = 0; j < 5; j++) a[i + 5 * j] ^= d[i];
         const b = Array(25).fill(0n);
-        for (let i = 0; i < 5; i++) for (let j = 0; j < 5; j++)
-            b[j + 5 * ((2 * i + 3 * j) % 5)] = rotl64(a[i + 5 * j], BigInt(ROTATIONS[i][j]));
-        for (let i = 0; i < 5; i++) for (let j = 0; j < 5; j++)
-            a[i + 5 * j] = b[i + 5 * j] ^ ((~b[(i + 1) % 5 + 5 * j]) & b[(i + 2) % 5 + 5 * j]);
+        for (let i = 0; i < 5; i++)
+            for (let j = 0; j < 5; j++)
+                b[j + 5 * ((2 * i + 3 * j) % 5)] = rotl64(a[i + 5 * j], BigInt(ROTATIONS[i][j]));
+        for (let i = 0; i < 5; i++)
+            for (let j = 0; j < 5; j++)
+                a[i + 5 * j] =
+                    b[i + 5 * j] ^ (~b[((i + 1) % 5) + 5 * j] & b[((i + 2) % 5) + 5 * j]);
         a[0] ^= KECCAK_RC[round];
     }
     return a.map((v) => Number(v) | 0);
@@ -132,7 +154,9 @@ function keccakP(state) {
 
 function keccak256(data) {
     const rateBytes = 136;
-    const padded = new Uint8Array(data.length + 1 + ((rateBytes - ((data.length + 1) % rateBytes)) % rateBytes));
+    const padded = new Uint8Array(
+        data.length + 1 + ((rateBytes - ((data.length + 1) % rateBytes)) % rateBytes)
+    );
     padded.set(data);
     padded[data.length] = 0x01;
     padded[padded.length - 1] = 0x80;
@@ -174,7 +198,7 @@ function jsSolve(challenge) {
     const maskBits = difficulty % 8;
     const mask = new Uint8Array(32);
     for (let i = 0; i < maskBytes; i++) mask[i] = 0x00;
-    if (maskBits > 0) mask[maskBytes] = 0xff << (8 - maskBits) & 0xff;
+    if (maskBits > 0) mask[maskBytes] = (0xff << (8 - maskBits)) & 0xff;
 
     for (let nonce = 0; ; nonce++) {
         const nonceBytes = new TextEncoder().encode(nonce.toString());
@@ -185,7 +209,10 @@ function jsSolve(challenge) {
         const hash = keccak256(data);
         let valid = true;
         for (let i = 0; i < 32; i++) {
-            if ((hash[i] & mask[i]) !== 0) { valid = false; break; }
+            if ((hash[i] & mask[i]) !== 0) {
+                valid = false;
+                break;
+            }
         }
         if (valid) {
             debugLog(`[DeepSeek Web PoW] JS solved: nonce=${nonce}, difficulty=${difficulty}`);
@@ -244,18 +271,20 @@ export async function fetchPowChallenge(token, targetPath = '/api/v0/chat/comple
         method: 'POST',
         headers: {
             'content-type': 'application/json',
-            'origin': 'https://chat.deepseek.com',
-            'referer': 'https://chat.deepseek.com/',
-            'authorization': `Bearer ${token}`,
+            origin: 'https://chat.deepseek.com',
+            referer: 'https://chat.deepseek.com/',
+            authorization: `Bearer ${token}`,
             'x-client-version': '2.0.2',
             'x-client-platform': 'web',
         },
         body: JSON.stringify({ target_path: targetPath }),
         signal,
     });
-    if (!resp.ok) throw new Error(`PoW challenge request failed: ${resp.status} ${resp.statusText}`);
+    if (!resp.ok)
+        throw new Error(`PoW challenge request failed: ${resp.status} ${resp.statusText}`);
     const data = await resp.json();
     const bizData = data?.data?.biz_data;
-    if (!bizData?.challenge) throw new Error('No challenge in PoW response: ' + JSON.stringify(data).slice(0, 200));
+    if (!bizData?.challenge)
+        throw new Error('No challenge in PoW response: ' + JSON.stringify(data).slice(0, 200));
     return bizData.challenge;
 }

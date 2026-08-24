@@ -360,6 +360,30 @@ describe('MessageBridge model persistence', () => {
         );
     });
 
+    it('forwards DeepSeek Web test connection results back to sandbox', async () => {
+        const frame = createFrame();
+        const state = createState();
+        chrome.runtime.sendMessage.mockResolvedValueOnce({
+            action: 'DEEPSEEK_WEB_TEST_RESULT',
+            success: true,
+        });
+        const bridge = new MessageBridge(frame, state);
+
+        bridge.forwardToBackground({
+            action: 'DEEPSEEK_WEB_TEST_CONNECTION',
+        });
+
+        await vi.waitFor(() =>
+            expect(frame.postMessage).toHaveBeenCalledWith({
+                action: 'BACKGROUND_MESSAGE',
+                payload: {
+                    action: 'DEEPSEEK_WEB_TEST_RESULT',
+                    success: true,
+                },
+            })
+        );
+    });
+
     it('routes browser-control prompts through the current webpage tab id', () => {
         const frame = createFrame();
         const state = createState();

@@ -33,7 +33,11 @@ describe('bump-version helpers', () => {
             );
             await writeFile(
                 path.join(tempDir, 'package-lock.json'),
-                JSON.stringify({ name: 'test', version: '1.0.0', packages: { '': { version: '1.0.0' } } }, null, 4)
+                JSON.stringify(
+                    { name: 'test', version: '1.0.0', packages: { '': { version: '1.0.0' } } },
+                    null,
+                    4
+                )
             );
             await writeFile(
                 path.join(tempDir, 'CHANGELOG.md'),
@@ -43,8 +47,12 @@ describe('bump-version helpers', () => {
             await updateProjectVersion('1.0.1', 'Fix bug', tempDir);
 
             const pkg = JSON.parse(await readFile(path.join(tempDir, 'package.json'), 'utf8'));
-            const manifest = JSON.parse(await readFile(path.join(tempDir, 'manifest.json'), 'utf8'));
-            const lock = JSON.parse(await readFile(path.join(tempDir, 'package-lock.json'), 'utf8'));
+            const manifest = JSON.parse(
+                await readFile(path.join(tempDir, 'manifest.json'), 'utf8')
+            );
+            const lock = JSON.parse(
+                await readFile(path.join(tempDir, 'package-lock.json'), 'utf8')
+            );
             const changelog = await readFile(path.join(tempDir, 'CHANGELOG.md'), 'utf8');
 
             expect(pkg.version).toBe('1.0.1');

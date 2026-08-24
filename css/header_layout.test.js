@@ -51,7 +51,7 @@ describe('header layout styles', () => {
         );
         expect(headerCss).toMatch(/\.model-picker-menu\s*{[^}]*position:\s*absolute/s);
         expect(headerCss).toMatch(/\.model-picker-menu\s*{[^}]*max-width:\s*320px/s);
-        expect(headerCss).toMatch(/\.model-picker-option\s*{[^}]*min-height:\s*54px/s);
+        expect(headerCss).toMatch(/\.model-picker-option\s*{[^}]*min-height:\s*34px/s);
         expect(headerCss).toMatch(/\.model-picker-option-id\s*{[^}]*font-family:\s*ui-monospace/s);
         expect(headerCss).toMatch(/\.model-native-select\s*{[^}]*position:\s*absolute/s);
         expect(headerCss).not.toContain('#model-select:hover');

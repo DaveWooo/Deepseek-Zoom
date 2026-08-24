@@ -15,7 +15,7 @@ export function bindConnectionSectionEvents(section) {
         });
     }
 
-    // DeepSeek Web model enabled checkboxes → update status dots
+    // DeepSeek & Gemini Web model enabled checkboxes → update status dots
     const modelEnabledMap = [
         {
             checkbox: section.elements.deepseekWebModelEnabledDefault,
@@ -28,6 +28,18 @@ export function bindConnectionSectionEvents(section) {
         {
             checkbox: section.elements.deepseekWebModelEnabledVision,
             dot: section.elements.deepseekWebStatusDotVision,
+        },
+        {
+            checkbox: section.elements.geminiWebModelEnabledFlash,
+            dot: section.elements.geminiWebStatusDotFlash,
+        },
+        {
+            checkbox: section.elements.geminiWebModelEnabledLite,
+            dot: section.elements.geminiWebStatusDotLite,
+        },
+        {
+            checkbox: section.elements.geminiWebModelEnabledPro,
+            dot: section.elements.geminiWebStatusDotPro,
         },
     ];
     for (const { checkbox, dot } of modelEnabledMap) {
@@ -53,8 +65,10 @@ export function bindConnectionSectionEvents(section) {
 
     // Listen for test result
     const deepseekTestHandler = (event) => {
-        if (event.data?.action !== 'DEEPSEEK_WEB_TEST_RESULT') return;
-        const result = event.data.payload;
+        const data = event.data;
+        const msg = data?.action === 'BACKGROUND_MESSAGE' ? data.payload : data;
+        if (msg?.action !== 'DEEPSEEK_WEB_TEST_RESULT') return;
+        const result = msg.payload || msg;
         if (testBtn) {
             testBtn.className = result?.success
                 ? 'deepseek-web-test-btn test-passed'
@@ -85,9 +99,11 @@ export function bindConnectionSectionEvents(section) {
             deepseekWebLogin.disabled = true;
 
             const handler = (event) => {
-                if (event.data?.action !== 'DEEPSEEK_WEB_LOGIN_RESULT') return;
+                const data = event.data;
+                const msg = data?.action === 'BACKGROUND_MESSAGE' ? data.payload : data;
+                if (msg?.action !== 'DEEPSEEK_WEB_LOGIN_RESULT') return;
                 window.removeEventListener('message', handler);
-                const result = event.data.payload;
+                const result = msg.payload || msg;
                 if (result?.token) {
                     deepseekWebLoginStatus.textContent = '✅ Logged in';
                 } else {

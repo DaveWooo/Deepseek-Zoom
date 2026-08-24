@@ -1,7 +1,12 @@
 import { SessionMessageHandler } from './handlers/session/index.js';
 import { UIMessageHandler } from './handlers/ui.js';
 import { loginDeepSeekWeb } from '../services/deepseek_web_auth.js';
-import { fetchPowChallenge, solvePow, buildPowResponse, initWasm } from '../services/providers/shared/deepseek_web_pow.js';
+import {
+    fetchPowChallenge,
+    solvePow,
+    buildPowResponse,
+    initWasm,
+} from '../services/providers/shared/deepseek_web_pow.js';
 
 /**
  * Sets up the global runtime message listener.
@@ -48,7 +53,12 @@ export function setupMessageListener(
 
         if (request.action === 'DEEPSEEK_WEB_LOGIN') {
             const isEmail = request.phone.includes('@');
-            loginDeepSeekWeb(isEmail ? 'email' : 'phone', request.phone, request.password, request.area_code)
+            loginDeepSeekWeb(
+                isEmail ? 'email' : 'phone',
+                request.phone,
+                request.password,
+                request.area_code
+            )
                 .then(async (result) => {
                     // Persist to chrome.storage.local so settings_store can read it
                     await chrome.storage.local.set({
@@ -62,25 +72,41 @@ export function setupMessageListener(
                     });
                     sendResponse({ action: 'DEEPSEEK_WEB_LOGIN_RESULT', ...result });
                 })
-                .catch((e) => sendResponse({ action: 'DEEPSEEK_WEB_LOGIN_RESULT', error: e.message }));
+                .catch((e) =>
+                    sendResponse({ action: 'DEEPSEEK_WEB_LOGIN_RESULT', error: e.message })
+                );
             return true;
         }
 
         if (request.action === 'DEEPSEEK_WEB_TEST_CONNECTION') {
             (async () => {
                 try {
-                    const stored = await chrome.storage.local.get(['deepseek_web_token', 'deepseek_web_session_id']);
+                    const stored = await chrome.storage.local.get([
+                        'deepseek_web_token',
+                        'deepseek_web_session_id',
+                    ]);
                     if (!stored.deepseek_web_token) {
-                        sendResponse({ action: 'DEEPSEEK_WEB_TEST_RESULT', success: false, error: '未登录，请先登录' });
+                        sendResponse({
+                            action: 'DEEPSEEK_WEB_TEST_RESULT',
+                            success: false,
+                            error: '未登录，请先登录',
+                        });
                         return;
                     }
                     await initWasm();
-                    const challenge = await fetchPowChallenge(stored.deepseek_web_token, '/api/v0/chat/completion');
+                    const challenge = await fetchPowChallenge(
+                        stored.deepseek_web_token,
+                        '/api/v0/chat/completion'
+                    );
                     const answer = await solvePow(challenge);
                     const powResponse = buildPowResponse(challenge, answer);
                     sendResponse({ action: 'DEEPSEEK_WEB_TEST_RESULT', success: true });
                 } catch (e) {
-                    sendResponse({ action: 'DEEPSEEK_WEB_TEST_RESULT', success: false, error: e.message });
+                    sendResponse({
+                        action: 'DEEPSEEK_WEB_TEST_RESULT',
+                        success: false,
+                        error: e.message,
+                    });
                 }
             })();
             return true;

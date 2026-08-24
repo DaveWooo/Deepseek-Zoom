@@ -163,15 +163,20 @@ describe('sidepanel window actions', () => {
         expect(bridge.importSettingsData).toHaveBeenCalledWith(settingsPayload);
     });
 
-    it('saves normalized Gemini Web thinking level', () => {
-        const bridge = {
-            state: {
-                save: vi.fn(),
-            },
+    it('restores image tools blacklist preference', () => {
+        const frame = {
+            postMessage: vi.fn(),
         };
+        const bridge = { frame };
+        chrome.storage.local.get.mockImplementation((keys, callback) => {
+            callback({ geminiImageToolsBlacklist: 'example.com' });
+        });
 
-        handleWindowMessageAction('SAVE_WEB_THINKING_LEVEL', 'MINIMAL', bridge);
+        handleWindowMessageAction('GET_IMAGE_TOOLS_BLACKLIST', null, bridge);
 
-        expect(bridge.state.save).toHaveBeenCalledWith('geminiWebThinkingLevel', 'minimal');
+        expect(frame.postMessage).toHaveBeenCalledWith({
+            action: 'RESTORE_IMAGE_TOOLS_BLACKLIST',
+            payload: 'example.com',
+        });
     });
 });

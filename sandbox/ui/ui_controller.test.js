@@ -47,4 +47,22 @@ describe('UIController host context', () => {
         expect(btn.classList.contains('active')).toBe(false);
         expect(btn.getAttribute('aria-pressed')).toBe('false');
     });
+
+    it('updates model list without throwing ReferenceError', () => {
+        const controller = Object.create(UIController.prototype);
+        const select = document.createElement('select');
+        controller.modelSelect = select;
+        controller.resizeModelSelect = vi.fn();
+        controller.updateWebThinkingToggle = vi.fn();
+
+        expect(() => {
+            controller.updateModelList({
+                provider: 'deepseek_web',
+                deepseekWeb: { deepseek_web_model_type: 'expert' },
+            });
+        }).not.toThrow();
+
+        expect(select.options.length).toBeGreaterThan(0);
+        expect(controller.resizeModelSelect).toHaveBeenCalled();
+    });
 });

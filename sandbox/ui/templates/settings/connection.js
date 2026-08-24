@@ -27,6 +27,27 @@ export const ConnectionSettingsTemplate = `
                     </div>
                     <input type="checkbox" id="web-temporary-chat-enabled" class="setting-toggle" />
                 </div>
+
+                <div class="setting-field">
+                    <span data-i18n="geminiWebEnabledModels">Quick Models (Toolbar & Sidepanel)</span>
+                    <div class="deepseek-web-model-toggles">
+                        <label class="deepseek-web-model-toggle" data-model-type="flash" title="Gemini 3.7 Flash">
+                            <span class="model-status-dot model-status-enabled" id="gemini-web-status-flash"></span>
+                            <span class="deepseek-web-model-toggle-label">3.7 Flash</span>
+                            <input type="checkbox" id="gemini-web-model-enabled-flash" class="setting-toggle" checked />
+                        </label>
+                        <label class="deepseek-web-model-toggle" data-model-type="lite" title="Gemini 3.5 Flash-Lite">
+                            <span class="model-status-dot model-status-enabled" id="gemini-web-status-lite"></span>
+                            <span class="deepseek-web-model-toggle-label">3.5 Flash-Lite</span>
+                            <input type="checkbox" id="gemini-web-model-enabled-lite" class="setting-toggle" checked />
+                        </label>
+                        <label class="deepseek-web-model-toggle" data-model-type="pro" title="Gemini 3.1 Pro">
+                            <span class="model-status-dot model-status-enabled" id="gemini-web-status-pro"></span>
+                            <span class="deepseek-web-model-toggle-label">3.1 Pro</span>
+                            <input type="checkbox" id="gemini-web-model-enabled-pro" class="setting-toggle" checked />
+                        </label>
+                    </div>
+                </div>
             </div>
 
             <div id="deepseek-web-fields" class="settings-stack settings-section-offset" hidden>

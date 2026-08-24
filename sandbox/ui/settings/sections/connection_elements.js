@@ -7,6 +7,12 @@ export function queryConnectionElements(getElement = getSettingsElement) {
         apiKeyContainer: getElement(DOM_IDS.API_KEY_CONTAINER),
         webFields: getElement(DOM_IDS.WEB_FIELDS),
         webTemporaryChat: getElement(DOM_IDS.WEB_TEMPORARY_CHAT),
+        geminiWebModelEnabledFlash: getElement(DOM_IDS.GEMINI_WEB_MODEL_ENABLED_FLASH),
+        geminiWebModelEnabledLite: getElement(DOM_IDS.GEMINI_WEB_MODEL_ENABLED_LITE),
+        geminiWebModelEnabledPro: getElement(DOM_IDS.GEMINI_WEB_MODEL_ENABLED_PRO),
+        geminiWebStatusDotFlash: getElement(DOM_IDS.GEMINI_WEB_STATUS_DOT_FLASH),
+        geminiWebStatusDotLite: getElement(DOM_IDS.GEMINI_WEB_STATUS_DOT_LITE),
+        geminiWebStatusDotPro: getElement(DOM_IDS.GEMINI_WEB_STATUS_DOT_PRO),
 
         officialFields: getElement(DOM_IDS.OFFICIAL_FIELDS),
         officialBaseUrl: getElement(DOM_IDS.OFFICIAL_BASE_URL),

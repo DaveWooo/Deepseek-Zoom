@@ -160,11 +160,15 @@ export class AppController {
         this.hostIsTab = context.isTab === true;
     }
 
-    handleModelChange(model) {
+    handleModelChange(model, optionProvider) {
         const connectionData = this.ui.settings?.connectionData;
-        const provider =
+        const currentProvider =
             connectionData?.provider ||
             (connectionData?.useOfficialApi === true ? 'official' : DEFAULT_PROVIDER);
+        const provider = optionProvider || currentProvider;
+        if (connectionData) {
+            connectionData.provider = provider;
+        }
         if (provider === 'openai' && connectionData) {
             connectionData.openaiSelectedModel = model;
         }
@@ -179,7 +183,15 @@ export class AppController {
                 },
             };
         }
+        if (provider === 'deepseek_web' && connectionData) {
+            if (!connectionData.deepseekWeb) connectionData.deepseekWeb = {};
+            connectionData.deepseekWeb.deepseek_web_model_type = model;
+        }
+        if (provider === 'official' && connectionData) {
+            connectionData.selectedModel = model;
+        }
         if (provider === 'web') {
+            if (connectionData) connectionData.selectedModel = model;
             this.syncWebThinkingForModel(model, { saveIfChanged: true });
         }
         window.parent.postMessage(

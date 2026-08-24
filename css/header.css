@@ -8,7 +8,8 @@
     align-items: center;
     padding: 6px 12px 6px 8px;
     z-index: 10;
-    pointer-events: none; /* Let clicks pass through empty space */
+    pointer-events: none;
+    /* Let clicks pass through empty space */
 }
 
 /* Wide Layout Overrides */
@@ -41,7 +42,7 @@ body.host-tab:not(.has-page-context) #open-full-page-btn {
     border: 1px solid color-mix(in srgb, var(--primary) 34%, transparent);
     border-radius: calc(var(--radius-md) + 6px);
     box-shadow: var(--shadow-md);
-    backdrop-filter: blur(14px);
+    backdrop-filter: blur(12px);
     pointer-events: auto;
 }
 
@@ -307,7 +308,7 @@ body.layout-wide.sidebar-collapsed .browser-control-bar {
 .model-picker-trigger {
     min-height: 36px;
     max-width: min(220px, calc(100vw - 208px));
-    padding: 0 12px;
+    padding: 0 10px;
     border: 1px solid transparent;
     border-radius: var(--radius-md);
     background: transparent;
@@ -317,7 +318,7 @@ body.layout-wide.sidebar-collapsed .browser-control-bar {
     align-items: center;
     gap: 8px;
     font: inherit;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 650;
     outline: none;
     transition:
@@ -405,7 +406,7 @@ body.layout-wide.sidebar-collapsed .browser-control-bar {
     left: 0;
     width: min(320px, calc(100vw - 32px));
     max-width: 320px;
-    max-height: min(384px, calc(100vh - 88px));
+    max-height: min(420px, calc(100vh - 88px));
     padding: 6px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
@@ -420,26 +421,42 @@ body.layout-wide.sidebar-collapsed .browser-control-bar {
 }
 
 .model-picker-listbox {
-    max-height: calc(min(384px, calc(100vh - 88px)) - 12px);
+    max-height: calc(min(420px, calc(100vh - 88px)) - 12px);
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
+}
+
+.model-picker-group-header {
+    padding: 8px 10px 4px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    user-select: none;
+}
+
+.model-picker-group-header:not(:first-child) {
+    margin-top: 4px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 8px;
 }
 
 .model-picker-option {
     width: 100%;
-    min-height: 54px;
-    padding: 8px 10px;
+    min-height: 34px;
+    padding: 6px 10px;
     border: 1px solid transparent;
     border-radius: calc(var(--radius-sm) + 2px);
     background: transparent;
     color: var(--text-secondary);
     cursor: pointer;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 10px;
     font: inherit;
     text-align: left;
     transition:
@@ -465,15 +482,15 @@ body.layout-wide.sidebar-collapsed .browser-control-bar {
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    justify-content: center;
 }
 
 .model-picker-option-name {
-    max-width: 240px;
+    max-width: 250px;
     color: inherit;
-    font-size: 14px;
-    font-weight: 650;
-    line-height: 1.2;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -493,7 +510,7 @@ body.layout-wide.sidebar-collapsed .browser-control-bar {
 .model-picker-check {
     width: 18px;
     height: 18px;
-    margin-top: 2px;
+    margin-top: 0;
     flex: 0 0 18px;
     color: var(--primary);
     display: inline-flex;
@@ -502,8 +519,8 @@ body.layout-wide.sidebar-collapsed .browser-control-bar {
 }
 
 .model-picker-check svg {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
 }
 
 @media (max-width: 600px) {
@@ -521,7 +538,7 @@ body.layout-wide.sidebar-collapsed .browser-control-bar {
         max-width: calc(100vw - 230px);
         min-height: 34px;
         padding: 0 10px;
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .web-thinking-toggle {

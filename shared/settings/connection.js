@@ -21,15 +21,14 @@ import {
     isDedicatedApiProvider,
 } from './dedicated_providers.js';
 
-import {
-    DEEPSEEK_WEB_MODEL_ENABLED_KEYS,
-} from './deepseek_web.js';
+import { DEEPSEEK_WEB_MODEL_ENABLED_KEYS } from './deepseek_web.js';
 
 export const DEEPSEEK_WEB_STORAGE_KEYS = [
     'deepseek_web_token',
     'deepseek_web_session_id',
     'deepseek_web_login_type',
     'deepseek_web_mobile',
+    'deepseek_web_phone',
     'deepseek_web_area_code',
     'deepseek_web_email',
     'deepseek_web_password',
@@ -37,6 +36,12 @@ export const DEEPSEEK_WEB_STORAGE_KEYS = [
     'deepseek_web_search_enabled',
     'deepseek_web_model_type',
     ...DEEPSEEK_WEB_MODEL_ENABLED_KEYS,
+];
+
+export const GEMINI_WEB_MODEL_ENABLED_KEYS = [
+    'gemini_web_model_enabled_flash',
+    'gemini_web_model_enabled_lite',
+    'gemini_web_model_enabled_pro',
 ];
 
 export const CONNECTION_STORAGE_KEYS = [
@@ -63,6 +68,7 @@ export const CONNECTION_STORAGE_KEYS = [
     'geminiMcpServerUrl',
     'geminiMcpServers',
     'geminiMcpActiveServerId',
+    ...GEMINI_WEB_MODEL_ENABLED_KEYS,
     ...DEDICATED_API_STORAGE_KEYS,
     ...DEEPSEEK_WEB_STORAGE_KEYS,
 ];
@@ -163,6 +169,9 @@ export function createConnectionSettingsPayload(storageData = {}, options = {}) 
             ? storageData.geminiMcpServers
             : null,
         mcpActiveServerId: storageData.geminiMcpActiveServerId || null,
+        gemini_web_model_enabled_flash: storageData.gemini_web_model_enabled_flash !== false,
+        gemini_web_model_enabled_lite: storageData.gemini_web_model_enabled_lite !== false,
+        gemini_web_model_enabled_pro: storageData.gemini_web_model_enabled_pro !== false,
         deepseekWeb,
     };
 }
@@ -184,6 +193,9 @@ export function createConnectionStorageUpdate(payload = {}) {
         geminiOpenaiThinkingLevel: payload.openaiThinkingLevel || DEFAULT_THINKING_LEVEL,
         geminiOpenaiUseResponsesApi: payload.openaiUseResponsesApi === true,
         geminiOpenaiWebSearch: payload.openaiWebSearch === true,
+        gemini_web_model_enabled_flash: payload.gemini_web_model_enabled_flash !== false,
+        gemini_web_model_enabled_lite: payload.gemini_web_model_enabled_lite !== false,
+        gemini_web_model_enabled_pro: payload.gemini_web_model_enabled_pro !== false,
         ...createDedicatedApiStorageUpdate(payload.dedicatedApiProviders),
         ...createDeepSeekWebStorageUpdate(payload.deepseekWeb),
         geminiMcpEnabled: payload.mcpEnabled === true,

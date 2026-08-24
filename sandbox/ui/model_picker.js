@@ -59,12 +59,7 @@ function buildOptionRow(controller, option, index) {
     name.textContent = option.text;
     name.title = option.text;
 
-    const id = document.createElement('span');
-    id.className = 'model-picker-option-id';
-    id.textContent = option.value;
-    id.title = option.value;
-
-    copy.append(name, id);
+    copy.appendChild(name);
     row.appendChild(copy);
 
     if (isSelected) {
@@ -103,7 +98,24 @@ function createModelPickerController(select, elements) {
 
         renderOptions() {
             const fragment = document.createDocumentFragment();
+            let lastGroup = null;
+
             [...select.options].forEach((option, index) => {
+                const group =
+                    option.dataset.group ||
+                    (option.parentElement && option.parentElement.tagName === 'OPTGROUP'
+                        ? option.parentElement.label
+                        : null);
+
+                if (group && group !== lastGroup) {
+                    lastGroup = group;
+                    const header = document.createElement('div');
+                    header.className = 'model-picker-group-header';
+                    header.textContent = group;
+                    header.setAttribute('role', 'presentation');
+                    fragment.appendChild(header);
+                }
+
                 fragment.appendChild(buildOptionRow(this, option, index));
             });
             this.listbox.replaceChildren(fragment);

@@ -3,7 +3,7 @@ import { SidebarController } from './sidebar.js';
 import { SettingsController } from './settings/index.js';
 import { ViewerController } from './viewer.js';
 import { TabSelectorController } from './tab_selector.js';
-import { createModelOptions, getPreferredModel } from './model_options.js';
+import { createModelOptions, getModelProvider, getPreferredModel } from './model_options.js';
 import { resizeSelectToSelectedOption } from './model_select_width.js';
 import { syncModelPicker } from './model_picker.js';
 import { syncWebThinkingToggle } from './web_thinking_toggle.js';
@@ -107,16 +107,30 @@ export class UIController {
             const optionElement = document.createElement('option');
             optionElement.value = option.value;
             optionElement.textContent = option.label;
+            if (option.group) {
+                optionElement.dataset.group = option.group;
+            }
+            if (option.provider) {
+                optionElement.dataset.provider = option.provider;
+            }
             this.modelSelect.appendChild(optionElement);
         });
 
         // Restore selection if valid, else default
-        const match = options.find((option) => option.value === preferred);
+        const currentProvider = getModelProvider(settings);
+        const match =
+            options.find(
+                (option) =>
+                    option.value === preferred &&
+                    (!option.provider || option.provider === currentProvider)
+            ) || options.find((option) => option.value === preferred);
+
         if (match) {
-            this.modelSelect.value = preferred;
+            const matchIndex = options.indexOf(match);
+            this.modelSelect.selectedIndex = matchIndex;
         } else {
             if (options.length > 0) {
-                this.modelSelect.value = options[0].value;
+                this.modelSelect.selectedIndex = 0;
             }
             this.modelSelect.dispatchEvent(new Event('change'));
         }

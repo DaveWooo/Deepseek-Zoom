@@ -593,16 +593,17 @@ describe('sendDeepSeekWebMessage vision mode file upload', () => {
 
     it('parses indexed fragments emitted during search and reasoning', async () => {
         mockPow();
-        const sseLines = [
-            'data: {"p":"response/fragments","o":"APPEND","v":[{"type":"SEARCH","content":"今日AI新闻"}]}',
-            'data: {"p":"response/fragments/0/status","v":"FINISHED"}',
-            'data: {"p":"response/fragments","o":"APPEND","v":[{"type":"THINK","content":"正在搜索相关新闻..."}]}',
-            'data: {"p":"response/fragments/1/content","o":"APPEND","v":"找到若干条热点。"}',
-            'data: {"p":"response/fragments","o":"APPEND","v":[{"type":"RESPONSE","content":"今天AI领域的重大新闻包括："}]}',
-            'data: {"p":"response/fragments/2/content","o":"APPEND","v":" 1. 新模型发布。"}',
-            'data: {"p":"response/status","v":"FINISHED"}',
-            'data: [DONE]',
-        ].join('\n') + '\n';
+        const sseLines =
+            [
+                'data: {"p":"response/fragments","o":"APPEND","v":[{"type":"SEARCH","content":"今日AI新闻"}]}',
+                'data: {"p":"response/fragments/0/status","v":"FINISHED"}',
+                'data: {"p":"response/fragments","o":"APPEND","v":[{"type":"THINK","content":"正在搜索相关新闻..."}]}',
+                'data: {"p":"response/fragments/1/content","o":"APPEND","v":"找到若干条热点。"}',
+                'data: {"p":"response/fragments","o":"APPEND","v":[{"type":"RESPONSE","content":"今天AI领域的重大新闻包括："}]}',
+                'data: {"p":"response/fragments/2/content","o":"APPEND","v":" 1. 新模型发布。"}',
+                'data: {"p":"response/status","v":"FINISHED"}',
+                'data: [DONE]',
+            ].join('\n') + '\n';
 
         global.fetch = vi.fn(async (url) => {
             if (url.includes('/chat/completion')) {
@@ -653,4 +654,3 @@ describe('sendDeepSeekWebMessage vision mode file upload', () => {
         expect(context.session_id).toBe('auto-created-session');
     });
 });
-

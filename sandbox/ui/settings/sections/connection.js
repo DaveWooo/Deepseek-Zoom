@@ -120,6 +120,40 @@ export class ConnectionSection {
         if (openaiUseResponsesApi) openaiUseResponsesApi.checked = openaiSettings.useResponsesApi;
         if (openaiWebSearch) openaiWebSearch.checked = openaiSettings.webSearch;
 
+        const {
+            geminiWebModelEnabledFlash,
+            geminiWebModelEnabledLite,
+            geminiWebModelEnabledPro,
+            geminiWebStatusDotFlash,
+            geminiWebStatusDotLite,
+            geminiWebStatusDotPro,
+        } = this.elements;
+
+        if (geminiWebModelEnabledFlash) {
+            geminiWebModelEnabledFlash.checked = data?.gemini_web_model_enabled_flash !== false;
+            if (geminiWebStatusDotFlash) {
+                geminiWebStatusDotFlash.className = geminiWebModelEnabledFlash.checked
+                    ? 'model-status-dot model-status-enabled'
+                    : 'model-status-dot model-status-disabled';
+            }
+        }
+        if (geminiWebModelEnabledLite) {
+            geminiWebModelEnabledLite.checked = data?.gemini_web_model_enabled_lite !== false;
+            if (geminiWebStatusDotLite) {
+                geminiWebStatusDotLite.className = geminiWebModelEnabledLite.checked
+                    ? 'model-status-dot model-status-enabled'
+                    : 'model-status-dot model-status-disabled';
+            }
+        }
+        if (geminiWebModelEnabledPro) {
+            geminiWebModelEnabledPro.checked = data?.gemini_web_model_enabled_pro !== false;
+            if (geminiWebStatusDotPro) {
+                geminiWebStatusDotPro.className = geminiWebModelEnabledPro.checked
+                    ? 'model-status-dot model-status-enabled'
+                    : 'model-status-dot model-status-disabled';
+            }
+        }
+
         // DeepSeek Web fields
         loadDeepSeekWebIntoForm(this, data?.deepseekWeb);
 
@@ -155,6 +189,9 @@ export class ConnectionSection {
             openaiThinkingLevelSelect,
             openaiUseResponsesApi,
             openaiWebSearch,
+            geminiWebModelEnabledFlash,
+            geminiWebModelEnabledLite,
+            geminiWebModelEnabledPro,
             mcpEnabled,
         } = this.elements;
 
@@ -189,6 +226,16 @@ export class ConnectionSection {
                 ? openaiUseResponsesApi.checked === true
                 : false,
             openaiWebSearch: openaiWebSearch ? openaiWebSearch.checked === true : false,
+
+            gemini_web_model_enabled_flash: geminiWebModelEnabledFlash
+                ? geminiWebModelEnabledFlash.checked !== false
+                : true,
+            gemini_web_model_enabled_lite: geminiWebModelEnabledLite
+                ? geminiWebModelEnabledLite.checked !== false
+                : true,
+            gemini_web_model_enabled_pro: geminiWebModelEnabledPro
+                ? geminiWebModelEnabledPro.checked !== false
+                : true,
 
             deepseekWeb: saveDeepSeekWebEdits(this),
             dedicatedApiProviders: this.dedicatedApiProviders,

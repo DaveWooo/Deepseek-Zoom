@@ -48,7 +48,10 @@
         'geminiWebThinkingLevel',
         'geminiOfficialModel',
         'geminiOpenaiModel',
-        'geminiOpenaiSelectedModel',
+        // Gemini Web
+        'gemini_web_model_enabled_flash',
+        'gemini_web_model_enabled_lite',
+        'gemini_web_model_enabled_pro',
         // DeepSeek Web
         'deepseek_web_model_type',
         'deepseek_web_model_enabled_default',

@@ -45,8 +45,28 @@
         return LEGACY_WEB_MODEL_ALIASES[normalized] || normalized;
     }
 
-    function createWebModelOptions() {
-        return WEB_MODEL_OPTIONS.map((option) => ({ ...option }));
+    function createWebModelOptions(storageData = {}) {
+        const enabled = WEB_MODEL_OPTIONS.filter((opt) => {
+            if (
+                opt.value === 'fbb127bbb056c959' &&
+                storageData.gemini_web_model_enabled_flash === false
+            )
+                return false;
+            if (
+                opt.value === 'cf41b0e0dd7d53e5' &&
+                storageData.gemini_web_model_enabled_lite === false
+            )
+                return false;
+            if (
+                opt.value === 'e6fa609c3fa255c0' &&
+                storageData.gemini_web_model_enabled_pro === false
+            )
+                return false;
+            return true;
+        });
+        return (enabled.length > 0 ? enabled : [WEB_MODEL_OPTIONS[0]]).map((option) => ({
+            ...option,
+        }));
     }
 
     function createWebModelOptionMarkup() {

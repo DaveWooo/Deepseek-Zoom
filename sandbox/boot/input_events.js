@@ -145,7 +145,16 @@ function bindModelSelect(app, ui, setResizeRef, inputFn) {
     let cleanup = () => {};
     if (modelSelect) {
         const handleModelChange = (changeEvent) => {
-            app.handleModelChange(changeEvent.target.value);
+            const selectedOption =
+                modelSelect.selectedIndex >= 0
+                    ? modelSelect.options[modelSelect.selectedIndex]
+                    : null;
+            const provider = selectedOption?.dataset?.provider;
+            if (provider) {
+                app.handleModelChange(changeEvent.target.value, provider);
+            } else {
+                app.handleModelChange(changeEvent.target.value);
+            }
             modelPicker?.sync();
             resizeModelSelect();
             focusInputAtEnd(inputFn, 50);

@@ -15,6 +15,7 @@ import {
     restoreCustomSelectionTools,
     restoreGeneratedImageWatermarkRemoval,
     restoreImageTools,
+    restoreImageToolsBlacklist,
     restoreTextSelection,
     restoreTextSelectionBlacklist,
 } from './preferences.js';

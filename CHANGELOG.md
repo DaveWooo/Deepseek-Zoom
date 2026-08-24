@@ -1,5 +1,76 @@
-
 # Changelog
+
+## v6.1.9 - 2026-08-24
+
+### DeepSeek Web & Quick Model Auto-Save Persistence Fix
+
+- **修复 DeepSeek Web 与快捷模型开关保存时数据丢失的问题**：
+    - 在 `sandbox/ui/settings/settings_save.js` 的 `buildConnectionSettingsForSave` 中补全对 `deepseekWeb`（手机号、密码、思考、搜索、默认模型、快捷模型开关等）与 `gemini_web_model_enabled_*` 字段的结构合并，解决自动保存时 DeepSeek 网页设置被丢弃的问题。
+    - 在 `shared/settings/connection.js` 的 `createConnectionStorageUpdate` 与 `createConnectionSettingsPayload` 中同步补全 `gemini_web_model_enabled_*` 与 `deepseek_web_phone`，确保存储层与设置 UI 数据无缝持久化。
+    - 任何开关切换、输入改变或离开页面均已确保 100% 自动保存并同步至 `chrome.storage.local`。
+
+## v6.1.8 - 2026-08-24
+
+### Enhanced Auto-Save & Screen Capture Robustness
+
+- **设置自动保存（Auto-Save）全场景强化与日志跟踪**：
+    - 新增文本输入与文本域的 400ms 防抖即时自动保存（`input` 事件），打字停顿后即刻保存。
+    - 在关闭设置模态窗（点击关闭、背景遮罩或按 ESC）前强制执行数据 Flush 保存，杜绝未失焦关闭导致修改丢失。
+    - 增加控制台详细日志输出（`[DeepSeek Zoom] Auto-saved settings:`），方便实时观察保存状态。
+- **网页截图与区域识别（Capture / OCR / Snip）稳定性修复**：
+    - 在后台 `handleInitiateCapture` 启动截图区域选择前，主动调用 `injectContentScriptsIntoTab(tab)` 确保目标标签页的 Content Script 与 Overlay 注入就绪，解决在未注入页面或重载后截图失效的问题。
+    - 捕获 `Extension context invalidated` 错误并显示更友好的本地化刷新网页提示。
+
+## v6.1.7 - 2026-08-24
+
+### Connectivity Test Fix & Seamless Auto-Save Settings
+
+- **修复连通性测试一直显示“测试中...”的问题**：
+    - 在 `sidepanel/core/background_forwarding.js` 的 `FORWARDED_RESPONSE_ACTIONS` 中添加 `DEEPSEEK_WEB_TEST_CONNECTION` 与 `DEEPSEEK_WEB_LOGIN`，确保后台测试与登录结果能正确回传并派发给沙盒窗口。
+    - 增强沙盒 `connection_events.js` 对消息结构的兼容解析，支持正确显示「✅ 连通正常」或具体错误提示。
+- **设置全面升级为无感自动保存（Auto-Save）**：
+    - 移除设置顶部多余的「保存更改」手动按键。
+    - 监听所有输入框失焦（`focusout`/`blur`）与选项切换（`change`），在用户修改任意内容或切换开关后立即自动持久化保存，并显示平滑的「已保存」状态指示。
+
+## v6.1.6 - 2026-08-24
+
+### Settings Save Fix for Quick Model Toggles
+
+- **修复设置保存时 `geminiWebModelEnabledFlash is not defined` 报错**：
+    - 在 `sandbox/ui/settings/sections/connection.js` 的 `getData()` 中补全对 `geminiWebModelEnabledFlash`、`geminiWebModelEnabledLite`、`geminiWebModelEnabledPro` 的解构声明，确保点击保存设置按钮时正常序列化表单数据并成功保存。
+
+## v6.1.5 - 2026-08-24
+
+### ReferenceError Fixes in Sidepanel & UI Controller
+
+- **修复 `restoreImageToolsBlacklist` 未定义错误**：
+    - 在 `sidepanel/core/window_actions.js` 中补充 `restoreImageToolsBlacklist` 的导入，消除打开图片工具黑名单设置时的运行时异常。
+- **修复 `getModelProvider` 未定义错误**：
+    - 在 `sandbox/ui/ui_controller.js` 中补充 `getModelProvider` 导入，消除初始化及切换模型列表时的 `ReferenceError`。
+
+## v6.1.4 - 2026-08-24
+
+### Model Grouping Separation & Quick Model Management
+
+- **网页版与官方 API 分组明确隔离与去重**：
+    - 针对 Google、DeepSeek 等同时具备网页免费版和官方 API 的模型，在下拉分组中明确拆分为 `Google (网页版)` 与 `Google (官方 API)`、`DeepSeek (网页版)` 与 `DeepSeek (官方 API)`，彻底解决模型重名与重复混淆问题。
+    - 为其他厂商 API 提供规范统一的分组标题（`OpenAI (官方 API)`、`Anthropic (Claude API)`、`Alibaba (通义千问 API)`、`Zhipu (智谱清言 API)`、`OpenRouter (多模型路由)`）。
+- **扩展设置页“快捷模型（工具栏与侧边栏）”控制**：
+    - 在设置页面中为 Gemini 网页版补充快捷模型显示开关（`3.7 Flash`、`3.5 Flash-Lite`、`3.1 Pro`），支持自定义控制是否在划词工具栏及侧边栏中展示。
+    - 划词悬浮工具栏和侧边栏模型列表自动联动过滤已停用的快捷模型。
+
+## v6.1.3 - 2026-08-24
+
+### Model Picker Typography & Multi-Provider Grouping
+
+- **模型选择区域字号与紧凑布局优化**：
+    - 触发按钮字号由 `16px` 缩小至 `14px`（移动端由 `14px` 缩小至 `13px`）。
+    - 选项名称字号调整为 `13px`，下拉菜单选项由双行冗余布局精简为高度 `34px` 的单行紧凑布局。
+- **去除底层值子标签展示**：
+    - 移除原先在选项下方显示的 `vision`、`default`、`expert` 等原始模型 ID 子标签，仅保留清晰的主模型显示名称。
+- **跨厂商多模型按公司分组与一键切换**：
+    - 将所有支持的有效模型按所属公司（`DeepSeek`、`Google`、`OpenAI`、`Anthropic`、`Alibaba (通义千问)`、`Zhipu (智谱清言)`、`OpenRouter`）进行分类与分组标题展示。
+    - 下拉菜单选择不同公司的模型时，自动无缝同步切换并持久化对应的 Provider 与选中模型。
 
 ## v6.1.1 - 2026-08-20
 

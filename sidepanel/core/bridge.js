@@ -158,6 +158,9 @@ export class MessageBridge {
         if (typeof model === 'string' && model.trim()) {
             this.state.save(getModelSaveKey(payload), model);
         }
+        if (payload && typeof payload === 'object' && payload.provider) {
+            this.state.save('geminiProvider', payload.provider);
+        }
     }
 
     saveSidePanelSessionBinding(payload) {

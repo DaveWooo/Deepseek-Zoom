@@ -49,14 +49,13 @@ export class SettingsView {
         this.elements = {
             modal: getSettingsElement(DOM_IDS.MODAL),
             btnClose: getSettingsElement(DOM_IDS.BTN_CLOSE),
-            btnSave: getSettingsElement(DOM_IDS.BTN_SAVE_SHORTCUTS),
             saveStatus: getSettingsElement(DOM_IDS.SAVE_STATUS),
             btnReset: getSettingsElement(DOM_IDS.BTN_RESET_SHORTCUTS),
         };
     }
 
     bindEvents() {
-        const { modal, btnClose, btnSave, btnReset } = this.elements;
+        const { modal, btnClose, btnReset } = this.elements;
 
         if (btnClose) btnClose.addEventListener('click', () => this.close());
         if (modal) {
@@ -65,8 +64,45 @@ export class SettingsView {
             });
         }
 
-        if (btnSave) btnSave.addEventListener('click', () => this.handleSave());
         if (btnReset) btnReset.addEventListener('click', () => this.handleReset());
+
+        const settingsBody = document.querySelector('.settings-body') || modal;
+        if (settingsBody) {
+            settingsBody.addEventListener('change', (event) => {
+                if (event.target?.type === 'file') return;
+                this.handleSave();
+            });
+            settingsBody.addEventListener('focusout', (event) => {
+                const tag = event.target?.tagName?.toLowerCase();
+                if (tag === 'input' || tag === 'textarea') {
+                    if (
+                        event.target.type !== 'file' &&
+                        event.target.type !== 'checkbox' &&
+                        event.target.type !== 'button'
+                    ) {
+                        this.handleSave();
+                    }
+                }
+            });
+            settingsBody.addEventListener('input', (event) => {
+                const tag = event.target?.tagName?.toLowerCase();
+                if (tag === 'input' || tag === 'textarea') {
+                    if (
+                        event.target.type !== 'file' &&
+                        event.target.type !== 'checkbox' &&
+                        event.target.type !== 'button'
+                    ) {
+                        if (this._inputDebounceTimer) {
+                            clearTimeout(this._inputDebounceTimer);
+                        }
+                        this._inputDebounceTimer = setTimeout(() => {
+                            this._inputDebounceTimer = null;
+                            this.handleSave();
+                        }, 400);
+                    }
+                }
+            });
+        }
 
         const tabs = document.querySelectorAll('.settings-tab');
         const sections = document.querySelectorAll('.settings-section');
@@ -201,6 +237,12 @@ export class SettingsView {
     }
 
     close() {
+        if (this._inputDebounceTimer) {
+            clearTimeout(this._inputDebounceTimer);
+            this._inputDebounceTimer = null;
+        }
+        this.handleSave();
+
         if (this.elements.modal) {
             this.elements.modal.classList.remove('visible');
         }

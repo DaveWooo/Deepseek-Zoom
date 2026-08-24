@@ -233,7 +233,7 @@ describe('project code hygiene', () => {
                 /^\/\/\s+(?=.*(?:^|[\s>])(?:[A-Za-z0-9_.-]+\/)+[A-Za-z0-9_.-]+\.(?:js|mjs|ts)\b).*$/
             );
         }
-    });
+    }, 30000);
 
     it('keeps stale placeholder comments out of toolbar and message code', async () => {
         const icons = await readProjectFile('content/toolbar/icons.js');

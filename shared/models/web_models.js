@@ -4,8 +4,8 @@ const catalog = globalThis.GeminiNexusWebModelCatalog;
 
 export const DEFAULT_WEB_MODEL = catalog.DEFAULT_WEB_MODEL;
 
-export function createWebModelOptions() {
-    return catalog.createWebModelOptions();
+export function createWebModelOptions(storageData = {}) {
+    return catalog.createWebModelOptions(storageData);
 }
 
 export function createWebModelOptionMarkup() {

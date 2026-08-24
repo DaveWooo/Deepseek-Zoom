@@ -30,7 +30,11 @@
     }
 
     function getRuntimeMessageErrorText(error) {
-        return error?.message || String(error) || 'Could not contact DeepSeek Zoom.';
+        const msg = error?.message || String(error || '');
+        if (msg.includes('Extension context invalidated')) {
+            return '插件已更新或重新加载，请刷新当前网页后重试。';
+        }
+        return msg || 'Could not contact DeepSeek Zoom.';
     }
 
     class ToolbarActions {

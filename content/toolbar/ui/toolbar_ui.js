@@ -463,7 +463,7 @@
             } else if (getDedicatedProviderConfig(provider)) {
                 options = createDedicatedModelOptions(settings, provider);
             } else {
-                options = window.GeminiWebModels.createOptions();
+                options = window.GeminiWebModels.createOptions(settings);
             }
 
             this.view.updateModelOptions(options, currentModel);

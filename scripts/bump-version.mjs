@@ -38,7 +38,11 @@ export function incrementVersion(currentVersion, type = 'patch') {
  * @param {string} [changelogTitle='']
  * @param {string} [targetRootDir=rootDir]
  */
-export async function updateProjectVersion(newVersion, changelogTitle = '', targetRootDir = rootDir) {
+export async function updateProjectVersion(
+    newVersion,
+    changelogTitle = '',
+    targetRootDir = rootDir
+) {
     // 1. package.json
     const packageJsonPath = path.join(targetRootDir, 'package.json');
     const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8'));

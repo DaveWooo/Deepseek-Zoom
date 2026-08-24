@@ -44,7 +44,6 @@ export const SettingsContentTemplate = `
                 <h3 id="settings-tab-title" data-i18n="apiSettings">API</h3>
                 <div class="settings-header-actions">
                     <button id="reset-shortcuts" class="btn-secondary btn-danger-soft" data-i18n="resetDefault">Reset Default</button>
-                    <button id="save-shortcuts" class="btn-primary" data-i18n="saveChanges">Save Changes</button>
                     <span id="settings-save-status" class="settings-save-status" role="status" aria-live="polite" hidden></span>
                     <button id="close-settings" class="icon-btn small" data-i18n-title="close" title="Close">${TemplateIcons.CLOSE}</button>
                 </div>

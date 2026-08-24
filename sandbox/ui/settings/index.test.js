@@ -68,7 +68,7 @@ describe('SettingsController', () => {
         expect(document.getElementById('account-indices-input').value).toBe('0,2');
     });
 
-    it('keeps settings open and shows saved feedback after saving', async () => {
+    it('keeps settings open and shows saved feedback after auto-saving', async () => {
         vi.useFakeTimers();
         try {
             const { saveConnectionSettingsToStorage } =
@@ -76,7 +76,13 @@ describe('SettingsController', () => {
             const controller = new SettingsController();
             controller.open();
 
-            document.getElementById('save-shortcuts').click();
+            const baseUrlInput = document.getElementById('official-base-url');
+            if (baseUrlInput) {
+                baseUrlInput.value = 'https://custom.api.google.com';
+                baseUrlInput.dispatchEvent(new Event('change', { bubbles: true }));
+            } else {
+                controller.view.handleSave();
+            }
 
             expect(saveConnectionSettingsToStorage).toHaveBeenCalled();
             expect(document.getElementById('settings-modal').classList.contains('visible')).toBe(
@@ -84,12 +90,10 @@ describe('SettingsController', () => {
             );
             expect(document.getElementById('settings-save-status').hidden).toBe(false);
             expect(document.getElementById('settings-save-status').textContent).toBe('Saved');
-            expect(document.getElementById('save-shortcuts').disabled).toBe(true);
 
             vi.advanceTimersByTime(1800);
 
             expect(document.getElementById('settings-save-status').hidden).toBe(true);
-            expect(document.getElementById('save-shortcuts').disabled).toBe(false);
         } finally {
             vi.useRealTimers();
         }
@@ -141,5 +145,26 @@ describe('SettingsController', () => {
         expect(document.getElementById('shortcut-open-panel').value).toBe('Alt+G');
         expect(document.getElementById('shortcut-browser-control').value).toBe('Ctrl+B');
         expect(document.getElementById('shortcut-ocr-capture').value).toBe('Alt+O');
+    });
+
+    it('auto-saves DeepSeek Web settings and quick model toggles when toggled', async () => {
+        const { saveConnectionSettingsToStorage } =
+            await import('../../../shared/messaging/index.js');
+        const controller = new SettingsController();
+
+        const expertToggle = document.getElementById('deepseek-web-model-enabled-expert');
+        if (expertToggle) {
+            expertToggle.checked = false;
+            expertToggle.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        expect(saveConnectionSettingsToStorage).toHaveBeenCalledWith(
+            expect.objectContaining({
+                deepseekWeb: expect.objectContaining({
+                    deepseek_web_model_enabled_expert: false,
+                }),
+                gemini_web_model_enabled_flash: true,
+            })
+        );
     });
 });

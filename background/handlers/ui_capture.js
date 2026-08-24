@@ -1,4 +1,5 @@
 import { respondWithUiTask, runUiTask } from './ui_async.js';
+import { injectContentScriptsIntoTab } from '../content_injection.js';
 
 const DEFAULT_CAPTURE_ERROR = 'Capture failed';
 
@@ -64,6 +65,12 @@ export function handleInitiateCapture(context, request, sender) {
     runUiTask(async () => {
         const tab = await getCaptureTargetTab(context, request, sender);
         if (!tab) return;
+
+        try {
+            await injectContentScriptsIntoTab(tab);
+        } catch {
+            // Non-critical if already present or restricted tab
+        }
 
         // Hide floating toolbar before capturing so it doesn't appear in the screenshot.
         try {

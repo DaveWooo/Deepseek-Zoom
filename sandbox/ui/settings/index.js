@@ -240,6 +240,11 @@ export class SettingsController {
                 providerChanged: previousProvider !== this.connectionData.provider,
             });
         }
+
+        console.info('[DeepSeek Zoom] Auto-saved settings:', {
+            provider: this.connectionData.provider,
+            settings: this.connectionData,
+        });
     }
 
     resetSettings() {

@@ -15,7 +15,8 @@ export function loadDeepSeekWebIntoForm(section, dsw = {}) {
     if (el.deepseekWebModelType)
         el.deepseekWebModelType.value = dsw.deepseek_web_model_type || 'default';
     if (el.deepseekWebModelEnabledDefault)
-        el.deepseekWebModelEnabledDefault.checked = dsw.deepseek_web_model_enabled_default !== false;
+        el.deepseekWebModelEnabledDefault.checked =
+            dsw.deepseek_web_model_enabled_default !== false;
     if (el.deepseekWebModelEnabledExpert)
         el.deepseekWebModelEnabledExpert.checked = dsw.deepseek_web_model_enabled_expert !== false;
     if (el.deepseekWebModelEnabledVision)
@@ -79,4 +80,3 @@ export function updateDeepSeekWebStatusDots(section) {
         }
     }
 }
-

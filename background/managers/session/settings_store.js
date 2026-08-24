@@ -5,7 +5,10 @@ import {
     DEFAULT_OFFICIAL_MODELS,
     DEFAULT_THINKING_LEVEL,
 } from '../../../shared/config/constants.js';
-import { DEEPSEEK_WEB_STORAGE_KEYS, isDeepSeekWebProvider } from '../../../shared/settings/connection.js';
+import {
+    DEEPSEEK_WEB_STORAGE_KEYS,
+    isDeepSeekWebProvider,
+} from '../../../shared/settings/connection.js';
 import {
     getConnectionProvider,
     getOpenAIWebSearchStorageKeys,

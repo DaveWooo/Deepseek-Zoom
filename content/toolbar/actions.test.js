@@ -233,7 +233,9 @@ describe('ToolbarActions', () => {
             await Promise.resolve();
 
             expect(ui.showLoading).toHaveBeenCalledWith('loading summarize');
-            expect(ui.showError).toHaveBeenCalledWith('Extension context invalidated');
+            expect(ui.showError).toHaveBeenCalledWith(
+                '插件已更新或重新加载，请刷新当前网页后重试。'
+            );
             expect(warnSpy).toHaveBeenCalledWith(
                 'Gemini toolbar background message failed:',
                 expect.any(Error)

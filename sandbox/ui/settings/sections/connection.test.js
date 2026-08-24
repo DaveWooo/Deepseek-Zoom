@@ -213,6 +213,9 @@ describe('ConnectionSection provider visibility', () => {
         expect(section.getData()).toMatchObject({
             provider: 'web',
             webTemporaryChat: true,
+            gemini_web_model_enabled_flash: true,
+            gemini_web_model_enabled_lite: true,
+            gemini_web_model_enabled_pro: true,
         });
     });
 

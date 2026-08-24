@@ -65,6 +65,10 @@ export function buildConnectionSettingsForSave(connection, previousConnectionDat
         openaiThinkingLevel: connection.openaiThinkingLevel || DEFAULT_THINKING_LEVEL,
         openaiUseResponsesApi: openaiSettings.useResponsesApi,
         openaiWebSearch: openaiSettings.webSearch,
+        gemini_web_model_enabled_flash: connection.gemini_web_model_enabled_flash !== false,
+        gemini_web_model_enabled_lite: connection.gemini_web_model_enabled_lite !== false,
+        gemini_web_model_enabled_pro: connection.gemini_web_model_enabled_pro !== false,
+        deepseekWeb: connection.deepseekWeb || previousConnectionData.deepseekWeb || {},
         dedicatedApiProviders: normalizeDedicatedApiSettingsPayload(
             connection.dedicatedApiProviders || previousConnectionData.dedicatedApiProviders
         ),

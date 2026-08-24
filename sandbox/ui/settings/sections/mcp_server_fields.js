@@ -17,9 +17,7 @@ export function initializeMcpServers(section, data) {
             headers: normalizeMcpHeaders(serverConfig.headers),
             enabled: serverConfig.enabled !== false,
             toolMode: serverConfig.toolMode === 'selected' ? 'selected' : 'all',
-            enabledTools: Array.isArray(serverConfig.enabledTools)
-                ? serverConfig.enabledTools
-                : [],
+            enabledTools: Array.isArray(serverConfig.enabledTools) ? serverConfig.enabledTools : [],
         }));
         section.mcpActiveServerId =
             activeId && section.mcpServers.some((serverConfig) => serverConfig.id === activeId)
@@ -90,14 +88,8 @@ export function renderMcpServerOptions(section) {
 }
 
 export function saveCurrentMcpServerEdits(section) {
-    const {
-        mcpServerName,
-        mcpTransport,
-        mcpServerUrl,
-        mcpHeaders,
-        mcpServerEnabled,
-        mcpToolMode,
-    } = section.elements;
+    const { mcpServerName, mcpTransport, mcpServerUrl, mcpHeaders, mcpServerEnabled, mcpToolMode } =
+        section.elements;
 
     const server = section._getActiveServer();
     if (!server) return false;
@@ -106,8 +98,7 @@ export function saveCurrentMcpServerEdits(section) {
 
     if (mcpServerName) server.name = mcpServerName.value || '';
     if (mcpServerUrl) server.url = (mcpServerUrl.value || '').trim();
-    if (mcpTransport)
-        server.transport = inferMcpTransport(mcpTransport.value || 'sse', server.url);
+    if (mcpTransport) server.transport = inferMcpTransport(mcpTransport.value || 'sse', server.url);
     if (mcpHeaders) {
         try {
             server.headers = parseMcpHeadersText(mcpHeaders.value);

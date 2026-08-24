@@ -2,7 +2,7 @@
  * DeepSeek Web provider shared model types & helpers.
  *
  * Model types map to chat.deepseek.com mode selector:
- *  - 'default' -> 快速模式 (DeepSeek-V4 3.6 Flash)
+ *  - 'default' -> 快速模式 (DeepSeek-V4 Flash)
  *  - 'expert'  -> 专家模式 (DeepSeek-R1 reasoning)
  *  - 'vision'  -> 识图模式 (multimodal, requires ref_file_ids)
  *

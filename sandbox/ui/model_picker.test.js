@@ -48,9 +48,26 @@ describe('model picker', () => {
         expect(rows[0].querySelector('.model-picker-option-name').textContent).toBe(
             'Gemini 3 Flash Preview'
         );
-        expect(rows[0].querySelector('.model-picker-option-id').textContent).toBe(
-            'gemini-3-flash-preview'
-        );
+        expect(rows[0].querySelector('.model-picker-option-id')).toBeNull();
+    });
+
+    it('renders group headers when options have optgroups or dataset.group', () => {
+        const select = document.getElementById('model-select');
+        select.innerHTML = `
+            <optgroup label="DeepSeek">
+                <option value="vision">DeepSeek Vision (识图)</option>
+                <option value="default">DeepSeek最新版模型 (快速)</option>
+            </optgroup>
+            <optgroup label="Google">
+                <option value="fbb127bbb056c959">Gemini 3.7 Flash</option>
+            </optgroup>
+        `;
+        initModelPicker(select);
+
+        const headers = [...document.querySelectorAll('.model-picker-group-header')];
+        expect(headers).toHaveLength(2);
+        expect(headers[0].textContent).toBe('DeepSeek');
+        expect(headers[1].textContent).toBe('Google');
     });
 
     it('selects a model through the custom listbox and dispatches native change', () => {
