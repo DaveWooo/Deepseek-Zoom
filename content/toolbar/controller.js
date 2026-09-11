@@ -213,10 +213,10 @@
                 webThinkingLevel: result.geminiWebThinkingLevel,
                 dedicatedApiProviders: createDedicatedProviderSettings(result),
                 deepseekWeb: {
-                    modelType: result.deepseek_web_model_type || 'default',
-                    enabledDefault: result.deepseek_web_model_enabled_default !== false,
-                    enabledExpert: result.deepseek_web_model_enabled_expert !== false,
-                    enabledVision: result.deepseek_web_model_enabled_vision !== false,
+                    modelType: 'default',
+                    enabledDefault: true,
+                    enabledExpert: true,
+                    enabledVision: true,
                 },
             };
 
@@ -227,7 +227,7 @@
             settings.provider = provider;
             const selectedModel =
                 provider === 'deepseek_web'
-                    ? result.deepseek_web_model_type || 'default'
+                    ? 'default'
                     : provider === 'openai'
                       ? result[TOOLBAR_OPENAI_MODEL_STORAGE_KEY] ||
                         result.geminiOpenaiSelectedModel ||

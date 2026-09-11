@@ -85,32 +85,10 @@ export const ConnectionSettingsTemplate = `
 
                 <div class="setting-field">
                     <span data-i18n="deepseekWebDefaultModel">Default Model</span>
-                    <select id="deepseek-web-model-type" class="settings-input settings-select">
-                        <option value="vision" data-i18n="deepseekWebModelVision">DeepSeek Vision (识图)</option>
-                        <option value="default" data-i18n="deepseekWebModelDefault" selected>DeepSeek最新版模型 (快速)</option>
-                        <option value="expert" data-i18n="deepseekWebModelExpert">DeepSeek R1 (专家)</option>
-                    </select>
-                </div>
-
-                <div class="setting-field">
-                    <span data-i18n="deepseekWebEnabledModels">Quick Models (Toolbar & Sidepanel)</span>
-                    <div class="deepseek-web-model-toggles">
-                        <label class="deepseek-web-model-toggle" data-model-type="default" title="快速模式 (DeepSeek最新版模型)">
-                            <span class="model-status-dot model-status-enabled" id="deepseek-web-status-default"></span>
-                            <span class="deepseek-web-model-toggle-label" data-i18n="deepseekWebModelDefaultShort">快速</span>
-                            <input type="checkbox" id="deepseek-web-model-enabled-default" class="setting-toggle" checked />
-                        </label>
-                        <label class="deepseek-web-model-toggle" data-model-type="expert" title="专家模式 (DeepSeek R1)">
-                            <span class="model-status-dot model-status-enabled" id="deepseek-web-status-expert"></span>
-                            <span class="deepseek-web-model-toggle-label" data-i18n="deepseekWebModelExpertShort">专家</span>
-                            <input type="checkbox" id="deepseek-web-model-enabled-expert" class="setting-toggle" checked />
-                        </label>
-                        <label class="deepseek-web-model-toggle" data-model-type="vision" title="识图模式 (DeepSeek Vision)">
-                            <span class="model-status-dot model-status-enabled" id="deepseek-web-status-vision"></span>
-                            <span class="deepseek-web-model-toggle-label" data-i18n="deepseekWebModelVisionShort">识图</span>
-                            <input type="checkbox" id="deepseek-web-model-enabled-vision" class="setting-toggle" checked />
-                        </label>
+                    <div class="settings-muted-text" data-i18n="deepseekWebModelUnifiedDesc">
+                        DeepSeek (已融合快速对话、深度思考与识图功能，支持直接上传图片与深度思考)
                     </div>
+                    <input type="hidden" id="deepseek-web-model-type" value="default" />
                 </div>
 
                 <div class="settings-action-row">

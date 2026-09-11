@@ -55,17 +55,20 @@ jobs:
           VERSION=$(node -p "JSON.parse(require('fs').readFileSync('package.json', 'utf8')).version")
           echo "value=$VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Create zip artifact
+      - name: Verify or create zip artifact
         run: |
-          mkdir -p artifacts
-          cd artifacts/chrome-extension
-          zip -r "../gemini-nexus-v${{ steps.version.outputs.value }}.zip" .
+          ZIP_NAME="deepseek-zoom-v${{ steps.version.outputs.value }}.zip"
+          if [[ ! -f "artifacts/$ZIP_NAME" ]]; then
+            mkdir -p artifacts
+            cd artifacts/chrome-extension
+            zip -r "../$ZIP_NAME" .
+          fi
 
       - name: Upload packaged extension
         uses: actions/upload-artifact@v4
         with:
-          name: gemini-nexus-v${{ steps.version.outputs.value }}
-          path: artifacts/gemini-nexus-v${{ steps.version.outputs.value }}.zip
+          name: deepseek-zoom-v${{ steps.version.outputs.value }}
+          path: artifacts/deepseek-zoom-v${{ steps.version.outputs.value }}.zip
           if-no-files-found: error
 
       - name: Resolve release target
@@ -121,8 +124,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: ${{ steps.release.outputs.tag }}
-          ZIP_PATH: artifacts/gemini-nexus-v${{ steps.version.outputs.value }}.zip
-          ZIP_NAME: gemini-nexus-v${{ steps.version.outputs.value }}.zip
+          ZIP_PATH: artifacts/deepseek-zoom-v${{ steps.version.outputs.value }}.zip
+          ZIP_NAME: deepseek-zoom-v${{ steps.version.outputs.value }}.zip
         run: |
           if [[ -z "$RELEASE_TAG" ]]; then
             echo "release_tag is required when publish_release is true" >&2
@@ -142,7 +145,7 @@ jobs:
 
           gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json assets --jq '
             .assets[]
-            | select(.name | startswith("gemini-nexus-v"))
+            | select(.name | (startswith("deepseek-zoom-v") or startswith("gemini-nexus-v")))
             | .name
           ' | while IFS= read -r asset_name; do
             if [[ -n "$asset_name" && "$asset_name" != "$ZIP_NAME" ]]; then

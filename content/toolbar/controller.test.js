@@ -213,10 +213,7 @@ describe('GeminiToolbarController model persistence', () => {
     it('re-syncs the model list with deepseek_web options after switching to DS Web', async () => {
         chrome.storage.local.get.mockResolvedValue({
             geminiToolbarProvider: 'deepseek_web',
-            deepseek_web_model_type: 'expert',
-            deepseek_web_model_enabled_default: true,
-            deepseek_web_model_enabled_expert: true,
-            deepseek_web_model_enabled_vision: true,
+            deepseek_web_model_type: 'default',
         });
         const controller = new window.GeminiToolbarController();
         ui.updateModelList.mockClear();
@@ -227,12 +224,10 @@ describe('GeminiToolbarController model persistence', () => {
             expect.objectContaining({
                 provider: 'deepseek_web',
                 deepseekWeb: expect.objectContaining({
-                    enabledDefault: true,
-                    enabledExpert: true,
-                    enabledVision: true,
+                    modelType: 'default',
                 }),
             }),
-            'expert'
+            'default'
         );
     });
 

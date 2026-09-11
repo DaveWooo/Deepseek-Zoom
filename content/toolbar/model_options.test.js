@@ -44,13 +44,13 @@ describe('toolbar web model helper', () => {
         ).toBe('e6fa609c3fa255c0');
     });
 
-    it('resolves deepseek_web provider to vision for image prompts', () => {
+    it('resolves deepseek_web provider to default for image prompts', () => {
         expect(
             window.GeminiWebModels.resolveImagePromptModel({
                 provider: 'deepseek_web',
                 mode: 'ocr',
                 model: 'default',
             })
-        ).toBe('vision');
+        ).toBe('default');
     });
 });

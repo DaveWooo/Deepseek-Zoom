@@ -1,5 +1,27 @@
 # Changelog
 
+## v6.2.0 - 2026-09-11
+
+### DeepSeek Web Unified Model Integration
+
+- **DeepSeek Web 专家模式、识图模式与快速模式全面融合重构**：
+    - **统一模型架构**：根据 `chat.deepseek.com` 官方接口规范，将原先独立的快速（default）、专家（expert）与识图（vision）三种分立模式融合成单一统一模型架构（`default`），侧边栏与工具栏的模型选择列表精简为统一项 `DeepSeek (网页版)`。
+    - **多模态图片附件解耦**：解除图片上传对 `modelType === 'vision'` 的强依赖，任何对话中附带图片均会自动触发 PoW 求解与上传（`ref_file_ids`），并支持在上传图片的同时自由开启“深度思考 (R1)”与“联网搜索”，不再被强制置假。
+    - **设置界面精简与体验优化**：移除 DeepSeek Web 配置区域冗余的“默认模型”下拉框和“快捷模型”勾选组，替换为统一模型说明展示卡片，保留“深度思考 (R1)”与“联网搜索”全局偏好开关。
+    - **全链路平滑向下兼容**：`shared/settings/deepseek_web.js` 与 `content/toolbar/model_options.js` 自动将历史配置中可能残留的 `expert` 或 `vision` 规范化为 `default`，确保升级无感知且稳定运行。
+    - **国际化与字典卫生度**：清理 `sandbox/core/translations.js` 中已废弃的旧模式孤儿键，补充 `deepseekWebModelUnifiedDesc` 双语描述，100% 通过 `project-i18n.test.js` 校验。
+    - **文档同步**：同步更新 `README.md` 与 `README.zh-CN.md` 中关于 DeepSeek 网页(免费) 的模型介绍与特性对比。
+
+## v6.1.10 - 2026-09-10
+
+### Release Packaging & Build Pipeline Fixes
+
+- **修复 Release 打包异常与构建产物差异问题**：
+    - **自动生成 Release Zip 产物**：在 `scripts/package-extension.mjs` 中新增 `createReleaseZip` 跨平台打包逻辑，在构建输出 `artifacts/chrome-extension` 解包目录的同时，自动压缩生成标准格式的 `artifacts/deepseek-zoom-v<version>.zip`，确保 Zip 根目录直接包含 `manifest.json`、`assets/` 等所有必要运行时文件，避免误传源码目录。
+    - **新增 `package:zip` 快捷命令**：在 `package.json` 中配置 `"package:zip": "npm run package:extension"`，方便开发者和发布流程一键完成 Vite 构建、静态资源收集、Content Script 捆绑及 Zip 归档。
+    - **修复 GitHub Actions 发布工作流中断问题**：同步更新 `.github/workflows/package-extension.yml` 中的产物名称与上传逻辑，将旧包名 `gemini-nexus-v*` 全面更新为 `deepseek-zoom-v*`；清理代码格式并修复 Knip 孤儿导出错误，确保 `npm run check` 零错误通过，杜绝 CI 流水线因格式校验失败导致 Release 资产上传被阻断。
+    - **清理未引用的废弃导出**：清理 `services/deepseek_web_auth.js` 与 `shared/settings/deepseek_web.js` 中未被引用的函数与变量，保证工程卫生度。
+
 ## v6.1.9 - 2026-08-24
 
 ### DeepSeek Web & Quick Model Auto-Save Persistence Fix

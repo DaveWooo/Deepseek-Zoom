@@ -450,16 +450,7 @@
                     label: getStrings().customModel || 'Custom Model',
                 });
             } else if (provider === 'deepseek_web') {
-                const dsw = settings.deepseekWeb || {};
-                options = [];
-                if (dsw.enabledVision !== false)
-                    options.push({ value: 'vision', label: 'DeepSeek Vision (识图)' });
-                if (dsw.enabledDefault !== false)
-                    options.push({ value: 'default', label: 'DeepSeek最新版模型 (快速)' });
-                if (dsw.enabledExpert !== false)
-                    options.push({ value: 'expert', label: 'DeepSeek R1 (专家)' });
-                if (options.length === 0)
-                    options.push({ value: 'default', label: 'DeepSeek最新版模型 (快速)' });
+                options = [{ value: 'default', label: 'DeepSeek (网页版)' }];
             } else if (getDedicatedProviderConfig(provider)) {
                 options = createDedicatedModelOptions(settings, provider);
             } else {

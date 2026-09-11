@@ -22,19 +22,13 @@ describe('createModelOptions grouped across providers', () => {
         expect(groups).toContain('OpenRouter (多模型路由)');
 
         expect(
-            options.some((opt) => opt.value === 'vision' && opt.group === 'DeepSeek (网页版)')
-        ).toBe(true);
-        expect(
             options.some((opt) => opt.value === 'default' && opt.group === 'DeepSeek (网页版)')
-        ).toBe(true);
-        expect(
-            options.some((opt) => opt.value === 'expert' && opt.group === 'DeepSeek (网页版)')
         ).toBe(true);
         expect(options.some((opt) => opt.group === 'Google (网页版)')).toBe(true);
         expect(options.some((opt) => opt.group === 'Google (官方 API)')).toBe(true);
     });
 
-    it('filters out disabled DeepSeek Web modes in the DeepSeek (网页版) group', () => {
+    it('provides the unified DeepSeek Web model in the DeepSeek (网页版) group', () => {
         const options = createModelOptions({
             provider: 'deepseek_web',
             deepseekWeb: {
@@ -45,14 +39,8 @@ describe('createModelOptions grouped across providers', () => {
         const deepseekWebOpts = options.filter((opt) => opt.provider === 'deepseek_web');
         expect(deepseekWebOpts).toEqual([
             {
-                value: 'vision',
-                label: 'DeepSeek Vision (识图)',
-                group: 'DeepSeek (网页版)',
-                provider: 'deepseek_web',
-            },
-            {
                 value: 'default',
-                label: 'DeepSeek最新版模型 (快速)',
+                label: 'DeepSeek (网页版)',
                 group: 'DeepSeek (网页版)',
                 provider: 'deepseek_web',
             },
@@ -70,7 +58,7 @@ describe('createModelOptions grouped across providers', () => {
         expect(googleWebOpts.some((opt) => opt.value === 'fbb127bbb056c959')).toBe(true);
     });
 
-    it('falls back to the default mode when every DeepSeek Web mode is disabled', () => {
+    it('falls back to the unified default mode for DeepSeek Web', () => {
         const options = createModelOptions({
             provider: 'deepseek_web',
             deepseekWeb: {
@@ -84,7 +72,7 @@ describe('createModelOptions grouped across providers', () => {
         expect(deepseekWebOpts).toEqual([
             {
                 value: 'default',
-                label: 'DeepSeek最新版模型 (快速)',
+                label: 'DeepSeek (网页版)',
                 group: 'DeepSeek (网页版)',
                 provider: 'deepseek_web',
             },
@@ -117,7 +105,7 @@ describe('createModelOptions grouped across providers', () => {
 });
 
 describe('getPreferredModel for deepseek_web provider', () => {
-    it('prefers the stored model type over the current value', () => {
+    it('always returns default unified model for deepseek_web', () => {
         const preferred = getPreferredModel(
             {
                 provider: 'deepseek_web',
@@ -126,7 +114,7 @@ describe('getPreferredModel for deepseek_web provider', () => {
             'default'
         );
 
-        expect(preferred).toBe('expert');
+        expect(preferred).toBe('default');
     });
 
     it('falls back to default model type', () => {

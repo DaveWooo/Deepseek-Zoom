@@ -1,5 +1,6 @@
 // @ts-check
 import { cp, mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
+import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CONTENT_SCRIPT_ORDER, YOUTUBE_SCRIPT_ORDER } from './content-script-order.mjs';
@@ -394,6 +395,57 @@ async function main() {
     );
 
     console.log(`Extension package prepared at ${path.relative(rootDir, packageDir)}`);
+
+    const zipName = `deepseek-zoom-v${packageJson.version}.zip`;
+    const zipPath = path.join(artifactsDir, zipName);
+    await createReleaseZip(packageDir, zipPath);
+    console.log(`Extension package zip created at ${path.relative(rootDir, zipPath)}`);
+}
+
+/**
+ * Create a zip archive containing the contents of sourceDir at the root of the archive.
+ * Supports cross-platform creation using zip, tar (bsdtar with zip support), or PowerShell Compress-Archive.
+ * @param {string} sourceDir
+ * @param {string} targetZipPath
+ * @returns {Promise<string>}
+ */
+export async function createReleaseZip(sourceDir, targetZipPath) {
+    const absSourceDir = path.resolve(sourceDir);
+    const absTargetZip = path.resolve(targetZipPath);
+    await mkdir(path.dirname(absTargetZip), { recursive: true });
+    await rm(absTargetZip, { force: true });
+
+    // 1. Try 'zip' (standard on Linux / macOS)
+    try {
+        const result = spawnSync('zip', ['-r', absTargetZip, '.'], {
+            cwd: absSourceDir,
+            stdio: 'pipe',
+        });
+        if (result.status === 0) return absTargetZip;
+    } catch {}
+
+    // 2. Try 'tar' (Windows 10/11 built-in bsdtar supports .zip with -a -cf)
+    try {
+        const result = spawnSync('tar', ['-a', '-cf', absTargetZip, '-C', absSourceDir, '.'], {
+            stdio: 'pipe',
+        });
+        if (result.status === 0) return absTargetZip;
+    } catch {}
+
+    // 3. Fallback on Windows to PowerShell Compress-Archive
+    if (process.platform === 'win32') {
+        const psCommand = `Compress-Archive -Path (Join-Path '${absSourceDir}' '*') -DestinationPath '${absTargetZip}' -Force`;
+        const result = spawnSync(
+            'powershell',
+            ['-NoProfile', '-NonInteractive', '-Command', psCommand],
+            { stdio: 'pipe' }
+        );
+        if (result.status === 0) return absTargetZip;
+    }
+
+    throw new Error(
+        `Failed to create release zip at ${absTargetZip}: no suitable zip tool found (tried zip, tar, Compress-Archive)`
+    );
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

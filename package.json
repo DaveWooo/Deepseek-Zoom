@@ -1,7 +1,7 @@
 {
     "name": "@davewooo/deepseek-zoom",
     "private": false,
-    "version": "6.1.9",
+    "version": "6.2.0",
     "type": "module",
     "repository": {
         "type": "git",
@@ -25,6 +25,7 @@
         "version:minor": "node scripts/bump-version.mjs minor",
         "version:major": "node scripts/bump-version.mjs major",
         "package:extension": "npm run build && node scripts/package-extension.mjs",
+        "package:zip": "npm run package:extension",
         "package:local": "npm run package:extension && node scripts/package-local.mjs",
         "sync:local": "node scripts/package-local.mjs",
         "native-logger:install": "node scripts/install-native-logger.mjs",

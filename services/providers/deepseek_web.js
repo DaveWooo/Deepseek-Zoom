@@ -207,10 +207,10 @@ async function uploadDeepSeekFiles(files, token, signal) {
     const attachments = normalizeUserAttachments(files);
     if (attachments.length === 0) return [];
 
-    // Only images are supported for vision mode
+    // Only images are supported
     const images = attachments.filter((a) => a.type.startsWith('image/'));
     if (images.length === 0) {
-        throw new Error('DeepSeek Web 识图模式仅支持图片附件。');
+        throw new Error('DeepSeek Web 仅支持图片附件。');
     }
 
     await initWasm();
@@ -233,7 +233,7 @@ async function uploadDeepSeekFiles(files, token, signal) {
     // Wait for DeepSeek to finish parsing the forked files so the vision
     // request does not reject them as "parsing".
     const parsedIds = await waitForDeepSeekFileParsing(fileIds, token, signal);
-    debugLog(`[DeepSeek Web] Uploaded ${parsedIds.length} file(s) for vision mode`);
+    debugLog(`[DeepSeek Web] Uploaded ${parsedIds.length} file(s)`);
     return parsedIds;
 }
 
@@ -510,23 +510,22 @@ export async function sendDeepSeekWebMessage(
     const answer = await solvePow(challenge);
     const powResponse = buildPowResponse(challenge, answer);
 
-    // ── Step 1.5: Upload attachments (vision/multimodal) ──
+    // ── Step 1.5: Upload attachments (multimodal) ──
     let refFileIds = [];
-    if (modelType === 'vision') {
-        refFileIds = await uploadDeepSeekFiles(files, context.token, signal);
-        debugLog(`[DeepSeek Web] Uploaded ${refFileIds.length} file(s) for vision mode`);
+    const attachments = normalizeUserAttachments(files);
+    if (attachments.length > 0) {
+        refFileIds = await uploadDeepSeekFiles(attachments, context.token, signal);
+        debugLog(`[DeepSeek Web] Uploaded ${refFileIds.length} file(s)`);
 
         if (refFileIds.length > 0) {
             // DeepSeek applies parallel_chat_limit_by_queue to the shared
-            // session; vision requests need a FRESH session so the uploaded
-            // files are accepted instead of an empty/queued response.
+            // session; requests with uploaded files need a FRESH session so
+            // the uploaded files are accepted instead of an empty/queued response.
             try {
                 chatSessionId = await createDeepSeekSession(context.token);
-                debugLog(`[DeepSeek Web] Created fresh vision session: ${chatSessionId}`);
+                debugLog(`[DeepSeek Web] Created fresh session for attachments: ${chatSessionId}`);
             } catch (e) {
-                debugLog(
-                    `[DeepSeek Web] Fresh vision session failed, reusing existing: ${e.message}`
-                );
+                debugLog(`[DeepSeek Web] Fresh session failed, reusing existing: ${e.message}`);
             }
         }
     }
@@ -551,9 +550,9 @@ export async function sendDeepSeekWebMessage(
         parent_message_id: null,
         prompt: prompt,
         ref_file_ids: refFileIds,
-        thinking_enabled: modelType === 'vision' ? false : thinkingEnabled,
-        search_enabled: modelType === 'vision' ? false : searchEnabled,
-        model_type: modelType === 'vision' && refFileIds.length === 0 ? 'default' : modelType,
+        thinking_enabled: thinkingEnabled,
+        search_enabled: searchEnabled,
+        model_type: 'default',
     };
 
     const resp = await fetch(CHAT_ENDPOINT, {
@@ -676,7 +675,7 @@ export async function sendDeepSeekWebMessage(
     if (!contentText && !thinkingText) {
         throw new Error(
             `DeepSeek Web returned an empty response${
-                refFileIds.length > 0 ? ` (vision ref_file_ids: ${refFileIds.join(',')})` : ''
+                refFileIds.length > 0 ? ` (ref_file_ids: ${refFileIds.join(',')})` : ''
             }${rawSampleLines.length > 0 ? `; raw lines: ${rawSampleLines.join(' | ')}` : ''}.`
         );
     }

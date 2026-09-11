@@ -98,9 +98,7 @@ export function createProviderModelOptions(settings = {}) {
     if (isDeepSeekWebProvider(provider)) {
         const enabled = getEnabledDeepSeekWebModelOptions(settings.deepseekWeb || {});
         return (
-            enabled.length > 0
-                ? enabled
-                : [{ value: 'default', label: 'DeepSeek最新版模型 (快速)' }]
+            enabled.length > 0 ? enabled : [{ value: 'default', label: 'DeepSeek (网页版)' }]
         ).map((opt) => ({ ...opt, group, provider: 'deepseek_web' }));
     }
 
@@ -131,9 +129,7 @@ export function createModelOptions(settings = {}, { providerOnly = false } = {})
     // 1. DeepSeek (Web + API)
     const enabledDsWeb = getEnabledDeepSeekWebModelOptions(settings.deepseekWeb || settings || {});
     const dsWebList =
-        enabledDsWeb.length > 0
-            ? enabledDsWeb
-            : [{ value: 'default', label: 'DeepSeek最新版模型 (快速)' }];
+        enabledDsWeb.length > 0 ? enabledDsWeb : [{ value: 'default', label: 'DeepSeek (网页版)' }];
     dsWebList.forEach((m) => {
         allOptions.push({
             value: m.value,
@@ -267,7 +263,7 @@ export function getPreferredModel(settings = {}, currentValue) {
         return settings.openaiSelectedModel || settings.selectedModel || currentValue;
     }
     if (isDeepSeekWebProvider(provider)) {
-        return settings.deepseekWeb?.deepseek_web_model_type || 'default';
+        return 'default';
     }
     if (isDedicatedApiProvider(provider)) {
         const providerSettings = getDedicatedApiRuntimeSettings(settings, provider);

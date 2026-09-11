@@ -15,20 +15,8 @@ export function bindConnectionSectionEvents(section) {
         });
     }
 
-    // DeepSeek & Gemini Web model enabled checkboxes → update status dots
+    // Gemini Web model enabled checkboxes → update status dots
     const modelEnabledMap = [
-        {
-            checkbox: section.elements.deepseekWebModelEnabledDefault,
-            dot: section.elements.deepseekWebStatusDotDefault,
-        },
-        {
-            checkbox: section.elements.deepseekWebModelEnabledExpert,
-            dot: section.elements.deepseekWebStatusDotExpert,
-        },
-        {
-            checkbox: section.elements.deepseekWebModelEnabledVision,
-            dot: section.elements.deepseekWebStatusDotVision,
-        },
         {
             checkbox: section.elements.geminiWebModelEnabledFlash,
             dot: section.elements.geminiWebStatusDotFlash,

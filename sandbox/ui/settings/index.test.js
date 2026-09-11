@@ -147,21 +147,21 @@ describe('SettingsController', () => {
         expect(document.getElementById('shortcut-ocr-capture').value).toBe('Alt+O');
     });
 
-    it('auto-saves DeepSeek Web settings and quick model toggles when toggled', async () => {
+    it('auto-saves DeepSeek Web settings when toggled', async () => {
         const { saveConnectionSettingsToStorage } =
             await import('../../../shared/messaging/index.js');
         const controller = new SettingsController();
 
-        const expertToggle = document.getElementById('deepseek-web-model-enabled-expert');
-        if (expertToggle) {
-            expertToggle.checked = false;
-            expertToggle.dispatchEvent(new Event('change', { bubbles: true }));
+        const thinkingToggle = document.getElementById('deepseek-web-thinking-enabled');
+        if (thinkingToggle) {
+            thinkingToggle.checked = false;
+            thinkingToggle.dispatchEvent(new Event('change', { bubbles: true }));
         }
 
         expect(saveConnectionSettingsToStorage).toHaveBeenCalledWith(
             expect.objectContaining({
                 deepseekWeb: expect.objectContaining({
-                    deepseek_web_model_enabled_expert: false,
+                    deepseek_web_thinking_enabled: false,
                 }),
                 gemini_web_model_enabled_flash: true,
             })

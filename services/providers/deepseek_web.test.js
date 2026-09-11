@@ -124,9 +124,9 @@ describe('sendDeepSeekWebMessage vision mode file upload', () => {
         expect(chatCall[1].headers['x-ds-pow-response']).toBe('base64-pow');
         const chatBody = JSON.parse(chatCall[1].body);
         expect(chatBody.ref_file_ids).toEqual(['vision-1']);
-        expect(chatBody.model_type).toBe('vision');
-        expect(chatBody.thinking_enabled).toBe(false);
-        expect(chatBody.search_enabled).toBe(false);
+        expect(chatBody.model_type).toBe('default');
+        expect(chatBody.thinking_enabled).toBe(true);
+        expect(chatBody.search_enabled).toBe(true);
     });
 
     it('accepts the older upload response shape { data: { id } }', async () => {
@@ -374,7 +374,7 @@ describe('sendDeepSeekWebMessage vision mode file upload', () => {
         expect(result.text).toBe('回答内容');
     });
 
-    it('does not upload files when modelType is not vision', async () => {
+    it('does not upload files when attachments are empty', async () => {
         mockPow();
         global.fetch = vi.fn(async (url) => {
             if (url.includes('/file/')) throw new Error('should not upload');
@@ -385,7 +385,7 @@ describe('sendDeepSeekWebMessage vision mode file upload', () => {
             '你好',
             { token: 't', session_id: 's' },
             'default',
-            [IMAGE],
+            [],
             undefined,
             undefined,
             { modelType: 'default' }
@@ -588,7 +588,7 @@ describe('sendDeepSeekWebMessage vision mode file upload', () => {
                 undefined,
                 { modelType: 'vision' }
             )
-        ).rejects.toThrow(/empty response.*vision ref_file_ids: vision-1/);
+        ).rejects.toThrow(/empty response.*ref_file_ids: vision-1/);
     });
 
     it('parses indexed fragments emitted during search and reasoning', async () => {

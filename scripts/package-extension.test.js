@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import {
     collectPackagedAssetReferences,
     createPackagedManifest,
+    createReleaseZip,
     findMissingPackagedAssetReferences,
     formatContentBundle,
     getUnbundledContentScriptFiles,
@@ -224,5 +225,22 @@ describe('package-extension', () => {
         expect(rewriteHtmlAssetPathsToRelative(html, 'sidepanel/index.html')).toContain(
             '../assets/sandbox.js'
         );
+    });
+
+    it('creates a release zip archive containing the directory contents', async () => {
+        const testDir = await mkdtemp(path.join(tmpdir(), 'zip-test-src-'));
+        const zipFile = path.join(tmpdir(), `test-release-${Date.now()}.zip`);
+
+        try {
+            await writeFile(path.join(testDir, 'manifest.json'), '{"name":"test"}', 'utf8');
+            await mkdir(path.join(testDir, 'sub'), { recursive: true });
+            await writeFile(path.join(testDir, 'sub/file.txt'), 'hello', 'utf8');
+
+            const resultPath = await createReleaseZip(testDir, zipFile);
+            expect(resultPath).toBe(zipFile);
+        } finally {
+            await rm(testDir, { recursive: true, force: true });
+            await rm(zipFile, { force: true });
+        }
     });
 });

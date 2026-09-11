@@ -63,12 +63,6 @@ export const DOM_IDS = {
     DEEPSEEK_WEB_THINKING_ENABLED: 'deepseek-web-thinking-enabled',
     DEEPSEEK_WEB_SEARCH_ENABLED: 'deepseek-web-search-enabled',
     DEEPSEEK_WEB_MODEL_TYPE: 'deepseek-web-model-type',
-    DEEPSEEK_WEB_MODEL_ENABLED_DEFAULT: 'deepseek-web-model-enabled-default',
-    DEEPSEEK_WEB_MODEL_ENABLED_EXPERT: 'deepseek-web-model-enabled-expert',
-    DEEPSEEK_WEB_MODEL_ENABLED_VISION: 'deepseek-web-model-enabled-vision',
-    DEEPSEEK_WEB_STATUS_DOT_DEFAULT: 'deepseek-web-status-default',
-    DEEPSEEK_WEB_STATUS_DOT_EXPERT: 'deepseek-web-status-expert',
-    DEEPSEEK_WEB_STATUS_DOT_VISION: 'deepseek-web-status-vision',
     DEEPSEEK_WEB_TEST_BTN: 'deepseek-web-test-btn',
     DEEPSEEK_WEB_TEST_STATUS: 'deepseek-web-test-status',
 

@@ -12,16 +12,7 @@ export function loadDeepSeekWebIntoForm(section, dsw = {}) {
         el.deepseekWebThinkingEnabled.checked = dsw.deepseek_web_thinking_enabled !== false;
     if (el.deepseekWebSearchEnabled)
         el.deepseekWebSearchEnabled.checked = dsw.deepseek_web_search_enabled !== false;
-    if (el.deepseekWebModelType)
-        el.deepseekWebModelType.value = dsw.deepseek_web_model_type || 'default';
-    if (el.deepseekWebModelEnabledDefault)
-        el.deepseekWebModelEnabledDefault.checked =
-            dsw.deepseek_web_model_enabled_default !== false;
-    if (el.deepseekWebModelEnabledExpert)
-        el.deepseekWebModelEnabledExpert.checked = dsw.deepseek_web_model_enabled_expert !== false;
-    if (el.deepseekWebModelEnabledVision)
-        el.deepseekWebModelEnabledVision.checked = dsw.deepseek_web_model_enabled_vision !== false;
-    updateDeepSeekWebStatusDots(section);
+    if (el.deepseekWebModelType) el.deepseekWebModelType.value = 'default';
     if (el.deepseekWebLoginStatus && dsw.deepseek_web_token) {
         el.deepseekWebLoginStatus.textContent = '✅ Logged in';
     }
@@ -41,42 +32,11 @@ export function saveDeepSeekWebEdits(section) {
         deepseek_web_search_enabled: el.deepseekWebSearchEnabled
             ? el.deepseekWebSearchEnabled.checked
             : false,
-        deepseek_web_model_type: el.deepseekWebModelType
-            ? el.deepseekWebModelType.value
-            : 'default',
-        deepseek_web_model_enabled_default: el.deepseekWebModelEnabledDefault
-            ? el.deepseekWebModelEnabledDefault.checked === true
-            : true,
-        deepseek_web_model_enabled_expert: el.deepseekWebModelEnabledExpert
-            ? el.deepseekWebModelEnabledExpert.checked === true
-            : true,
-        deepseek_web_model_enabled_vision: el.deepseekWebModelEnabledVision
-            ? el.deepseekWebModelEnabledVision.checked === true
-            : true,
+        deepseek_web_model_type: 'default',
+        deepseek_web_model_enabled_default: true,
+        deepseek_web_model_enabled_expert: true,
+        deepseek_web_model_enabled_vision: true,
     };
 }
 
-export function updateDeepSeekWebStatusDots(section) {
-    const el = section.elements;
-    const dots = [
-        {
-            checkbox: el.deepseekWebModelEnabledDefault,
-            dot: el.deepseekWebStatusDotDefault,
-        },
-        {
-            checkbox: el.deepseekWebModelEnabledExpert,
-            dot: el.deepseekWebStatusDotExpert,
-        },
-        {
-            checkbox: el.deepseekWebModelEnabledVision,
-            dot: el.deepseekWebStatusDotVision,
-        },
-    ];
-    for (const { checkbox, dot } of dots) {
-        if (dot) {
-            dot.className =
-                'model-status-dot ' +
-                (checkbox?.checked !== false ? 'model-status-enabled' : 'model-status-disabled');
-        }
-    }
-}
+export function updateDeepSeekWebStatusDots(_section) {}
