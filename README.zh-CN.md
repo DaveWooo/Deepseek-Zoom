@@ -157,11 +157,42 @@ DeepSeek Web 渠道同样**依赖逆向协议**，在无官方授权的情况下
 #### 从源码构建与打包
 
 ```bash
+# 1. 安装依赖
 npm install
+
+# 2. 完整质量检查（包含代码格式、TypeScript 类型检查、未引用导出及全量单元测试）
+npm run check
+
+# 3. 一键构建并生成扩展安装包与 Zip 归档 (输出至 artifacts/ 目录)
 npm run package:extension
+# 或者使用快捷别名
+npm run package:zip
 ```
 
-打包完成后，Chrome 的 **“加载已解压的扩展程序”** 应选择 `artifacts/chrome-extension`。开发调试时也可以直接加载仓库根目录，但发布或手动安装推荐使用打包目录；`npm run build` 生成的 `dist/` 只是 Vite UI 构建产物，不是完整扩展目录。发布包会把多个 content scripts 按 `manifest.json` 中的顺序合并为单个 `content/index.js`，并重写包内 manifest，避免发布产物依赖一长串手工脚本顺序。
+打包完成后：
+- **解压调试目录**：位于 `artifacts/chrome-extension`，可在 Chrome `chrome://extensions/` 中点击 **“加载已解压的扩展程序”** 加载测试。
+- **发布 Zip 压缩包**：自动生成于 `artifacts/deepseek-zoom-v<version>.zip`（如 `artifacts/deepseek-zoom-v6.2.0.zip`），根目录直接包含 `manifest.json` 与所有打包运行时资源，可直接用于分发或发布。
+
+#### 推送版本并发布到 GitHub Release
+
+本项目已配置 GitHub Actions 自动化发布工作流（`.github/workflows/package-extension.yml`）。当您完成版本开发并将带有 `v*` 的版本标签推送到 GitHub 时，CI/CD 流水线将自动执行全量测试、打包 Zip 产物、解析 `CHANGELOG.md` 提取版本更新日志，并自动创建/更新 GitHub Release：
+
+```bash
+# 1. 确保代码已提交，并已打上版本标签（以 v6.2.0 为例）
+git tag v6.2.0
+
+# 2. 推送主分支及所有标签至 GitHub（自动触发 GitHub Actions 发布 Release）
+git push origin main --tags
+```
+
+> **提示（手动通过 GitHub CLI 发布备用方案）**：
+> 若希望在本地直接创建或更新 GitHub Release，可使用官方 `gh` 命令行：
+> ```bash
+> # 本地打包
+> npm run package:extension
+> # 通过 gh 命令行直接上传发布
+> gh release create v6.2.0 artifacts/deepseek-zoom-v6.2.0.zip --title "v6.2.0" --notes-file CHANGELOG.md
+> ```
 
 #### 发布到 Chrome Web Store
 

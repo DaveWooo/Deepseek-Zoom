@@ -157,11 +157,42 @@ The repository root is the runnable Chrome extension project root. `package.json
 #### Build and Package from Source
 
 ```bash
+# 1. Install dependencies
 npm install
+
+# 2. Run full quality checks (formatting, TypeScript types, unused exports, and tests)
+npm run check
+
+# 3. Build and package the extension with zip archive (outputs to artifacts/)
 npm run package:extension
+# or using the shortcut alias
+npm run package:zip
 ```
 
-After packaging, choose `artifacts/chrome-extension` when using Chrome **Load unpacked**. For development, you can also load the repository root directly, but releases and manual installs should use the packaged directory. `npm run build` only creates the Vite UI output in `dist/`; it is not a complete extension directory. The package step merges multiple content scripts into a single `content/index.js` in `manifest.json` order and rewrites the packaged manifest, avoiding reliance on a long manual script list in release artifacts.
+After packaging:
+- **Unpacked directory**: Located at `artifacts/chrome-extension`, suitable for Chrome **Load unpacked** in `chrome://extensions/`.
+- **Release Zip archive**: Automatically generated at `artifacts/deepseek-zoom-v<version>.zip` (e.g. `artifacts/deepseek-zoom-v6.2.0.zip`), containing runtime files directly at the root for distribution.
+
+#### Push and Publish Release to GitHub
+
+The repository is configured with a GitHub Actions workflow (`.github/workflows/package-extension.yml`). When you tag a release with `v*` and push it to GitHub, CI/CD automatically runs checks, packages the zip, parses release notes from `CHANGELOG.md`, and creates/updates the GitHub Release:
+
+```bash
+# 1. Ensure commits are ready and tag the version (e.g. v6.2.0)
+git tag v6.2.0
+
+# 2. Push main branch and tags to GitHub (triggers automated release workflow)
+git push origin main --tags
+```
+
+> **Tip (Manual release via GitHub CLI)**:
+> If you prefer creating or updating the GitHub Release locally:
+> ```bash
+> # Build and package extension
+> npm run package:extension
+> # Create release using gh CLI
+> gh release create v6.2.0 artifacts/deepseek-zoom-v6.2.0.zip --title "v6.2.0" --notes-file CHANGELOG.md
+> ```
 
 #### Publish to Chrome Web Store
 
