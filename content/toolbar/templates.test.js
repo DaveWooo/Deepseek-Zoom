@@ -48,7 +48,7 @@ describe('GeminiToolbarTemplates', () => {
                 expand: 'Expand',
                 windowTitle: 'DeepSeek Zoom',
                 close: 'Close',
-                askPlaceholder: 'Ask Gemini...',
+                askPlaceholder: 'Ask Deepseek...',
                 toolbarProviderLabel: 'Popup provider',
                 toolbarThinkingToggleAria: 'Toggle thinking level',
                 providerWebShort: 'Web',

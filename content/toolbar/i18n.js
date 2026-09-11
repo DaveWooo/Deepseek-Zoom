@@ -103,7 +103,7 @@
 
         return {
             askAi: isZh ? '询问 AI' : 'Ask AI',
-            ask: isZh ? '询问' : 'Ask Gemini',
+            ask: isZh ? '询问' : 'Ask Deepseek',
             copy: isZh ? '复制' : 'Copy',
             copied: isZh ? '已复制' : 'Copied',
             error: isZh ? '错误' : 'Error',
@@ -125,7 +125,7 @@
             customSelectionMore: isZh ? '更多自定义工具' : 'More custom tools',
             askImage: isZh ? '询问这张图片' : 'Ask AI about this image',
             close: isZh ? '关闭' : 'Close',
-            askPlaceholder: isZh ? '询问 Gemini...' : 'Ask Gemini...',
+            askPlaceholder: isZh ? '询问 Deepseek...' : 'Ask Deepseek...',
             toolbarProviderLabel: isZh ? '弹窗模型来源' : 'Popup provider',
             toolbarThinkingToggleAria: isZh ? '切换思考等级' : 'Toggle thinking level',
             toolbarThinkingMinimalFastTitle: isZh
